@@ -1,0 +1,4 @@
+/Users/rallso/CLionProjects/provaClientDav/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/Users/rallso/CLionProjects/provaClientDav/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/rallso/CLionProjects/provaClientDav/cmake-build-debug/CMakeFiles/provaClientDav.dir
+/Users/rallso/CLionProjects/provaClientDav/cmake-build-debug/CMakeFiles/provaClientDav_autogen.dir

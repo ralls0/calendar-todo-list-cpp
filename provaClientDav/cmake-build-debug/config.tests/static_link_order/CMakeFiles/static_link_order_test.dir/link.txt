@@ -1,0 +1,1 @@
+/Library/Developer/CommandLineTools/usr/bin/c++  -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk -Wl,-search_paths_first -Wl,-headerpad_max_install_names CMakeFiles/static_link_order_test.dir/main.cpp.o -o static_link_order_test  libstaticLib.a CMakeFiles/objLib.dir/objlib.cpp.o 

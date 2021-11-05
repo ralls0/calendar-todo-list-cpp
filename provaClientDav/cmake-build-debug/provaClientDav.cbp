@@ -1,0 +1,464 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="provaClientDav"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;CMake Files\..\;CMake Files\..\..\;CMake Files\..\..\..\;CMake Files\..\..\..\..\;CMake Files\..\..\..\..\opt\;CMake Files\..\..\..\..\opt\homebrew\;CMake Files\..\..\..\..\opt\homebrew\lib\;CMake Files\..\..\..\..\opt\homebrew\lib\cmake\;CMake Files\..\..\..\..\opt\homebrew\lib\cmake\Qt6\;CMake Files\..\..\..\..\opt\homebrew\lib\cmake\Qt6Core\;CMake Files\..\..\..\..\opt\homebrew\lib\cmake\Qt6CoreTools\;CMake Files\..\..\..\..\opt\homebrew\lib\cmake\Qt6Gui\;CMake Files\..\..\..\..\opt\homebrew\lib\cmake\Qt6GuiTools\;CMake Files\..\..\..\..\opt\homebrew\lib\cmake\Qt6Widgets\;CMake Files\..\..\..\..\opt\homebrew\lib\cmake\Qt6WidgetsTools\;CMake Files\..\..\..\..\opt\homebrew\lib\cmake\Qt6Network\;CMake Files\..\..\..\..\opt\homebrew\lib\cmake\Qt6Xml\;CMake Files\..\..\..\..\opt\homebrew\lib\cmake\Qt6StateMachine\;CMake Files\..\..\..\..\opt\homebrew\Cellar\;CMake Files\..\..\..\..\opt\homebrew\Cellar\qt\;CMake Files\..\..\..\..\opt\homebrew\Cellar\qt\6.2.0\;CMake Files\..\..\..\..\opt\homebrew\Cellar\qt\6.2.0\lib\;CMake Files\..\..\..\..\opt\homebrew\Cellar\qt\6.2.0\lib\cmake\;CMake Files\..\..\..\..\opt\homebrew\Cellar\qt\6.2.0\lib\cmake\Qt6\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="/Users/rallso/CLionProjects/provaClientDav/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/rallso/CLionProjects/provaClientDav/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/rallso/CLionProjects/provaClientDav/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/rallso/CLionProjects/provaClientDav/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/rallso/CLionProjects/provaClientDav/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="/Users/rallso/CLionProjects/provaClientDav/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/rallso/CLionProjects/provaClientDav/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/rallso/CLionProjects/provaClientDav/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/rallso/CLionProjects/provaClientDav/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/rallso/CLionProjects/provaClientDav/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="/Users/rallso/CLionProjects/provaClientDav/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/rallso/CLionProjects/provaClientDav/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/rallso/CLionProjects/provaClientDav/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/rallso/CLionProjects/provaClientDav/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/rallso/CLionProjects/provaClientDav/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="provaClientDav">
+				<Option output="/Users/rallso/CLionProjects/provaClientDav/cmake-build-debug/provaClientDav" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/rallso/CLionProjects/provaClientDav/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DQT_CORE_LIB"/>
+					<Add option="-DQT_GUI_LIB"/>
+					<Add option="-DQT_WIDGETS_LIB"/>
+					<Add option="-DQT_NETWORK_LIB"/>
+					<Add option="-DQT_XML_LIB"/>
+					<Add option="-DQT_STATEMACHINE_LIB"/>
+					<Add directory="/Users/rallso/CLionProjects/provaClientDav/cmake-build-debug"/>
+					<Add directory="/Users/rallso/CLionProjects/provaClientDav"/>
+					<Add directory="/Users/rallso/CLionProjects/provaClientDav/cmake-build-debug/provaClientDav_autogen/include"/>
+					<Add directory="/opt/homebrew/lib/QtCore.framework"/>
+					<Add directory="/opt/homebrew/lib/QtCore.framework/Headers"/>
+					<Add directory="/opt/homebrew/share/qt/mkspecs/macx-clang"/>
+					<Add directory="/opt/homebrew/include"/>
+					<Add directory="/opt/homebrew/lib/QtGui.framework"/>
+					<Add directory="/opt/homebrew/lib/QtGui.framework/Headers"/>
+					<Add directory="/opt/homebrew/lib/QtWidgets.framework"/>
+					<Add directory="/opt/homebrew/lib/QtWidgets.framework/Headers"/>
+					<Add directory="/opt/homebrew/lib/QtNetwork.framework"/>
+					<Add directory="/opt/homebrew/lib/QtNetwork.framework/Headers"/>
+					<Add directory="/opt/homebrew/lib/QtXml.framework"/>
+					<Add directory="/opt/homebrew/lib/QtXml.framework/Headers"/>
+					<Add directory="/opt/homebrew/lib/QtStateMachine.framework"/>
+					<Add directory="/opt/homebrew/lib/QtStateMachine.framework/Headers"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/13.0.0/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/rallso/CLionProjects/provaClientDav/cmake-build-debug/Makefile&quot;  VERBOSE=1 provaClientDav"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/rallso/CLionProjects/provaClientDav/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/rallso/CLionProjects/provaClientDav/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/rallso/CLionProjects/provaClientDav/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="provaClientDav/fast">
+				<Option output="/Users/rallso/CLionProjects/provaClientDav/cmake-build-debug/provaClientDav" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/rallso/CLionProjects/provaClientDav/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DQT_CORE_LIB"/>
+					<Add option="-DQT_GUI_LIB"/>
+					<Add option="-DQT_WIDGETS_LIB"/>
+					<Add option="-DQT_NETWORK_LIB"/>
+					<Add option="-DQT_XML_LIB"/>
+					<Add option="-DQT_STATEMACHINE_LIB"/>
+					<Add directory="/Users/rallso/CLionProjects/provaClientDav/cmake-build-debug"/>
+					<Add directory="/Users/rallso/CLionProjects/provaClientDav"/>
+					<Add directory="/Users/rallso/CLionProjects/provaClientDav/cmake-build-debug/provaClientDav_autogen/include"/>
+					<Add directory="/opt/homebrew/lib/QtCore.framework"/>
+					<Add directory="/opt/homebrew/lib/QtCore.framework/Headers"/>
+					<Add directory="/opt/homebrew/share/qt/mkspecs/macx-clang"/>
+					<Add directory="/opt/homebrew/include"/>
+					<Add directory="/opt/homebrew/lib/QtGui.framework"/>
+					<Add directory="/opt/homebrew/lib/QtGui.framework/Headers"/>
+					<Add directory="/opt/homebrew/lib/QtWidgets.framework"/>
+					<Add directory="/opt/homebrew/lib/QtWidgets.framework/Headers"/>
+					<Add directory="/opt/homebrew/lib/QtNetwork.framework"/>
+					<Add directory="/opt/homebrew/lib/QtNetwork.framework/Headers"/>
+					<Add directory="/opt/homebrew/lib/QtXml.framework"/>
+					<Add directory="/opt/homebrew/lib/QtXml.framework/Headers"/>
+					<Add directory="/opt/homebrew/lib/QtStateMachine.framework"/>
+					<Add directory="/opt/homebrew/lib/QtStateMachine.framework/Headers"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/13.0.0/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/rallso/CLionProjects/provaClientDav/cmake-build-debug/Makefile&quot;  VERBOSE=1 provaClientDav/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/rallso/CLionProjects/provaClientDav/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/rallso/CLionProjects/provaClientDav/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/rallso/CLionProjects/provaClientDav/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="provaClientDav_autogen">
+				<Option working_dir="/Users/rallso/CLionProjects/provaClientDav/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/rallso/CLionProjects/provaClientDav/cmake-build-debug/Makefile&quot;  VERBOSE=1 provaClientDav_autogen"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/rallso/CLionProjects/provaClientDav/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/rallso/CLionProjects/provaClientDav/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/rallso/CLionProjects/provaClientDav/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/CalendarClient/CalendarClient.cpp">
+			<Option target="provaClientDav"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/CalendarClient/CalendarClient.h">
+			<Option target="provaClientDav"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/CalendarClient/CalendarClient_CalDAV.cpp">
+			<Option target="provaClientDav"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/CalendarClient/CalendarClient_CalDAV.h">
+			<Option target="provaClientDav"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/CalendarClient/CalendarClient_CalDAV_ReceiveResponse.cpp">
+			<Option target="provaClientDav"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/CalendarClient/CalendarClient_CalDAV_SendRequest.cpp">
+			<Option target="provaClientDav"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/CalendarClient/CalendarClient_CalDAV_StateMachine.cpp">
+			<Option target="provaClientDav"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/CalendarClient/CalendarClient_CalDAV_Utils.cpp">
+			<Option target="provaClientDav"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/CalendarClient/CalendarClient_ICS.cpp">
+			<Option target="provaClientDav"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/CalendarClient/CalendarClient_ICS.h">
+			<Option target="provaClientDav"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/CalendarClient/CalendarClient_ICS_ReceiveResonse.cpp">
+			<Option target="provaClientDav"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/CalendarClient/CalendarClient_ICS_SendRequest.cpp">
+			<Option target="provaClientDav"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/CalendarClient/CalendarClient_ICS_StateMachine.cpp">
+			<Option target="provaClientDav"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/CalendarClient/CalendarEvent.cpp">
+			<Option target="provaClientDav"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/CalendarClient/CalendarEvent.h">
+			<Option target="provaClientDav"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/CalendarClient/CalendarManager.cpp">
+			<Option target="provaClientDav"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/CalendarClient/CalendarManager.h">
+			<Option target="provaClientDav"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/CalendarClient/DateUtils.cpp">
+			<Option target="provaClientDav"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/CalendarClient/DateUtils.h">
+			<Option target="provaClientDav"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/CalendarClient/SimpleCrypt.cpp">
+			<Option target="provaClientDav"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/CalendarClient/SimpleCrypt.h">
+			<Option target="provaClientDav"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/cmake-build-debug/provaClientDav_autogen/mocs_compilation.cpp">
+			<Option target="provaClientDav"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/main.cpp">
+			<Option target="provaClientDav"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/../../../../opt/homebrew/lib/cmake/Qt6/Qt6Config.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\Qt6\"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/../../../../opt/homebrew/lib/cmake/Qt6/Qt6ConfigExtras.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\Qt6\"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/../../../../opt/homebrew/lib/cmake/Qt6/Qt6ConfigVersion.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\Qt6\"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/../../../../opt/homebrew/lib/cmake/Qt6/Qt6Dependencies.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\Qt6\"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/../../../../opt/homebrew/lib/cmake/Qt6/Qt6Targets.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\Qt6\"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/../../../../opt/homebrew/lib/cmake/Qt6/Qt6VersionlessTargets.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\Qt6\"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/../../../../opt/homebrew/lib/cmake/Qt6/QtFeature.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\Qt6\"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/../../../../opt/homebrew/lib/cmake/Qt6/QtPublicCMakeVersionHelpers.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\Qt6\"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/../../../../opt/homebrew/lib/cmake/Qt6/QtPublicDependencyHelpers.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\Qt6\"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/../../../../opt/homebrew/lib/cmake/Qt6/QtPublicFinalizerHelpers.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\Qt6\"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/../../../../opt/homebrew/lib/cmake/Qt6/QtPublicFindPackageHelpers.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\Qt6\"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/../../../../opt/homebrew/lib/cmake/Qt6/QtPublicPluginHelpers.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\Qt6\"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/../../../../opt/homebrew/lib/cmake/Qt6/QtPublicTargetHelpers.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\Qt6\"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/../../../../opt/homebrew/lib/cmake/Qt6/QtPublicWalkLibsHelpers.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\Qt6\"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/../../../../opt/homebrew/lib/cmake/Qt6Core/Qt6CoreAdditionalTargetInfo.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\Qt6Core\"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/../../../../opt/homebrew/lib/cmake/Qt6Core/Qt6CoreConfig.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\Qt6Core\"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/../../../../opt/homebrew/lib/cmake/Qt6Core/Qt6CoreConfigExtras.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\Qt6Core\"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/../../../../opt/homebrew/lib/cmake/Qt6Core/Qt6CoreConfigVersion.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\Qt6Core\"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/../../../../opt/homebrew/lib/cmake/Qt6Core/Qt6CoreDependencies.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\Qt6Core\"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/../../../../opt/homebrew/lib/cmake/Qt6Core/Qt6CoreMacros.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\Qt6Core\"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/../../../../opt/homebrew/lib/cmake/Qt6Core/Qt6CoreTargets-release.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\Qt6Core\"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/../../../../opt/homebrew/lib/cmake/Qt6Core/Qt6CoreTargets.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\Qt6Core\"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/../../../../opt/homebrew/lib/cmake/Qt6Core/Qt6CoreVersionlessTargets.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\Qt6Core\"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/../../../../opt/homebrew/lib/cmake/Qt6CoreTools/Qt6CoreToolsAdditionalTargetInfo.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\Qt6CoreTools\"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/../../../../opt/homebrew/lib/cmake/Qt6CoreTools/Qt6CoreToolsConfig.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\Qt6CoreTools\"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/../../../../opt/homebrew/lib/cmake/Qt6CoreTools/Qt6CoreToolsConfigVersion.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\Qt6CoreTools\"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/../../../../opt/homebrew/lib/cmake/Qt6CoreTools/Qt6CoreToolsDependencies.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\Qt6CoreTools\"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/../../../../opt/homebrew/lib/cmake/Qt6CoreTools/Qt6CoreToolsTargets-release.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\Qt6CoreTools\"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/../../../../opt/homebrew/lib/cmake/Qt6CoreTools/Qt6CoreToolsTargets.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\Qt6CoreTools\"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/../../../../opt/homebrew/lib/cmake/Qt6CoreTools/Qt6CoreToolsVersionlessTargets.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\Qt6CoreTools\"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/../../../../opt/homebrew/lib/cmake/Qt6Gui/Qt6GuiAdditionalTargetInfo.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\Qt6Gui\"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/../../../../opt/homebrew/lib/cmake/Qt6Gui/Qt6GuiConfig.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\Qt6Gui\"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/../../../../opt/homebrew/lib/cmake/Qt6Gui/Qt6GuiConfigVersion.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\Qt6Gui\"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/../../../../opt/homebrew/lib/cmake/Qt6Gui/Qt6GuiDependencies.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\Qt6Gui\"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/../../../../opt/homebrew/lib/cmake/Qt6Gui/Qt6GuiTargets-release.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\Qt6Gui\"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/../../../../opt/homebrew/lib/cmake/Qt6Gui/Qt6GuiTargets.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\Qt6Gui\"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/../../../../opt/homebrew/lib/cmake/Qt6Gui/Qt6GuiVersionlessTargets.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\Qt6Gui\"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/../../../../opt/homebrew/lib/cmake/Qt6GuiTools/Qt6GuiToolsAdditionalTargetInfo.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\Qt6GuiTools\"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/../../../../opt/homebrew/lib/cmake/Qt6GuiTools/Qt6GuiToolsConfig.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\Qt6GuiTools\"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/../../../../opt/homebrew/lib/cmake/Qt6GuiTools/Qt6GuiToolsConfigVersion.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\Qt6GuiTools\"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/../../../../opt/homebrew/lib/cmake/Qt6GuiTools/Qt6GuiToolsDependencies.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\Qt6GuiTools\"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/../../../../opt/homebrew/lib/cmake/Qt6GuiTools/Qt6GuiToolsTargets-release.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\Qt6GuiTools\"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/../../../../opt/homebrew/lib/cmake/Qt6GuiTools/Qt6GuiToolsTargets.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\Qt6GuiTools\"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/../../../../opt/homebrew/lib/cmake/Qt6GuiTools/Qt6GuiToolsVersionlessTargets.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\Qt6GuiTools\"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/../../../../opt/homebrew/lib/cmake/Qt6Widgets/Qt6WidgetsAdditionalTargetInfo.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\Qt6Widgets\"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/../../../../opt/homebrew/lib/cmake/Qt6Widgets/Qt6WidgetsConfig.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\Qt6Widgets\"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/../../../../opt/homebrew/lib/cmake/Qt6Widgets/Qt6WidgetsConfigVersion.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\Qt6Widgets\"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/../../../../opt/homebrew/lib/cmake/Qt6Widgets/Qt6WidgetsDependencies.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\Qt6Widgets\"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/../../../../opt/homebrew/lib/cmake/Qt6Widgets/Qt6WidgetsMacros.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\Qt6Widgets\"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/../../../../opt/homebrew/lib/cmake/Qt6Widgets/Qt6WidgetsTargets-release.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\Qt6Widgets\"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/../../../../opt/homebrew/lib/cmake/Qt6Widgets/Qt6WidgetsTargets.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\Qt6Widgets\"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/../../../../opt/homebrew/lib/cmake/Qt6Widgets/Qt6WidgetsVersionlessTargets.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\Qt6Widgets\"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/../../../../opt/homebrew/lib/cmake/Qt6WidgetsTools/Qt6WidgetsToolsAdditionalTargetInfo.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\Qt6WidgetsTools\"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/../../../../opt/homebrew/lib/cmake/Qt6WidgetsTools/Qt6WidgetsToolsConfig.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\Qt6WidgetsTools\"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/../../../../opt/homebrew/lib/cmake/Qt6WidgetsTools/Qt6WidgetsToolsConfigVersion.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\Qt6WidgetsTools\"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/../../../../opt/homebrew/lib/cmake/Qt6WidgetsTools/Qt6WidgetsToolsDependencies.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\Qt6WidgetsTools\"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/../../../../opt/homebrew/lib/cmake/Qt6WidgetsTools/Qt6WidgetsToolsTargets-release.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\Qt6WidgetsTools\"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/../../../../opt/homebrew/lib/cmake/Qt6WidgetsTools/Qt6WidgetsToolsTargets.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\Qt6WidgetsTools\"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/../../../../opt/homebrew/lib/cmake/Qt6WidgetsTools/Qt6WidgetsToolsVersionlessTargets.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\Qt6WidgetsTools\"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/../../../../opt/homebrew/lib/cmake/Qt6Network/Qt6NetworkAdditionalTargetInfo.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\Qt6Network\"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/../../../../opt/homebrew/lib/cmake/Qt6Network/Qt6NetworkConfig.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\Qt6Network\"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/../../../../opt/homebrew/lib/cmake/Qt6Network/Qt6NetworkConfigVersion.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\Qt6Network\"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/../../../../opt/homebrew/lib/cmake/Qt6Network/Qt6NetworkDependencies.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\Qt6Network\"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/../../../../opt/homebrew/lib/cmake/Qt6Network/Qt6NetworkTargets-release.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\Qt6Network\"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/../../../../opt/homebrew/lib/cmake/Qt6Network/Qt6NetworkTargets.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\Qt6Network\"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/../../../../opt/homebrew/lib/cmake/Qt6Network/Qt6NetworkVersionlessTargets.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\Qt6Network\"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/../../../../opt/homebrew/lib/cmake/Qt6Xml/Qt6XmlAdditionalTargetInfo.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\Qt6Xml\"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/../../../../opt/homebrew/lib/cmake/Qt6Xml/Qt6XmlConfig.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\Qt6Xml\"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/../../../../opt/homebrew/lib/cmake/Qt6Xml/Qt6XmlConfigVersion.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\Qt6Xml\"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/../../../../opt/homebrew/lib/cmake/Qt6Xml/Qt6XmlDependencies.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\Qt6Xml\"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/../../../../opt/homebrew/lib/cmake/Qt6Xml/Qt6XmlTargets-release.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\Qt6Xml\"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/../../../../opt/homebrew/lib/cmake/Qt6Xml/Qt6XmlTargets.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\Qt6Xml\"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/../../../../opt/homebrew/lib/cmake/Qt6Xml/Qt6XmlVersionlessTargets.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\Qt6Xml\"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/../../../../opt/homebrew/lib/cmake/Qt6StateMachine/Qt6StateMachineAdditionalTargetInfo.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\Qt6StateMachine\"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/../../../../opt/homebrew/lib/cmake/Qt6StateMachine/Qt6StateMachineConfig.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\Qt6StateMachine\"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/../../../../opt/homebrew/lib/cmake/Qt6StateMachine/Qt6StateMachineConfigVersion.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\Qt6StateMachine\"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/../../../../opt/homebrew/lib/cmake/Qt6StateMachine/Qt6StateMachineDependencies.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\Qt6StateMachine\"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/../../../../opt/homebrew/lib/cmake/Qt6StateMachine/Qt6StateMachineTargets-release.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\Qt6StateMachine\"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/../../../../opt/homebrew/lib/cmake/Qt6StateMachine/Qt6StateMachineTargets.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\Qt6StateMachine\"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/../../../../opt/homebrew/lib/cmake/Qt6StateMachine/Qt6StateMachineVersionlessTargets.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\lib\cmake\Qt6StateMachine\"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/../../../../opt/homebrew/Cellar/qt/6.2.0/lib/cmake/Qt6/FindWrapAtomic.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\Cellar\qt\6.2.0\lib\cmake\Qt6\"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/../../../../opt/homebrew/Cellar/qt/6.2.0/lib/cmake/Qt6/FindWrapOpenGL.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\Cellar\qt\6.2.0\lib\cmake\Qt6\"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/../../../../opt/homebrew/Cellar/qt/6.2.0/lib/cmake/Qt6/FindWrapOpenSSLHeaders.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\Cellar\qt\6.2.0\lib\cmake\Qt6\"/>
+		</Unit>
+		<Unit filename="/Users/rallso/CLionProjects/provaClientDav/../../../../opt/homebrew/Cellar/qt/6.2.0/lib/cmake/Qt6/QtFeatureCommon.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\opt\homebrew\Cellar\qt\6.2.0\lib\cmake\Qt6\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>
