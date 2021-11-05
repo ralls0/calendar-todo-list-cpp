@@ -1,0 +1,4 @@
+/Users/rallso/Dropbox (Politecnico Di Torino Studenti)/Git/calendar-todo-list-cpp/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/Users/rallso/Dropbox (Politecnico Di Torino Studenti)/Git/calendar-todo-list-cpp/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/rallso/Dropbox (Politecnico Di Torino Studenti)/Git/calendar-todo-list-cpp/cmake-build-debug/CMakeFiles/calendar_todo_list_cpp.dir
+/Users/rallso/Dropbox (Politecnico Di Torino Studenti)/Git/calendar-todo-list-cpp/cmake-build-debug/CMakeFiles/calendar_todo_list_cpp_autogen.dir

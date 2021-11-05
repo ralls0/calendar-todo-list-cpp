@@ -1,0 +1,5 @@
+/Users/rallso/Dropbox (Politecnico Di Torino Studenti)/Git/calendar-todo-list-cpp/cmake-build-debug/config.tests/static_link_order/CMakeFiles/rebuild_cache.dir
+/Users/rallso/Dropbox (Politecnico Di Torino Studenti)/Git/calendar-todo-list-cpp/cmake-build-debug/config.tests/static_link_order/CMakeFiles/edit_cache.dir
+/Users/rallso/Dropbox (Politecnico Di Torino Studenti)/Git/calendar-todo-list-cpp/cmake-build-debug/config.tests/static_link_order/CMakeFiles/static_link_order_test.dir
+/Users/rallso/Dropbox (Politecnico Di Torino Studenti)/Git/calendar-todo-list-cpp/cmake-build-debug/config.tests/static_link_order/CMakeFiles/staticLib.dir
+/Users/rallso/Dropbox (Politecnico Di Torino Studenti)/Git/calendar-todo-list-cpp/cmake-build-debug/config.tests/static_link_order/CMakeFiles/objLib.dir
