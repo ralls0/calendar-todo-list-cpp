@@ -155,15 +155,6 @@ protected:
   bool isDateExcluded(const QString strExdates,
                       const QDate &questionedDate) const;
 
-  /**
-   * Private attributes
-   */
-
-private:
-  /**
-   * Signals
-   */
-
 signals:
 
   void colorChanged(QString color);

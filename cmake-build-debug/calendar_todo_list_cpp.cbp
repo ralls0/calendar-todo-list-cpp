@@ -5,7 +5,7 @@
 		<Option title="calendar_todo_list_cpp"/>
 		<Option makefile_is_custom="1"/>
 		<Option compiler="gcc"/>
-		<Option virtualFolders="CMake Files\;CMake Files\..\;CMake Files\..\..\;CMake Files\..\..\..\;CMake Files\..\..\..\..\;CMake Files\..\..\..\..\..\;CMake Files\..\..\..\..\..\opt\;CMake Files\..\..\..\..\..\opt\homebrew\;CMake Files\..\..\..\..\..\opt\homebrew\lib\;CMake Files\..\..\..\..\..\opt\homebrew\lib\cmake\;CMake Files\..\..\..\..\..\opt\homebrew\lib\cmake\Qt6\;CMake Files\..\..\..\..\..\opt\homebrew\lib\cmake\Qt6Core\;CMake Files\..\..\..\..\..\opt\homebrew\lib\cmake\Qt6CoreTools\;CMake Files\..\..\..\..\..\opt\homebrew\lib\cmake\Qt6Gui\;CMake Files\..\..\..\..\..\opt\homebrew\lib\cmake\Qt6GuiTools\;CMake Files\..\..\..\..\..\opt\homebrew\lib\cmake\Qt6Widgets\;CMake Files\..\..\..\..\..\opt\homebrew\lib\cmake\Qt6WidgetsTools\;CMake Files\..\..\..\..\..\opt\homebrew\lib\cmake\Qt6Network\;CMake Files\..\..\..\..\..\opt\homebrew\lib\cmake\Qt6Xml\;CMake Files\..\..\..\..\..\opt\homebrew\lib\cmake\Qt6StateMachine\;CMake Files\..\..\..\..\..\opt\homebrew\Cellar\;CMake Files\..\..\..\..\..\opt\homebrew\Cellar\qt\;CMake Files\..\..\..\..\..\opt\homebrew\Cellar\qt\6.2.0\;CMake Files\..\..\..\..\..\opt\homebrew\Cellar\qt\6.2.0\lib\;CMake Files\..\..\..\..\..\opt\homebrew\Cellar\qt\6.2.0\lib\cmake\;CMake Files\..\..\..\..\..\opt\homebrew\Cellar\qt\6.2.0\lib\cmake\Qt6\;"/>
+		<Option virtualFolders="CMake Files\;CMake Files\..\;CMake Files\..\..\;CMake Files\..\..\..\;CMake Files\..\..\..\..\;CMake Files\..\..\..\..\..\;CMake Files\..\..\..\..\..\opt\;CMake Files\..\..\..\..\..\opt\homebrew\;CMake Files\..\..\..\..\..\opt\homebrew\lib\;CMake Files\..\..\..\..\..\opt\homebrew\lib\cmake\;CMake Files\..\..\..\..\..\opt\homebrew\lib\cmake\Qt6\;CMake Files\..\..\..\..\..\opt\homebrew\lib\cmake\Qt6Core\;CMake Files\..\..\..\..\..\opt\homebrew\lib\cmake\Qt6CoreTools\;CMake Files\..\..\..\..\..\opt\homebrew\lib\cmake\Qt6Gui\;CMake Files\..\..\..\..\..\opt\homebrew\lib\cmake\Qt6GuiTools\;CMake Files\..\..\..\..\..\opt\homebrew\lib\cmake\Qt6Widgets\;CMake Files\..\..\..\..\..\opt\homebrew\lib\cmake\Qt6WidgetsTools\;CMake Files\..\..\..\..\..\opt\homebrew\lib\cmake\Qt6Network\;CMake Files\..\..\..\..\..\opt\homebrew\lib\cmake\Qt6Xml\;CMake Files\..\..\..\..\..\opt\homebrew\lib\cmake\Qt6StateMachine\;CMake Files\..\..\..\..\..\opt\homebrew\Cellar\;CMake Files\..\..\..\..\..\opt\homebrew\Cellar\qt\;CMake Files\..\..\..\..\..\opt\homebrew\Cellar\qt\6.2.1\;CMake Files\..\..\..\..\..\opt\homebrew\Cellar\qt\6.2.1\lib\;CMake Files\..\..\..\..\..\opt\homebrew\Cellar\qt\6.2.1\lib\cmake\;CMake Files\..\..\..\..\..\opt\homebrew\Cellar\qt\6.2.1\lib\cmake\Qt6\;"/>
 		<Build>
 			<Target title="all">
 				<Option working_dir="/Users/rallso/Dropbox (Politecnico Di Torino Studenti)/Git/calendar-todo-list-cpp/cmake-build-debug"/>
@@ -421,17 +421,17 @@
 		<Unit filename="/Users/rallso/Dropbox (Politecnico Di Torino Studenti)/Git/calendar-todo-list-cpp/../../../../../opt/homebrew/lib/cmake/Qt6StateMachine/Qt6StateMachineVersionlessTargets.cmake">
 			<Option virtualFolder="CMake Files\..\..\..\..\..\opt\homebrew\lib\cmake\Qt6StateMachine\"/>
 		</Unit>
-		<Unit filename="/Users/rallso/Dropbox (Politecnico Di Torino Studenti)/Git/calendar-todo-list-cpp/../../../../../opt/homebrew/Cellar/qt/6.2.0/lib/cmake/Qt6/FindWrapAtomic.cmake">
-			<Option virtualFolder="CMake Files\..\..\..\..\..\opt\homebrew\Cellar\qt\6.2.0\lib\cmake\Qt6\"/>
+		<Unit filename="/Users/rallso/Dropbox (Politecnico Di Torino Studenti)/Git/calendar-todo-list-cpp/../../../../../opt/homebrew/Cellar/qt/6.2.1/lib/cmake/Qt6/FindWrapAtomic.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\..\opt\homebrew\Cellar\qt\6.2.1\lib\cmake\Qt6\"/>
 		</Unit>
-		<Unit filename="/Users/rallso/Dropbox (Politecnico Di Torino Studenti)/Git/calendar-todo-list-cpp/../../../../../opt/homebrew/Cellar/qt/6.2.0/lib/cmake/Qt6/FindWrapOpenGL.cmake">
-			<Option virtualFolder="CMake Files\..\..\..\..\..\opt\homebrew\Cellar\qt\6.2.0\lib\cmake\Qt6\"/>
+		<Unit filename="/Users/rallso/Dropbox (Politecnico Di Torino Studenti)/Git/calendar-todo-list-cpp/../../../../../opt/homebrew/Cellar/qt/6.2.1/lib/cmake/Qt6/FindWrapOpenGL.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\..\opt\homebrew\Cellar\qt\6.2.1\lib\cmake\Qt6\"/>
 		</Unit>
-		<Unit filename="/Users/rallso/Dropbox (Politecnico Di Torino Studenti)/Git/calendar-todo-list-cpp/../../../../../opt/homebrew/Cellar/qt/6.2.0/lib/cmake/Qt6/FindWrapOpenSSLHeaders.cmake">
-			<Option virtualFolder="CMake Files\..\..\..\..\..\opt\homebrew\Cellar\qt\6.2.0\lib\cmake\Qt6\"/>
+		<Unit filename="/Users/rallso/Dropbox (Politecnico Di Torino Studenti)/Git/calendar-todo-list-cpp/../../../../../opt/homebrew/Cellar/qt/6.2.1/lib/cmake/Qt6/FindWrapOpenSSLHeaders.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\..\opt\homebrew\Cellar\qt\6.2.1\lib\cmake\Qt6\"/>
 		</Unit>
-		<Unit filename="/Users/rallso/Dropbox (Politecnico Di Torino Studenti)/Git/calendar-todo-list-cpp/../../../../../opt/homebrew/Cellar/qt/6.2.0/lib/cmake/Qt6/QtFeatureCommon.cmake">
-			<Option virtualFolder="CMake Files\..\..\..\..\..\opt\homebrew\Cellar\qt\6.2.0\lib\cmake\Qt6\"/>
+		<Unit filename="/Users/rallso/Dropbox (Politecnico Di Torino Studenti)/Git/calendar-todo-list-cpp/../../../../../opt/homebrew/Cellar/qt/6.2.1/lib/cmake/Qt6/QtFeatureCommon.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\..\opt\homebrew\Cellar\qt\6.2.1\lib\cmake\Qt6\"/>
 		</Unit>
 	</Project>
 </CodeBlocks_project_file>

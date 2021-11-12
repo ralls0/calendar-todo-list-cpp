@@ -110,6 +110,9 @@ CMakeFiles/calendar_todo_list_cpp.dir/calendar_todo_list_cpp_autogen/mocs_compil
  /opt/homebrew/lib/QtNetwork.framework/QtNetwork
 CMakeFiles/calendar_todo_list_cpp.dir/main.cpp.o
  /Users/rallso/Dropbox (Politecnico Di Torino Studenti)/Git/calendar-todo-list-cpp/main.cpp
+ /Users/rallso/Dropbox (Politecnico Di Torino Studenti)/Git/calendar-todo-list-cpp/src/CalDAV/CalendarClient.h
+ /Users/rallso/Dropbox (Politecnico Di Torino Studenti)/Git/calendar-todo-list-cpp/src/CalDAV/CalendarClient_CalDAV.h
+ /Users/rallso/Dropbox (Politecnico Di Torino Studenti)/Git/calendar-todo-list-cpp/src/CalDAV/CalendarEvent.h
  /opt/homebrew/include/QtCore/QList
  /opt/homebrew/include/QtCore/QObject
  /opt/homebrew/include/QtCore/QRect
@@ -125,10 +128,12 @@ CMakeFiles/calendar_todo_list_cpp.dir/main.cpp.o
  /opt/homebrew/include/QtCore/qatomic_bootstrap.h
  /opt/homebrew/include/QtCore/qatomic_cxx11.h
  /opt/homebrew/include/QtCore/qbasicatomic.h
+ /opt/homebrew/include/QtCore/qbasictimer.h
  /opt/homebrew/include/QtCore/qbytearray.h
  /opt/homebrew/include/QtCore/qbytearrayalgorithms.h
  /opt/homebrew/include/QtCore/qbytearraylist.h
  /opt/homebrew/include/QtCore/qbytearrayview.h
+ /opt/homebrew/include/QtCore/qcalendar.h
  /opt/homebrew/include/QtCore/qchar.h
  /opt/homebrew/include/QtCore/qcompare.h
  /opt/homebrew/include/QtCore/qcompilerdetection.h
@@ -258,6 +263,22 @@ CMakeFiles/calendar_todo_list_cpp.dir/main.cpp.o
  /opt/homebrew/include/QtWidgets/qtwidgets-config.h
  /opt/homebrew/include/QtWidgets/qtwidgetsglobal.h
  /opt/homebrew/include/QtWidgets/qwidget.h
+ /opt/homebrew/lib/QtCore.framework/Headers/QDate
+ /opt/homebrew/lib/QtCore.framework/Headers/QDateTime
+ /opt/homebrew/lib/QtCore.framework/Headers/QList
+ /opt/homebrew/lib/QtCore.framework/Headers/QObject
+ /opt/homebrew/lib/QtCore.framework/Headers/QString
+ /opt/homebrew/lib/QtCore.framework/Headers/QTextStream
+ /opt/homebrew/lib/QtCore.framework/Headers/QTimer
+ /opt/homebrew/lib/QtCore.framework/Headers/QUrl
+ /opt/homebrew/lib/QtCore.framework/Headers/qdatetime.h
+ /opt/homebrew/lib/QtCore.framework/Headers/qlist.h
+ /opt/homebrew/lib/QtCore.framework/Headers/qobject.h
+ /opt/homebrew/lib/QtCore.framework/Headers/qstring.h
+ /opt/homebrew/lib/QtCore.framework/Headers/qtextstream.h
+ /opt/homebrew/lib/QtCore.framework/Headers/qtimer.h
+ /opt/homebrew/lib/QtCore.framework/Headers/qurl.h
+ /opt/homebrew/lib/QtNetwork.framework/QtNetwork
  /opt/homebrew/lib/QtWidgets.framework/Headers/QApplication
  /opt/homebrew/lib/QtWidgets.framework/Headers/QPushButton
  /opt/homebrew/lib/QtWidgets.framework/Headers/qapplication.h
