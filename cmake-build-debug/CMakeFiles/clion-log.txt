@@ -1,0 +1,45 @@
+/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_DEPENDS_USE_COMPILER=FALSE -G "CodeBlocks - Unix Makefiles" "/Users/rallso/Dropbox (Politecnico Di Torino Studenti)/Git/calendar-todo-list-cpp"
+-- The C compiler identification is AppleClang 13.0.0.13000029
+-- The CXX compiler identification is AppleClang 13.0.0.13000029
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /Library/Developer/CommandLineTools/usr/bin/cc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /Library/Developer/CommandLineTools/usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Looking for pthread.h
+-- Looking for pthread.h - found
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+-- Found Threads: TRUE  
+CMake Error: The current CMakeCache.txt directory /Users/rallso/Dropbox (Politecnico Di Torino Studenti)/Git/calendar-todo-list-cpp/cmake-build-debug/config.tests/static_link_order/CMakeCache.txt is different than the directory /Users/rallso/CLionProjects/QtNetWOAuth2/cmake-build-debug/config.tests/static_link_order where CMakeCache.txt was created. This may result in binaries being created in the wrong place. If you are not sure, reedit the CMakeCache.txt
+CMake Error at /opt/homebrew/lib/cmake/Qt6/QtPublicTargetHelpers.cmake:36 (try_compile):
+  Failed to configure test project build system.
+Call Stack (most recent call first):
+  /opt/homebrew/lib/cmake/Qt6/QtPublicTargetHelpers.cmake:78 (__qt_internal_static_link_order_public_test)
+  /opt/homebrew/lib/cmake/Qt6/Qt6Config.cmake:244 (__qt_internal_check_link_order_matters)
+  /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.20/Modules/CMakeFindDependencyMacro.cmake:47 (find_package)
+  /opt/homebrew/lib/cmake/Qt6Core/Qt6CoreDependencies.cmake:8 (find_dependency)
+  /opt/homebrew/lib/cmake/Qt6Core/Qt6CoreConfig.cmake:40 (include)
+  /opt/homebrew/lib/cmake/Qt6/Qt6Config.cmake:176 (find_package)
+  CMakeLists.txt:10 (find_package)
+
+
+CMake Warning at /opt/homebrew/lib/cmake/Qt6/Qt6Config.cmake:176 (find_package):
+  Found package configuration file:
+
+    /opt/homebrew/lib/cmake/Qt6Core/Qt6CoreConfig.cmake
+
+  but it set Qt6Core_FOUND to FALSE so package "Qt6Core" is considered to be
+  NOT FOUND.
+Call Stack (most recent call first):
+  CMakeLists.txt:10 (find_package)
+
+
+-- Configuring incomplete, errors occurred!
+See also "/Users/rallso/Dropbox (Politecnico Di Torino Studenti)/Git/calendar-todo-list-cpp/cmake-build-debug/CMakeFiles/CMakeOutput.log".
+See also "/Users/rallso/Dropbox (Politecnico Di Torino Studenti)/Git/calendar-todo-list-cpp/cmake-build-debug/CMakeFiles/CMakeError.log".
