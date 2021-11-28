@@ -21,14 +21,69 @@
 CalendarClient_CalDAV::CalendarClient_CalDAV(QObject *parent)
     : CalendarClient(parent) {
   _calendarType = E_CALENDAR_CALDAV;
-  _dataStream = NULL;
-  _pUploadReply = NULL;
+  _auth = E_AUTH_UPWD;
+  _dataStream = nullptr;
+  _pUploadReply = nullptr;
+  _au = nullptr;
 
   _username = "";
   _password = "";
   _hostURL = "";
   _syncToken = "";
   _displayName = "";
+  _cTag = "";
+  _year = 1;
+  _month = 1;
+  _yearToBeRequested = QDate::currentDate().year();
+  ;
+  _monthToBeRequested = QDate::currentDate().month();
+  lastSyncYear = -1;
+  lastSyncMonth = -1;
+  _bRecoveredFromError = false;
+
+  setupStateMachine();
+}
+
+CalendarClient_CalDAV::CalendarClient_CalDAV(const QString &username,
+                                             const QString &password,
+                                             const QString &hostURL,
+                                             const QString &displayName,
+                                             QObject *parent)
+    : CalendarClient(hostURL, displayName, parent), _username(username),
+      _password(password) {
+  _calendarType = E_CALENDAR_CALDAV;
+  _auth = E_AUTH_UPWD;
+  _dataStream = nullptr;
+  _pUploadReply = nullptr;
+  _au = nullptr;
+
+  _syncToken = "";
+  _cTag = "";
+  _year = 1;
+  _month = 1;
+  _yearToBeRequested = QDate::currentDate().year();
+  ;
+  _monthToBeRequested = QDate::currentDate().month();
+  lastSyncYear = -1;
+  lastSyncMonth = -1;
+  _bRecoveredFromError = false;
+
+  setupStateMachine();
+}
+
+CalendarClient_CalDAV::CalendarClient_CalDAV(
+    const QString &filepath, const QString &hostURL, const QString &displayName,
+    const QString &scope, const QString &username, QObject *parent)
+    : CalendarClient(hostURL, displayName, parent) {
+  _calendarType = E_CALENDAR_CALDAV;
+  _auth = E_AUTH_TOKEN;
+  _dataStream = nullptr;
+  _pUploadReply = nullptr;
+  _au = new (std::nothrow) OAuth(filepath, scope);
+
+  _username = "";
+  _password = "";
+  _syncToken = "";
   _cTag = "";
   _year = 1;
   _month = 1;
@@ -117,7 +172,7 @@ void CalendarClient_CalDAV::setMonth(const int &month) {
 
 void CalendarClient_CalDAV::handleUploadHTTPError(void) {
   _uploadRequestTimeoutTimer.stop();
-  if (NULL != _pUploadReply) {
+  if (nullptr != _pUploadReply) {
     QDEBUG << _displayName << ": "
            << "HTTP upload error:" << _pUploadReply->errorString();
     emit error(_pUploadReply->errorString());
@@ -134,7 +189,7 @@ void CalendarClient_CalDAV::handleUploadFinished(void) {
   QDEBUG << _displayName << ": "
          << "HTTP upload finished";
 
-  if (NULL != _pUploadReply) {
+  if (nullptr != _pUploadReply) {
     std::cout << _displayName.toStdString() << ": "
               << "received:\r\n"
               << _pUploadReply->readAll().toStdString();
@@ -150,7 +205,7 @@ void CalendarClient_CalDAV::handleHTTPError(void) {
   _state = E_STATE_ERROR;
   emit syncStateChanged(_state);
   _requestTimeoutTimer.stop();
-  if (NULL != _pReply) {
+  if (nullptr != _pReply) {
     QDEBUG << _displayName << ": "
            << "HTTP request error:" << _pReply->errorString();
     emit error(_pReply->errorString());
@@ -172,7 +227,7 @@ void CalendarClient_CalDAV::handleRequestSyncTokenFinished(void) {
   QDEBUG << _displayName << ": "
          << "HTTP RequestSyncToken finished";
 
-  if (NULL != _pReply) {
+  if (nullptr != _pReply) {
     QDomDocument doc;
 
     doc.setContent(_pReply);
@@ -296,7 +351,7 @@ void CalendarClient_CalDAV::handleRequestChangesFinished(void) {
   QDEBUG << _displayName << ": "
          << "HTTP RequestChanges finished";
 
-  if (NULL != _pReply) {
+  if (nullptr != _pReply) {
     QDomDocument doc;
 
     // QDEBUG << _displayName << ": " << "received:\r\n" <<
@@ -467,24 +522,10 @@ void CalendarClient_CalDAV::setupStateMachine(void) {
   pStateMachine->start();
 }
 
-/***** End of: protfunct Protected functions ****************************/ /*@}*/
-
-/******************************************************************************/
-/* Private functions                                                          */
-/*************************/
-/*!@addtogroup privfunct Private functions   */ /*@{*/
-/***** End of: privfunct Private functions ******************************/ /*@}*/
-
-/******************************************************************************/
-/* Public slots                                                               */
-/*************************/
-/*!@addtogroup pubslots Public slots         */ /*@{*/
-/***** End of: pubslots Public slots ************************************/ /*@}*/
-
-/******************************************************************************/
-/* Protected slots                                                            */
-/*********************/
-/*!@addtogroup protslots Protected slots         */ /*@{*/
+CalendarClient_CalDAV::E_CalendarAuth
+CalendarClient_CalDAV::getClientAuth(void) {
+  return _auth;
+}
 
 void CalendarClient_CalDAV::handleStateWaitingEntry(void) {
   QDEBUG << _displayName << ": "
@@ -528,7 +569,7 @@ void CalendarClient_CalDAV::handleStateRequestingSyncTokenExit(void) {
 void CalendarClient_CalDAV::handleStateRequestingChangesEntry(void) {
   QDEBUG << _displayName << ": "
          << "entering pStateRequestingChanges";
-  sendRequestChanges();
+  getChangedEvent();
 }
 
 void CalendarClient_CalDAV::handleStateRequestingChangesExit(void) {

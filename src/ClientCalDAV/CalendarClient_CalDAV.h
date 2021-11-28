@@ -28,12 +28,22 @@
 #include <iostream>
 
 #include "../CalendarEvent/CalendarEvent.h"
+#include "../OAuth2/OAuth.h"
 #include "CalendarClient.h"
 
 class CalendarClient_CalDAV : public CalendarClient {
   Q_OBJECT
 
 public:
+  typedef enum {
+    E_AUTH_UPWD, // Auth based on username and password
+    E_AUTH_TOKEN // Auth based on OAuth2
+  } E_CalendarAuth;
+
+  Q_ENUM(E_CalendarAuth)
+
+  Q_PROPERTY(
+      E_CalendarAuth clientAuth READ getClientAuth NOTIFY clientAuthChanged)
   Q_PROPERTY(int year READ getYear WRITE setYear NOTIFY yearChanged)
   Q_PROPERTY(int month READ getMonth WRITE setMonth NOTIFY monthChanged)
   Q_PROPERTY(QString username READ getUsername WRITE setUsername NOTIFY
@@ -41,7 +51,15 @@ public:
   Q_PROPERTY(QString password READ getPassword WRITE setPassword NOTIFY
                  passwordChanged)
 
-  CalendarClient_CalDAV(QObject *parent = NULL);
+  CalendarClient_CalDAV(QObject *parent = nullptr);
+  CalendarClient_CalDAV(const QString &username, const QString &password,
+                        const QString &hostURL, const QString &displayName,
+                        QObject *parent = nullptr);
+  CalendarClient_CalDAV(
+      const QString &filepath, const QString &hostURL,
+      const QString &displayName,
+      const QString &scope = "https://www.googleapis.com/auth/calendar",
+      const QString &username = "", QObject *parent = nullptr);
   ~CalendarClient_CalDAV();
 
 protected:
@@ -62,23 +80,29 @@ protected:
   int lastSyncYear;
   int lastSyncMonth;
 
+  E_CalendarAuth _auth;
+
   int _yearToBeRequested;
   int _monthToBeRequested;
   int _year;
   int _month;
   QString _username;
   QString _password;
+  QString _accessToken;
 
   QString _cTag;
   QString _syncToken;
 
   bool _bRecoveredFromError;
 
+  OAuth *_au;
+
   QNetworkAccessManager _uploadNetworkManager;
   QNetworkReply *_pUploadReply;
   QTimer _uploadRequestTimeoutTimer;
 
 signals:
+  void clientAuthChanged(E_CalendarAuth clientAuth);
   void yearChanged(const int &year);
   void monthChanged(const int &month);
   void usernameChanged(QString username);
@@ -93,6 +117,8 @@ signals:
                                 // the year/month since the last synchronization
 
 public slots:
+
+  E_CalendarAuth getClientAuth(void);
 
   int getYear() const;
   void setYear(const int &year);

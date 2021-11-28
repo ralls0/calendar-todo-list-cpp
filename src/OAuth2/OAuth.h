@@ -51,8 +51,8 @@ signals:
 
 public:
   OAuth();
-  OAuth(const QString &scope, const QString &authUri, const QString &clientId,
-        const QUrl &tokenUri, const QString &clientSecret, const quint16 _port);
+  OAuth(const QString &authUri, const QString &clientId, const QUrl &tokenUri,
+        const QString &clientSecret, const quint16 _port, const QString &scope);
   OAuth(const QString &filepath, const QString &scope);
   ~OAuth();
   void parseJson(const QString &filepath);
