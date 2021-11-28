@@ -31,7 +31,7 @@
 #define CALENDAR_OVERWRITE_COLOR 0
 
 /**
- * Class
+ * @class       CalendarClient
  *
  * @brief       Classe astratta per tutti i calendari.
  *              Consente di ottenere un oggetto CalendarEvent da una
@@ -77,11 +77,13 @@ public:
                  displayNameChanged)
 
   // Richiesta di timeout in ms per l'accesso alle sorgenti del calendario
-  // remoto (default: 2000ms) FIXME firefox usa 30s -> 30_000ms
+  // remoto (default: 32000ms)
   Q_PROPERTY(int requestTimeoutMS READ getRequestTimeoutMS WRITE
                  setRequestTimeoutMS NOTIFY requestTimeoutMSChanged)
 
-  CalendarClient(QObject *parent = NULL);
+  CalendarClient(QObject *parent = nullptr);
+  CalendarClient(const QString &hostURL, const QString &displayName,
+                 QObject *parent = nullptr);
   ~CalendarClient();
 
   /**

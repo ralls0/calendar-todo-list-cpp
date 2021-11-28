@@ -19,8 +19,8 @@
 #endif
 
 CalendarClient::CalendarClient(QObject *parent) : QObject(parent) {
-  _pReply = NULL;
-  _dataStream = NULL;
+  _pReply = nullptr;
+  _dataStream = nullptr;
   _hostURL = "";
   _displayName = "";
 
@@ -34,6 +34,29 @@ CalendarClient::CalendarClient(QObject *parent) : QObject(parent) {
    */
   _synchronizationTimer.setSingleShot(true);
   _synchronizationTimer.setInterval(60000);
+
+  // Creazione di un colore generato in modo randomico
+  _color = QColor(rand() & 0xFF, rand() & 0xFF, rand() & 0xFF).name();
+}
+
+CalendarClient::CalendarClient(const QString &hostURL,
+                               const QString &displayName, QObject *parent)
+    : QObject(parent) {
+  _pReply = nullptr;
+  _dataStream = nullptr;
+  _hostURL = hostURL;
+  _displayName = displayName;
+
+  _requestTimeoutMS = 32000;
+  _requestTimeoutTimer.setSingleShot(true);
+
+  /*
+   * Il timer è impostato su singolo scatto,
+   * quindi non è necessario interromperlo
+   * nel caso in cui la sincronizzazione non sia riuscita
+   */
+  _synchronizationTimer.setSingleShot(true);
+  _synchronizationTimer.setInterval(64000);
 
   // Creazione di un colore generato in modo randomico
   _color = QColor(rand() & 0xFF, rand() & 0xFF, rand() & 0xFF).name();
@@ -805,19 +828,6 @@ bool CalendarClient::isDateExcluded(const QString strExdates,
 
   return bRet;
 }
-
-/***** End of: protfunct Protected functions ****************************/ /*@}*/
-
-/******************************************************************************/
-/* Private functions                                                          */
-/*************************/
-/*!@addtogroup privfunct Private functions   */ /*@{*/
-/***** End of: privfunct Private functions ******************************/ /*@}*/
-
-/******************************************************************************/
-/* Public slots                                                               */
-/*************************/
-/*!@addtogroup pubslots Public slots         */ /*@{*/
 
 CalendarClient::E_CalendarState CalendarClient::getSyncState(void) {
   return _state;

@@ -20,9 +20,9 @@
 
 OAuth::OAuth() { _google = new (std::nothrow) QOAuth2AuthorizationCodeFlow(); }
 
-OAuth::OAuth(const QString &scope, const QString &authUri,
-             const QString &clientId, const QUrl &tokenUri,
-             const QString &clientSecret, const quint16 _port) {
+OAuth::OAuth(const QString &authUri, const QString &clientId,
+             const QUrl &tokenUri, const QString &clientSecret,
+             const quint16 _port, const QString &scope) {
   _google = new (std::nothrow) QOAuth2AuthorizationCodeFlow();
   _google->setScope(_scope);
   _google->setAuthorizationUrl(_authUri);
