@@ -1,0 +1,35 @@
+#!/bin/bash
+
+PPWD=$PWD
+LPWD=$PWD
+if [ $# -eq 2 ]
+then 
+  LPWD=$1
+  PPWD=$2
+fi
+
+FILES="$(echo "LPWD" | ls)"
+
+for entry in $FILES
+do
+  if [ -f "$entry" ]
+  then
+    echo "[i] Checking if $entry file is a cpp or h file..."
+    ent=$(echo "$entry" | tr "." " ") 
+    read -ra nt <<< $ent
+    echo "[+]     name: ${nt[0]}, type: ${nt[1]}"
+    if [ "${nt[1]}" = "c" ] || [ "${nt[1]}" = "cpp" ] || [ "${nt[1]}" = "h" ]
+    then
+      echo "[i] Processing $entry file..."
+      clang-format $entry > ./tmp.${nt[1]}
+      cat ./tmp.${nt[1]} > $entry
+      rm ./tmp.${nt[1]}
+    else
+      echo "[w] $entry is not a cpp file"
+    fi
+  else
+    echo "[i] $entry is a directory. Starting to process its file..."
+    (cd ./$entry; "$PPWD"/cpp-prettier "$LPWD/$entry" "$PPWD")
+  fi
+done
+
