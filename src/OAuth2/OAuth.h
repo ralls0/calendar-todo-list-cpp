@@ -28,26 +28,15 @@
  */
 
 class OAuth : public QObject {
-
   Q_OBJECT
 
-private:
-  QOAuth2AuthorizationCodeFlow *_google;
-  QString _scope;
-  QUrl _authUri;
-  QString _clientId;
-  QUrl _tokenUri;
-  QString _clientSecret;
-  QUrl _redirectUri;
-  quint16 _port;
-  QJsonDocument _document;
-  QString _accessToken;
-
 public slots:
-  void onGoogleGranted();
+  void onGoogleGranted(void);
+  void startAuth(void);
 
 signals:
   void accessTokenChanged(QString accessToken);
+  void dataParsed(void);
 
 public:
   OAuth();
@@ -55,8 +44,6 @@ public:
         const QString &clientSecret, const quint16 _port, const QString &scope);
   OAuth(const QString &filepath, const QString &scope);
   ~OAuth();
-  void parseJson(const QString &filepath);
-  void startAuth();
 
   QString getScope() const;
   void setScope(const QString &scope);
@@ -74,6 +61,20 @@ public:
   void setPort(const int port);
   QString getAccessToken() const;
   QString toString();
+
+private:
+  void parseJson(const QString &filepath);
+
+  QOAuth2AuthorizationCodeFlow *_google;
+  QString _scope;
+  QUrl _authUri;
+  QString _clientId;
+  QUrl _tokenUri;
+  QString _clientSecret;
+  QUrl _redirectUri;
+  quint16 _port;
+  QJsonDocument _document;
+  QString _accessToken;
 };
 
 #endif // CALENDAR_TODO_LIST_CPP_OAUTH_H

@@ -9,6 +9,15 @@
 
 #include "NewCalendarDialog.h"
 
+#define DEBUG_OAUTH 1
+#if DEBUG_OAUTH
+#define QDEBUG qDebug()
+#else
+#define QDEBUG                                                                 \
+  if (0)                                                                       \
+  qDebug()
+#endif
+
 NewCalendarDialog::NewCalendarDialog(QWidget *parent) : QDialog(parent) {
 
   createBaseInfoGroupBox();
@@ -60,7 +69,7 @@ void NewCalendarDialog::createAuthGroupBox() {
   e_basic = new QWidget;
   e_oauth = new QWidget;
 
-  lbl_username = new QLabel(tr("&Username:"));
+  lbl_username = new QLabel(tr("Username:"));
   le_username = new QLineEdit;
   lbl_username->setBuddy(le_username);
 
@@ -104,9 +113,9 @@ void NewCalendarDialog::createAuthGroupBox() {
 }
 
 void NewCalendarDialog::createButtonGroupBox() {
-  btn_cancel = new QPushButton(tr("&Cancel"));
+  btn_cancel = new QPushButton(tr("Cancel"));
   btn_cancel->setCheckable(true);
-  btn_add = new QPushButton(tr("&Add"));
+  btn_add = new QPushButton(tr("Add"));
   btn_add->setCheckable(true);
 
   connect(btn_add, &QPushButton::clicked, this, &NewCalendarDialog::onAddClick);
@@ -129,8 +138,14 @@ void NewCalendarDialog::fileClientSecretChanged(const QString &path) {
 }
 
 void NewCalendarDialog::onAddClick(void) {
-  emit newCalendar(lbl_displayName->text(), lbl_hostURL->text(),
-                   rb_basicAuth->isChecked(), lbl_username->text(),
-                   lbl_password->text(), lbl_clientSecret->text());
+  QDEBUG << "[i] adding new calendar with displayName:"
+         << le_displayName->text() << "hostURL:" << le_hostURL->text()
+         << "basicAuth:" << rb_basicAuth->isChecked()
+         << "username:" << le_username->text()
+         << "password:" << le_password->text()
+         << "clientSecret:" << le_clientSecret->text() << "\n";
+  emit newCalendar(le_displayName->text(), le_hostURL->text(),
+                   rb_basicAuth->isChecked(), le_username->text(),
+                   le_password->text(), le_clientSecret->text());
   this->close();
 }

@@ -18,7 +18,7 @@
   qDebug()
 #endif
 
-OAuth::OAuth() { _google = new (std::nothrow) QOAuth2AuthorizationCodeFlow(); }
+OAuth::OAuth() { _google = new QOAuth2AuthorizationCodeFlow; }
 
 OAuth::OAuth(const QString &authUri, const QString &clientId,
              const QUrl &tokenUri, const QString &clientSecret,
@@ -44,8 +44,7 @@ OAuth::OAuth(const QString &authUri, const QString &clientId,
    * Create and assign a QOAuthHttpServerReplyHandler as the reply handler
    * of the QOAuth2AuthorizationCodeFlow object
    */
-  auto replyHandler =
-      new (std::nothrow) QOAuthHttpServerReplyHandler(_port, this);
+  auto replyHandler = new QOAuthHttpServerReplyHandler(_port);
   _google->setReplyHandler(replyHandler);
 
   /*
@@ -56,10 +55,12 @@ OAuth::OAuth(const QString &authUri, const QString &clientId,
           &QDesktopServices::openUrl);
   connect(_google, &QOAuth2AuthorizationCodeFlow::granted, this,
           &OAuth::onGoogleGranted);
+  connect(this, &OAuth::dataParsed, this, &OAuth::startAuth);
+  emit dataParsed();
 }
 
 OAuth::OAuth(const QString &filepath, const QString &scope) : _scope(scope) {
-  _google = new (std::nothrow) QOAuth2AuthorizationCodeFlow(this);
+  _google = new QOAuth2AuthorizationCodeFlow;
   _google->setScope(_scope);
 
   parseJson(filepath);
@@ -83,8 +84,7 @@ OAuth::OAuth(const QString &filepath, const QString &scope) : _scope(scope) {
    * Create and assign a QOAuthHttpServerReplyHandler as the reply handler
    * of the QOAuth2AuthorizationCodeFlow object
    */
-  auto replyHandler =
-      new (std::nothrow) QOAuthHttpServerReplyHandler(_port, this);
+  auto replyHandler = new QOAuthHttpServerReplyHandler(_port);
   _google->setReplyHandler(replyHandler);
 
   /*
@@ -95,6 +95,8 @@ OAuth::OAuth(const QString &filepath, const QString &scope) : _scope(scope) {
           &QDesktopServices::openUrl);
   connect(_google, &QOAuth2AuthorizationCodeFlow::granted, this,
           &OAuth::onGoogleGranted);
+  connect(this, &OAuth::dataParsed, this, &OAuth::startAuth);
+  emit dataParsed();
 }
 
 OAuth::~OAuth() { delete _google; }
@@ -147,6 +149,7 @@ void OAuth::parseJson(const QString &filepath) {
   /*
    * Parse the JSON to get the settings and information needed.
    */
+  QDEBUG << "[i] Parse the JSON to get the settings and information needed\n";
   _document = QJsonDocument::fromJson(file.readAll());
   const auto object = _document.object();
   const auto settingsObject = object["web"].toObject();
