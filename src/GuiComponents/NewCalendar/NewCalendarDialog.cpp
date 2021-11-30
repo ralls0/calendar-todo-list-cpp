@@ -138,7 +138,7 @@ void NewCalendarDialog::fileClientSecretChanged(const QString &path) {
 }
 
 void NewCalendarDialog::onAddClick(void) {
-  QDEBUG << "[i] adding new calendar with displayName:"
+  QDEBUG << "[i] Adding new calendar with displayName:"
          << le_displayName->text() << "hostURL:" << le_hostURL->text()
          << "basicAuth:" << rb_basicAuth->isChecked()
          << "username:" << le_username->text()

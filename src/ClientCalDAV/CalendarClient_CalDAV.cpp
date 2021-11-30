@@ -80,6 +80,8 @@ CalendarClient_CalDAV::CalendarClient_CalDAV(
   _dataStream = nullptr;
   _pUploadReply = nullptr;
   _au = new (std::nothrow) OAuth(filepath, scope);
+  connect(_au, &OAuth::accessTokenChanged, this,
+          &CalendarClient_CalDAV::setAccessToken);
 
   _username = "";
   _password = "";
@@ -104,6 +106,10 @@ CalendarClient_CalDAV::~CalendarClient_CalDAV() {
 int CalendarClient_CalDAV::getYear() const { return _year; }
 
 int CalendarClient_CalDAV::getMonth() const { return _month; }
+
+void CalendarClient_CalDAV::setAccessToken(QString accessToken) {
+  _accessToken = accessToken;
+}
 
 void CalendarClient_CalDAV::setUsername(const QString username) {
   _username = username;

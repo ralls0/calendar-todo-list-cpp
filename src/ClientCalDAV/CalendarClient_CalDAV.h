@@ -119,6 +119,7 @@ signals:
 public slots:
 
   E_CalendarAuth getClientAuth(void);
+  void setAccessToken(QString accessToken);
 
   int getYear() const;
   void setYear(const int &year);

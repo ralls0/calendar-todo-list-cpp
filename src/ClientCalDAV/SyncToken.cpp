@@ -26,8 +26,14 @@ void CalendarClient_CalDAV::sendRequestSyncToken(void) {
     _pReply->disconnect();
   }
 
-  QString authorization = "Basic ";
-  authorization.append(encodeBase64(_username + ":" + _password));
+  QString authorization = "";
+  if (_auth == E_AUTH_UPWD) {
+    authorization.append("Basic ");
+    authorization.append(encodeBase64(_username + ":" + _password));
+  } else {
+    authorization.append("Bearer ");
+    authorization.append(_accessToken);
+  }
 
   QBuffer *buffer = new QBuffer();
 

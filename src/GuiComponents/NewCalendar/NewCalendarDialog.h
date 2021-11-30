@@ -60,13 +60,12 @@ private:
   QPushButton *btn_clientSecret;
   QFileDialog *fd_clientSecret;
 
-  QDialogButtonBox *_buttonBox;
-
   QGroupBox *_groupBox;
   QHBoxLayout *_vbox;
   QRadioButton *rb_basicAuth;
   QRadioButton *rb_oAuth;
 
+  QDialogButtonBox *_buttonBox;
   QPushButton *btn_cancel;
   QPushButton *btn_add;
 

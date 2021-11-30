@@ -42,6 +42,8 @@ add_executable(calendar_todo_list_cpp
         src/GuiComponents/NewCalendar/WindowNewCalendar.cpp
         src/GuiComponents/NewCalendar/NewCalendarDialog.h
         src/GuiComponents/NewCalendar/NewCalendarDialog.cpp
+        src/GuiComponents/NewEvent/NewEventDialog.cpp
+        src/GuiComponents/NewEvent/NewEventDialog.h
         )
 target_link_libraries(calendar_todo_list_cpp
         Qt::Core
