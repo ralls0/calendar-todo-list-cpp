@@ -33,8 +33,14 @@ void CalendarClient_CalDAV::deleteEvent(QString href) {
     _pUploadReply->disconnect();
   }
 
-  QString authorization = "Basic ";
-  authorization.append(encodeBase64(_username + ":" + _password));
+  QString authorization = "";
+  if (_auth == E_AUTH_UPWD) {
+    authorization.append("Basic ");
+    authorization.append(encodeBase64(_username + ":" + _password));
+  } else {
+    authorization.append("Bearer ");
+    authorization.append(_accessToken);
+  }
 
   QString filename = QUrl(href).fileName();
 

@@ -6,7 +6,7 @@
  * @brief
  *
  */
-
+// https://apidata.googleusercontent.com/caldav/v2/pdsmariorossi@gmail.com/events/
 #include "WindowNewCalendar.h"
 
 #define DEBUG_OAUTH 1
@@ -20,9 +20,11 @@
 
 WindowNewCalendar::WindowNewCalendar(QWidget *parent) : QWidget(parent) {
   _newCalendarDialog = new NewCalendarDialog;
+  _newEventDialog = new NewEventDialog;
   _cals = nullptr;
   connect(_newCalendarDialog, &NewCalendarDialog::newCalendar, this,
           &WindowNewCalendar::createNewCalendar);
+
   createPreviewGroupBox();
 
   QGridLayout *layout = new QGridLayout;
@@ -50,6 +52,8 @@ void WindowNewCalendar::createNewCalendar(const QString &displayName,
         clientSecret, hostURL, displayName,
         "https://www.googleapis.com/auth/calendar", "Rallso", nullptr);
   }
+  connect(_newEventDialog, &NewEventDialog::newEvent, _cals,
+          &CalendarClient_CalDAV::saveEvent);
 }
 
 void WindowNewCalendar::createPreviewGroupBox() {
@@ -59,7 +63,11 @@ void WindowNewCalendar::createPreviewGroupBox() {
   connect(btn_addCalendar, &QPushButton::clicked, _newCalendarDialog,
           &QWidget::show);
 
+  QPushButton *btn_addEvent = new QPushButton("Add Event", nullptr);
+  connect(btn_addEvent, &QPushButton::clicked, _newEventDialog, &QWidget::show);
+
   _previewLayout = new QGridLayout;
   _previewLayout->addWidget(btn_addCalendar, 0, 0, Qt::AlignCenter);
+  _previewLayout->addWidget(btn_addEvent, 1, 0, Qt::AlignCenter);
   _previewGroupBox->setLayout(_previewLayout);
 }

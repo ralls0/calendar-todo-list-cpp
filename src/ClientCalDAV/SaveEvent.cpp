@@ -9,7 +9,7 @@
 
 #include "CalendarClient_CalDAV.h"
 
-#define DEBUG_CALENDARCLIENT_CALDAV 0
+#define DEBUG_CALENDARCLIENT_CALDAV 1
 #if DEBUG_CALENDARCLIENT_CALDAV
 #define QDEBUG qDebug()
 #else
@@ -33,26 +33,31 @@ void CalendarClient_CalDAV::saveEvent(QString uid, QString filename,
     _pUploadReply->disconnect();
   }
 
-  std::cout << "non sono abbortito\n";
-  QString authorization = "Basic ";
-  authorization.append(encodeBase64(_username + ":" + _password));
+  QString authorization = "";
+  if (_auth == E_AUTH_UPWD) {
+    authorization.append("Basic ");
+    authorization.append(encodeBase64(_username + ":" + _password));
+  } else {
+    authorization.append("Bearer ");
+    authorization.append(_accessToken);
+  }
+
+  QDEBUG << _displayName << ": "
+         << "auth" << authorization;
 
   QBuffer *buffer = new QBuffer();
 
   buffer->open(QIODevice::ReadWrite);
 
   if (uid.isEmpty()) {
-    std::cout << "uid empty\n";
     uid = QDateTime::currentDateTime().toString("yyyyMMdd-HHMM-00ss") +
           "-0000-" + startDateTime.toString("yyyyMMddHHMM");
   }
 
   if (filename.isEmpty()) {
-    std::cout << "filename empty\n";
     filename = uid + ".ics";
   }
 
-  std::cout << "creo stringa di richiesta\n";
   QString requestString =
       "BEGIN:VCALENDAR\r\n"
       "BEGIN:VEVENT\r\n"
@@ -81,19 +86,15 @@ void CalendarClient_CalDAV::saveEvent(QString uid, QString filename,
       "TRANSP:OPAQUE\r\n";
 
   if (!rrule.isEmpty()) {
-    std::cout << "rrule non e' empty\n";
     requestString.append("RRULE:" + rrule + "\r\n");
   }
 
   if (!exdate.isEmpty()) {
-    std::cout << "exdata non e' empty\n";
     requestString.append("EXDATE:" + exdate + "\r\n");
   }
 
-  std::cout << "appendo la fine\n";
   requestString.append("END:VEVENT\r\nEND:VCALENDAR");
 
-  std::cout << "prendo la dime del buffer\n";
   int buffersize = buffer->write(requestString.toUtf8());
   buffer->seek(0);
   buffer->size();
@@ -101,7 +102,6 @@ void CalendarClient_CalDAV::saveEvent(QString uid, QString filename,
   QByteArray contentlength;
   contentlength.append(QString::number(buffersize).toUtf8());
 
-  std::cout << "creo richiesta header\n";
   QNetworkRequest request;
   request.setUrl(QUrl(_hostURL.toString() + filename));
   request.setRawHeader("User-Agent", "CalendarClient_CalDAV");
@@ -111,12 +111,10 @@ void CalendarClient_CalDAV::saveEvent(QString uid, QString filename,
   request.setRawHeader("Content-Type", "text/calendar; charset=utf-8");
   request.setRawHeader("Content-Length", contentlength);
 
-  std::cout << "start ssl config\n";
   QSslConfiguration conf = request.sslConfiguration();
   conf.setPeerVerifyMode(QSslSocket::VerifyNone);
   request.setSslConfiguration(conf);
 
-  std::cout << "put _pUploadReply\n";
   _pUploadReply = _uploadNetworkManager.put(request, buffer);
 
   if (NULL != _pUploadReply) {

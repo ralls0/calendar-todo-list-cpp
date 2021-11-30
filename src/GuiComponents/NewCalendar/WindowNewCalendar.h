@@ -25,6 +25,7 @@
 #include <iostream>
 
 #include "../../ClientCalDAV/CalendarClient_CalDAV.h"
+#include "../NewEvent/NewEventDialog.h"
 #include "NewCalendarDialog.h"
 
 class WindowNewCalendar : public QWidget {
@@ -44,6 +45,7 @@ private:
   QGroupBox *_previewGroupBox;
   QGridLayout *_previewLayout;
   NewCalendarDialog *_newCalendarDialog;
+  NewEventDialog *_newEventDialog;
 
   CalendarClient_CalDAV *_cals;
 };
