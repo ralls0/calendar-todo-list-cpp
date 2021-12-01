@@ -234,13 +234,13 @@ void NewEventDialog::onSaveClick(void) {
     if (rule == "Non si ripete")
       rrule = "";
     if (rule == "Ogni giorno")
-      rrule = "FREQ=DAILY";
-    if (rule == "Ogni giorno")
-      rrule = "FREQ=WEEKLY";
-    if (rule == "Ogni giorno")
-      rrule = "FREQ=MONTHLY";
-    if (rule == "Ogni giorno")
-      rrule = "FREQ=YEARLY";
+      rrule = "FREQ=DAILY;INTERVAL=1";
+    if (rule == "Ogni settimana")
+      rrule = "FREQ=WEEKLY;INTERVAL=1";
+    if (rule == "Ogni mese")
+      rrule = "FREQ=MONTHLY;INTERVAL=1";
+    if (rule == "Ogni anno")
+      rrule = "FREQ=YEARLY;INTERVAL=1";
     QDateTime startDateTime = dte_startDateE->dateTime();
     QDateTime endDateTime = dte_endDateE->dateTime();
     emit newEvent(uid, filename, summary, location, description, rrule, exdate,
