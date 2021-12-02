@@ -48,13 +48,7 @@ public:
     E_STATE_ERROR // Errore nel calendario
   } E_CalendarState;
 
-  typedef enum {
-    E_CALENDAR_ICS,   // event source è un file iCalendar locale or remoto
-    E_CALENDAR_CALDAV // event source è un server CalDAV
-  } E_CalendarType;
-
   Q_ENUM(E_CalendarState)
-  Q_ENUM(E_CalendarType)
 
   // Colore del CalendarClient per la GUI
   Q_PROPERTY(QString color READ getColor WRITE setColor NOTIFY colorChanged)
@@ -62,9 +56,6 @@ public:
   // Sincronizzazione dello stato del CalendarClient
   Q_PROPERTY(
       E_CalendarState syncState READ getSyncState NOTIFY syncStateChanged)
-
-  // Tipo di calendario; i.e. qual è la fonte degli eventi del calendario
-  Q_PROPERTY(E_CalendarType calendarType READ getCalendarType CONSTANT)
 
   // URL della da cui vengono recuperati gli eventi del calendario
   // (percorso del file iCalendar, URL del server Caldav, ...)
@@ -105,7 +96,6 @@ public:
 protected:
   QString _color;
   E_CalendarState _state;
-  E_CalendarType _calendarType;
   QUrl _hostURL;
   QString _displayName;
 
@@ -167,7 +157,6 @@ signals:
   void colorChanged(QString color);
   // emesso quando il calendario è entrato in un nuovo stato di sincronizzazione
   void syncStateChanged(E_CalendarState syncState);
-  void calendarTypeChanged(E_CalendarType calendarType);
   void hostURLChanged(QString hostURL);
   void displayNameChanged(QString hostURL);
 
@@ -212,7 +201,6 @@ public slots:
   void setColor(const QString &color);
 
   E_CalendarState getSyncState(void);
-  E_CalendarType getCalendarType(void);
 
   virtual bool setHostURL(const QUrl hostURL);
   QString getHostURL(void) const;

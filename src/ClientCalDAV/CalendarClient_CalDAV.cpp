@@ -9,7 +9,7 @@
 
 #include "CalendarClient_CalDAV.h"
 
-#define DEBUG_CALENDARCLIENT_CALDAV 0
+#define DEBUG_CALENDARCLIENT_CALDAV 1
 #if DEBUG_CALENDARCLIENT_CALDAV
 #define QDEBUG qDebug()
 #else
@@ -20,7 +20,6 @@
 
 CalendarClient_CalDAV::CalendarClient_CalDAV(QObject *parent)
     : CalendarClient(parent) {
-  _calendarType = E_CALENDAR_CALDAV;
   _auth = E_AUTH_UPWD;
   _dataStream = nullptr;
   _pUploadReply = nullptr;
@@ -51,7 +50,6 @@ CalendarClient_CalDAV::CalendarClient_CalDAV(const QString &username,
                                              QObject *parent)
     : CalendarClient(hostURL, displayName, parent), _username(username),
       _password(password) {
-  _calendarType = E_CALENDAR_CALDAV;
   _auth = E_AUTH_UPWD;
   _dataStream = nullptr;
   _pUploadReply = nullptr;
@@ -75,7 +73,6 @@ CalendarClient_CalDAV::CalendarClient_CalDAV(
     const QString &filepath, const QString &hostURL, const QString &displayName,
     const QString &scope, const QString &username, QObject *parent)
     : CalendarClient(hostURL, displayName, parent) {
-  _calendarType = E_CALENDAR_CALDAV;
   _auth = E_AUTH_TOKEN;
   _dataStream = nullptr;
   _pUploadReply = nullptr;
@@ -109,7 +106,10 @@ int CalendarClient_CalDAV::getMonth() const { return _month; }
 
 void CalendarClient_CalDAV::setAccessToken(QString accessToken) {
   _accessToken = accessToken;
+  emit accessTokenChanged(_accessToken);
 }
+
+QString CalendarClient_CalDAV::getAccessToken() const { return _accessToken; }
 
 void CalendarClient_CalDAV::setUsername(const QString username) {
   _username = username;
@@ -222,6 +222,129 @@ void CalendarClient_CalDAV::handleHTTPError(void) {
   }
 }
 
+void CalendarClient_CalDAV::handleRequestCTagFinished(void) {
+  _requestTimeoutTimer.stop();
+
+  if (E_STATE_ERROR == _state) {
+    QDEBUG << _displayName << ": "
+           << "Error state - aborting";
+  }
+
+  QDEBUG << _displayName << ": "
+         << "HTTP RequestCTag finished";
+
+  if (nullptr != _pReply) {
+    QDomDocument doc;
+
+    QString reply = _pReply->readAll();
+    QDEBUG << _displayName << "Response: " << reply;
+    reply = reply.replace("<D:", "<")
+                .replace("</D:", "</")
+                .replace("<cs:", "<")
+                .replace("</cs:", "</");
+    QDEBUG << _displayName << ": "
+           << "Response replaced: " << reply;
+
+    doc.setContent(reply);
+
+    QString sDisplayName = "";
+    QString sCTag = "";
+    QString sStatus = "";
+
+    QDomNodeList response = doc.elementsByTagName("prop");
+    QDEBUG << _displayName << ": "
+           << "response.size() = " << response.size();
+    for (int i = 0; i < response.size(); i++) {
+      QDomNode n = response.item(i);
+      QDomElement displayname = n.firstChildElement("displayname");
+      if (!displayname.isNull()) {
+        QDEBUG << _displayName << ": "
+               << "DISPLAYNAME = " << displayname.text();
+        sDisplayName = displayname.text();
+      }
+      QDomElement ctag = n.firstChildElement("getctag");
+      if (!ctag.isNull()) {
+        QDEBUG << _displayName << ": "
+               << "CTAG = " << ctag.text();
+        sCTag = ctag.text();
+      }
+    }
+
+    response = doc.elementsByTagName("propstat");
+    for (int i = 0; i < response.size(); i++) {
+      QDomNode n = response.item(i);
+      QDomElement status = n.firstChildElement("status");
+      if (!status.isNull()) {
+        QDEBUG << _displayName << ": "
+               << "STATUS = " << status.text();
+        sStatus = status.text();
+      }
+    }
+
+    if ((!sCTag.isEmpty()) && (sStatus.endsWith("200 OK"))) {
+      bool bDisplayNameChanged = (_displayName != sDisplayName);
+      bool bCTagChanged = (_cTag != sCTag);
+
+      _displayName = sDisplayName;
+      _cTag = sCTag;
+
+      if (false != bDisplayNameChanged) {
+        emit displayNameChanged(_displayName);
+      }
+
+      if (false == bCTagChanged) {
+        QDEBUG << _displayName << ": "
+               << "ctag is unchanged";
+        // emit syncTokenHasNotChanged(); FIXME
+
+        if ((_year != lastSyncYear) || (_month != lastSyncMonth)) {
+          QDEBUG << _displayName << ": "
+                 << "year/month has changed from" << lastSyncYear
+                 << lastSyncMonth << "to" << _year << _month
+                 << "=> update required";
+          lastSyncMonth = _month;
+          lastSyncYear = _year;
+          emit calendarUpdateRequired();
+        } else {
+          QDEBUG << _displayName << ": "
+                 << "calendar has not changed, no update required";
+          _synchronizationTimer.start();
+          emit calendarHasNotChanged();
+        }
+      } else {
+        QDEBUG << _displayName << ": "
+               << "ctag has changed";
+        // emit syncTokenChanged(); FIXME
+        lastSyncMonth = _month;
+        lastSyncYear = _year;
+        emit calendarUpdateRequired();
+      }
+    } else {
+      QDEBUG << _displayName << ": "
+             << "ERROR: Receiving ctag failed. Status:" << sStatus;
+      emit error("Receiving ctag failed.");
+    }
+
+    /*
+    QDEBUG << _displayName << ": " << "\r\nHeaders:" <<
+    _pReply->rawHeaderList() << "\r\n";
+    if (_pReply->hasRawHeader("DAV")) {
+      QDEBUG << _displayName << ": " << "DAV:" << _pReply->rawHeader("DAV");
+    }
+    if (_pReply->hasRawHeader("Server")) {
+      QDEBUG << _displayName << ": " << "Server:" <<
+    _pReply->rawHeader("Server");
+    }
+    QDEBUG << _displayName << ": " << "Status code:" <<
+    _pReply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
+    */
+  } else {
+    QDEBUG << _displayName << ": "
+           << "ERROR: Invalid reply pointer when receiving ctag.";
+    emit error("Invalid reply pointer when receiving ctag.");
+  }
+}
+
 void CalendarClient_CalDAV::handleRequestSyncTokenFinished(void) {
   _requestTimeoutTimer.stop();
 
@@ -236,28 +359,38 @@ void CalendarClient_CalDAV::handleRequestSyncTokenFinished(void) {
   if (nullptr != _pReply) {
     QDomDocument doc;
 
-    doc.setContent(_pReply);
+    QString reply = _pReply->readAll();
+    QDEBUG << _displayName << "Response: " << reply;
+    reply = reply.replace("<D:", "<")
+                .replace("</D:", "</")
+                .replace("<cs:", "<")
+                .replace("</cs:", "</");
+    QDEBUG << _displayName << ": "
+           << "Response replaced: " << reply;
+
+    doc.setContent(reply);
 
     QString sDisplayName = "";
     QString sCTag = "";
     QString sSyncToken = "";
     QString sStatus = "";
 
-    QDomNodeList response = doc.elementsByTagName("d:prop");
+    QDomNodeList response = doc.elementsByTagName("prop");
     for (int i = 0; i < response.size(); i++) {
       QDomNode n = response.item(i);
-      QDomElement displayname = n.firstChildElement("d:displayname");
+      QDomElement displayname = n.firstChildElement("displayname");
       if (!displayname.isNull()) {
-        // QDEBUG << _displayName << ": " << "DISPLAYNAME = " <<
-        // displayname.text();
+        QDEBUG << _displayName << ": "
+               << "DISPLAYNAME = " << displayname.text();
         sDisplayName = displayname.text();
       }
-      QDomElement ctag = n.firstChildElement("cs:getctag");
+      QDomElement ctag = n.firstChildElement("getctag");
       if (!ctag.isNull()) {
-        // QDEBUG << _displayName << ": " << "CTAG = " << ctag.text();
+        QDEBUG << _displayName << ": "
+               << "CTAG = " << ctag.text();
         sCTag = ctag.text();
       }
-      QDomElement syncToken = n.firstChildElement("d:sync-token");
+      QDomElement syncToken = n.firstChildElement("sync-token");
       if (!syncToken.isNull()) {
         // QDEBUG << _displayName << ": " << "SYNC-TOKEN = " <<
         // syncToken.text();
@@ -265,10 +398,10 @@ void CalendarClient_CalDAV::handleRequestSyncTokenFinished(void) {
       }
     }
 
-    response = doc.elementsByTagName("d:propstat");
+    response = doc.elementsByTagName("propstat");
     for (int i = 0; i < response.size(); i++) {
       QDomNode n = response.item(i);
-      QDomElement status = n.firstChildElement("d:status");
+      QDomElement status = n.firstChildElement("status");
       if (!status.isNull()) {
         // QDEBUG << _displayName << ": " << "STATUS = " << status.text();
         sStatus = status.text();
@@ -326,19 +459,19 @@ void CalendarClient_CalDAV::handleRequestSyncTokenFinished(void) {
       emit error("Receiving sync token failed.");
     }
 
-    /*
-    QDEBUG << _displayName << ": " << "\r\nHeaders:" <<
-    _pReply->rawHeaderList() << "\r\n";
+    QDEBUG << _displayName << ": "
+           << "\r\nHeaders:" << _pReply->rawHeaderList() << "\r\n";
     if (_pReply->hasRawHeader("DAV")) {
-      QDEBUG << _displayName << ": " << "DAV:" << _pReply->rawHeader("DAV");
+      QDEBUG << _displayName << ": "
+             << "DAV:" << _pReply->rawHeader("DAV");
     }
     if (_pReply->hasRawHeader("Server")) {
-      QDEBUG << _displayName << ": " << "Server:" <<
-    _pReply->rawHeader("Server");
+      QDEBUG << _displayName << ": "
+             << "Server:" << _pReply->rawHeader("Server");
     }
-    QDEBUG << _displayName << ": " << "Status code:" <<
-    _pReply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
-    */
+    QDEBUG << _displayName << ": "
+           << "Status code:"
+           << _pReply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
   } else {
     QDEBUG << _displayName << ": "
            << "ERROR: Invalid reply pointer when receiving sync token.";
@@ -360,49 +493,57 @@ void CalendarClient_CalDAV::handleRequestChangesFinished(void) {
   if (nullptr != _pReply) {
     QDomDocument doc;
 
-    // QDEBUG << _displayName << ": " << "received:\r\n" <<
-    // _pReply->readAll();
+    QString reply = _pReply->readAll();
+    QDEBUG << _displayName << "Response: " << reply;
+    reply = reply.replace("<D:", "<")
+                .replace("</D:", "</")
+                .replace("<cs:", "<")
+                .replace("</cs:", "</");
+    QDEBUG << _displayName << ": "
+           << "Response replaced: " << reply;
 
-    doc.setContent(_pReply);
+    doc.setContent(reply);
 
     _eventList.clear();
 
-    QDomNodeList list_response = doc.elementsByTagName("d:response");
+    QDomNodeList list_response = doc.elementsByTagName("response");
     for (int i = 0; i < list_response.size(); i++) {
       QDomNode thisResponse = list_response.item(i);
 
-      // QDEBUG << _displayName << ": " << "Response" << i;
+      QDEBUG << _displayName << ": "
+             << "Response" << i;
 
       QString sHref = "";
       QString sETag = "";
       QString sPropStatus = "";
       QString strCalendarData = "";
 
-      QDomElement elHref = thisResponse.firstChildElement("d:href");
+      QDomElement elHref = thisResponse.firstChildElement("href");
       if (!elHref.isNull()) {
-        // QDEBUG << _displayName << ": " << "  HREF = " << elHref.text();
+        QDEBUG << _displayName << ": "
+               << "  HREF = " << elHref.text();
         sHref = elHref.text();
       } else {
         QDEBUG << _displayName << ": "
                << "  HREF = ";
       }
 
-      QDomNode thisPropStat = thisResponse.firstChildElement("d:propstat");
+      QDomNode thisPropStat = thisResponse.firstChildElement("propstat");
       if (!thisPropStat.isNull()) {
 
-        QDomElement elPropStatus = thisPropStat.firstChildElement("d:status");
+        QDomElement elPropStatus = thisPropStat.firstChildElement("status");
         if (!elPropStatus.isNull()) {
-          // QDEBUG << _displayName << ": " << "    PROPSTATUS = " <<
-          // elPropStatus.text();
+          QDEBUG << _displayName << ": "
+                 << "    PROPSTATUS = " << elPropStatus.text();
           sPropStatus = elPropStatus.text();
         } else {
           QDEBUG << _displayName << ": "
                  << "    PROPSTATUS = ";
         }
 
-        QDomNode thisProp = thisPropStat.firstChildElement("d:prop");
+        QDomNode thisProp = thisPropStat.firstChildElement("prop");
         if (!thisProp.isNull()) {
-          QDomElement elETag = thisProp.firstChildElement("d:getetag");
+          QDomElement elETag = thisProp.firstChildElement("getetag");
           if (!elETag.isNull()) {
             // QDEBUG << _displayName << ": " << "    ETAG = " <<
             // elETag.text();
@@ -415,8 +556,8 @@ void CalendarClient_CalDAV::handleRequestChangesFinished(void) {
           QDomElement elCalendarData =
               thisProp.firstChildElement("cal:calendar-data");
           if (!elCalendarData.isNull()) {
-            // QDEBUG << _displayName << ": " << "    CALENDARDATA = " <<
-            // elCalendarData.text();
+            QDEBUG << _displayName << ": "
+                   << "    CALENDARDATA = " << elCalendarData.text();
 
             if (_dataStream) {
               delete _dataStream;

@@ -113,7 +113,6 @@ public slots:
 
   void addCalDAV_Calendar(QString color, QString calendarName, QUrl url,
                           QString username, QString password);
-  // void addICS_Calendar(QString color, QString calendarName, QUrl url); FIXME
 
   /**
    * @brief Returns a pointer to a specific calendar instance in the list of

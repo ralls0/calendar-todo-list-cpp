@@ -50,6 +50,8 @@ public:
                  usernameChanged)
   Q_PROPERTY(QString password READ getPassword WRITE setPassword NOTIFY
                  passwordChanged)
+  Q_PROPERTY(QString accessToken READ getAccessToken WRITE setAccessToken NOTIFY
+                 accessTokenChanged)
 
   CalendarClient_CalDAV(QObject *parent = nullptr);
   CalendarClient_CalDAV(const QString &username, const QString &password,
@@ -61,6 +63,7 @@ public:
       const QString &scope = "https://www.googleapis.com/auth/calendar",
       const QString &username = "", QObject *parent = nullptr);
   ~CalendarClient_CalDAV();
+  void getCTag(void);
 
 protected:
   /**
@@ -75,6 +78,7 @@ protected:
    * @brief Obtains calendar information from the calDAV server.
    */
   void getChangedEvent(void);
+  // void getCTag(void); FIXME
   void setupStateMachine(void);
 
   int lastSyncYear;
@@ -105,6 +109,7 @@ signals:
   void clientAuthChanged(E_CalendarAuth clientAuth);
   void yearChanged(const int &year);
   void monthChanged(const int &month);
+  void accessTokenChanged(QString username);
   void usernameChanged(QString username);
   void passwordChanged(QString password);
 
@@ -119,7 +124,6 @@ signals:
 public slots:
 
   E_CalendarAuth getClientAuth(void);
-  void setAccessToken(QString accessToken);
 
   int getYear() const;
   void setYear(const int &year);
@@ -132,6 +136,9 @@ public slots:
 
   void setPassword(const QString password);
   QString getPassword(void) const;
+
+  void setAccessToken(QString accessToken);
+  QString getAccessToken(void) const;
 
   void startSynchronization(void);
   void stopSynchronization(void);
@@ -156,6 +163,7 @@ protected slots:
   void handleHTTPError(void);
 
   void handleRequestSyncTokenFinished(void);
+  void handleRequestCTagFinished(void);
   void handleRequestChangesFinished(void);
 
   void handleStateWaitingEntry(void);

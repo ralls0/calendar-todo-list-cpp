@@ -846,10 +846,6 @@ void CalendarClient::setColor(const QString &color) {
   }
 }
 
-CalendarClient::E_CalendarType CalendarClient::getCalendarType(void) {
-  return _calendarType;
-}
-
 bool CalendarClient::setHostURL(const QUrl hostURL) {
   bool bRet = false;
 

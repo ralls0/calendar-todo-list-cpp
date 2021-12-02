@@ -44,7 +44,7 @@ add_executable(calendar_todo_list_cpp
         src/GuiComponents/NewCalendar/NewCalendarDialog.cpp
         src/GuiComponents/NewEvent/NewEventDialog.cpp
         src/GuiComponents/NewEvent/NewEventDialog.h
-        )
+        src/ClientCalDAV/getCTag.cpp)
 target_link_libraries(calendar_todo_list_cpp
         Qt::Core
         Qt::Core5Compat
