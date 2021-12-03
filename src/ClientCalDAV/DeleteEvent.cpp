@@ -62,7 +62,7 @@ void CalendarClient_CalDAV::deleteEvent(QString href) {
 
   _pUploadReply = _uploadNetworkManager.deleteResource(request);
 
-  if (NULL != _pUploadReply) {
+  if (_pUploadReply) {
     connect(_pReply, SIGNAL(CalendarClient::error()), this,
             SLOT(CalendarClient_CalDAV::handleHTTPError()));
 

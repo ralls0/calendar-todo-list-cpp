@@ -771,7 +771,7 @@ void CalendarClient::setColor(const QString &color) {
 bool CalendarClient::setHostURL(const QUrl hostURL) {
   bool bRet = false;
 
-  if (false != hostURL.isValid()) {
+  if (hostURL.isValid()) {
     _hostURL = hostURL;
     bRet = true;
     emit hostURLChanged(_hostURL.toString());

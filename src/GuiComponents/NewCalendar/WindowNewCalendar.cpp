@@ -48,14 +48,11 @@ void WindowNewCalendar::createNewCalendar(const QString &displayName,
     _cals = new CalendarClient_CalDAV(username, password, hostURL, displayName,
                                       nullptr);
   } else {
-    _cals = new CalendarClient_CalDAV(
-        clientSecret, hostURL, displayName,
-        "https://www.googleapis.com/auth/calendar", "Rallso", nullptr);
+    _cals =
+        new CalendarClient_CalDAV(clientSecret, hostURL, displayName, nullptr);
   }
   connect(_newEventDialog, &NewEventDialog::newEvent, _cals,
           &CalendarClient_CalDAV::saveEvent);
-  connect(_cals, &CalendarClient_CalDAV::accessTokenChanged, _cals,
-          &CalendarClient_CalDAV::getChangedEvent);
 }
 
 void WindowNewCalendar::createPreviewGroupBox() {

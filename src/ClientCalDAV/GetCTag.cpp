@@ -3,7 +3,7 @@
  * @author  Marco Manco
  * @date    01/12/21.
  * @file    getCTag.cpp
- * @brief
+ * @brief   Chiede il CTag per controllare se vi sono modifiche nel calendario
  *
  */
 
@@ -62,14 +62,116 @@ void CalendarClient_CalDAV::getCTag(void) {
   _pReply = _networkManager.sendCustomRequest(request, QByteArray("PROPFIND"),
                                               buffer);
 
-  if (NULL != _pReply) {
+  if (_pReply) {
+    connect(_pReply, SIGNAL(CalendarClient::error()), this,
+            SLOT(CalendarClient_CalDAV::handleHTTPError()));
     connect(_pReply, SIGNAL(finished()), this,
             SLOT(handleRequestCTagFinished()));
 
     _requestTimeoutTimer.start(_requestTimeoutMS);
   } else {
-    QDEBUG << _displayName << ": "
+    QDEBUG << "[i] (" << _displayName << ") "
            << "ERROR: Invalid reply pointer when requesting  ctag.";
     emit error("Invalid reply pointer when requesting ctag.");
+  }
+}
+
+void CalendarClient_CalDAV::handleRequestCTagFinished(void) {
+  _requestTimeoutTimer.stop();
+
+  if (E_STATE_ERROR == _state) {
+    QDEBUG << "[i] (" << _displayName << ") "
+           << "Error state - aborting";
+  }
+
+  QDEBUG << "[i] (" << _displayName << ") "
+         << "HTTP RequestCTag finished";
+
+  if (_pReply) {
+    QDomDocument doc;
+
+    QString reply = _pReply->readAll();
+    QDEBUG << "[i] (" << _displayName << ") Response: " << reply;
+    reply = reply.replace("<D:", "<")
+                .replace("</D:", "</")
+                .replace("<cs:", "<")
+                .replace("</cs:", "</");
+    QDEBUG << "[i] (" << _displayName << ") Response replaced: " << reply;
+
+    doc.setContent(reply);
+
+    QString sDisplayName = "";
+    QString sCTag = "";
+    QString sStatus = "";
+
+    QDomNodeList response = doc.elementsByTagName("prop");
+    QDEBUG << "[i] (" << _displayName << ") "
+           << "response.size() = " << response.size();
+    for (int i = 0; i < response.size(); i++) {
+      QDomNode n = response.item(i);
+      QDomElement displayname = n.firstChildElement("displayname");
+      if (!displayname.isNull()) {
+        QDEBUG << "[i] (" << _displayName << ") "
+               << "DISPLAYNAME = " << displayname.text();
+        sDisplayName = displayname.text();
+      }
+      QDomElement ctag = n.firstChildElement("getctag");
+      if (!ctag.isNull()) {
+        QDEBUG << "[i] (" << _displayName << ") "
+               << "CTAG = " << ctag.text();
+        sCTag = ctag.text();
+      }
+    }
+
+    response = doc.elementsByTagName("propstat");
+    for (int i = 0; i < response.size(); i++) {
+      QDomNode n = response.item(i);
+      QDomElement status = n.firstChildElement("status");
+      if (!status.isNull()) {
+        QDEBUG << "[i] (" << _displayName << ") "
+               << "STATUS = " << status.text();
+        sStatus = status.text();
+      }
+    }
+
+    if ((!sCTag.isEmpty()) && (sStatus.endsWith("200 OK"))) {
+      bool bDisplayNameChanged = (_displayName != sDisplayName);
+      bool bCTagChanged = (_cTag != sCTag);
+
+      _displayName = sDisplayName;
+      _cTag = sCTag;
+
+      if (bDisplayNameChanged) {
+        emit displayNameChanged(_displayName);
+      }
+
+      if (bCTagChanged) {
+        QDEBUG << "[i] (" << _displayName << ") "
+               << "ctag has changed";
+        emit calendarUpdateRequired();
+      }
+    } else {
+      QDEBUG << "[i] (" << _displayName << ") "
+             << "ERROR: Receiving ctag failed. Status:" << sStatus;
+      emit error("Receiving ctag failed.");
+    }
+
+    QDEBUG << "[i] (" << _displayName << ") "
+           << "\r\nHeaders:" << _pReply->rawHeaderList() << "\r\n";
+    if (_pReply->hasRawHeader("DAV")) {
+      QDEBUG << "[i] (" << _displayName << ") "
+             << "DAV:" << _pReply->rawHeader("DAV");
+    }
+    if (_pReply->hasRawHeader("Server")) {
+      QDEBUG << "[i] (" << _displayName << ") "
+             << "Server:" << _pReply->rawHeader("Server");
+    }
+    QDEBUG << "[i] (" << _displayName << ") "
+           << "Status code:"
+           << _pReply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
+  } else {
+    QDEBUG << "[i] (" << _displayName << ") "
+           << "ERROR: Invalid reply pointer when receiving ctag.";
+    emit error("Invalid reply pointer when receiving ctag.");
   }
 }

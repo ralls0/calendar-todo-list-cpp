@@ -10,10 +10,10 @@
  * CalDAV. La proprietà URL può essere nello stile
  *          https://server.tld/owncloud/remote.php/dav/calendars/username/calendarname/
  *          Si consiglia vivamente di utilizzare HTTPS per proteggere i dati
- * personali.
+ *          personali.
  *
  * @note    CalendarClient_CalDAV utilizza le proprietà anno e mese per limitare
- * il elenco degli eventi per un determinato mese.
+ *          il elenco degli eventi per un determinato mese.
  *
  */
 
@@ -53,25 +53,20 @@ public:
   Q_PROPERTY(QString accessToken READ getAccessToken WRITE setAccessToken NOTIFY
                  accessTokenChanged)
 
-  CalendarClient_CalDAV(QObject *parent = nullptr);
   CalendarClient_CalDAV(const QString &username, const QString &password,
                         const QString &hostURL, const QString &displayName,
                         QObject *parent = nullptr);
-  CalendarClient_CalDAV(
-      const QString &filepath, const QString &hostURL,
-      const QString &displayName,
-      const QString &scope = "https://www.googleapis.com/auth/calendar",
-      const QString &username = "", QObject *parent = nullptr);
+  CalendarClient_CalDAV(const QString &filepath, const QString &hostURL,
+                        const QString &displayName, QObject *parent = nullptr);
   ~CalendarClient_CalDAV();
-  void getCTag(void);         // FIXME
-  void getChangedEvent(void); // FIXME
 
 protected:
   /**
-   * @brief Obtains calendar information from the calDAV server.
+   * @brief     Ottiene le informazioni del calendario dall CalDAV Server.
    */
-  // void getChangedEvent(void); FIXME
-  // void getCTag(void); FIXME
+  void getChangedEvent(void);
+  void getChangedActivity(void);
+  void getCTag(void);
   void setupStateMachine(void);
 
   int lastSyncYear;
@@ -106,9 +101,8 @@ signals:
   void passwordChanged(QString password);
 
   void calendarHasNotChanged(void);
-  void
-  calendarUpdateRequired(void); // emitted when the sync token has changed or
-                                // the year/month since the last synchronization
+  void calendarUpdateRequired(void); // Emesso quando year/month sono cambiati
+                                     // rispetto alla scorsa sincronizzazione
 
 public slots:
 
@@ -134,17 +128,16 @@ public slots:
   void recover(void);
 
   /**
-   * @brief Saves a event to the calDAV server.
+   * @brief Salva un evento nel CalDAV Server.
    *
-   * If the uid parameter is empty, a new event will be created.
+   * Se l'uid e' vuoto, un nuovo evento viene creato.
    */
   void saveEvent(QString uid, QString filename, QString summary,
                  QString location, QString description, QString rrule,
-                 QString exdate, QDateTime startDateTime,
-                 QDateTime endDateTime);
+                 QDateTime startDateTime, QDateTime endDateTime);
 
   /**
-   * @brief Deletes a specific event from the calDAV server.
+   * @brief Elimina uno specifico evento dal CalDAV Server.
    */
   void deleteEvent(QString href);
 
@@ -152,7 +145,8 @@ protected slots:
   void handleHTTPError(void);
 
   void handleRequestCTagFinished(void);
-  void handleRequestChangesFinished(void);
+  void handleRequestChangesEventFinished(void);
+  void handleRequestChangesActivityFinished(void);
 
   void handleStateWaitingEntry(void);
   void handleStateWaitingExit(void);

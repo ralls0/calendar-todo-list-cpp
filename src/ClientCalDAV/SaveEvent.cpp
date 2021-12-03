@@ -21,7 +21,7 @@
 void CalendarClient_CalDAV::saveEvent(QString uid, QString filename,
                                       QString summary, QString location,
                                       QString description, QString rrule,
-                                      QString exdate, QDateTime startDateTime,
+                                      QDateTime startDateTime,
                                       QDateTime endDateTime) {
   QDEBUG << _displayName << ": "
          << "saving event" << summary;
@@ -89,10 +89,6 @@ void CalendarClient_CalDAV::saveEvent(QString uid, QString filename,
     requestString.append("RRULE:" + rrule + "\r\n");
   }
 
-  if (!exdate.isEmpty()) {
-    requestString.append("EXDATE:" + exdate + "\r\n");
-  }
-
   requestString.append("END:VEVENT\r\nEND:VCALENDAR");
 
   int buffersize = buffer->write(requestString.toUtf8());
@@ -117,10 +113,9 @@ void CalendarClient_CalDAV::saveEvent(QString uid, QString filename,
 
   _pUploadReply = _uploadNetworkManager.put(request, buffer);
 
-  if (NULL != _pUploadReply) {
-    //    connect(_pUploadReply, SIGNAL(error(QNetworkReply::NetworkError)),
-    //    this,
-    //            SLOT(handleUploadHTTPError()));
+  if (_pUploadReply) {
+    connect(_pReply, SIGNAL(CalendarClient::error()), this,
+            SLOT(CalendarClient_CalDAV::handleHTTPError()));
 
     connect(_pUploadReply, SIGNAL(finished()), this,
             SLOT(handleUploadFinished()));

@@ -4,7 +4,6 @@
  * @date    28/11/21.
  * @file    CalendarClient.h
  * @brief   Classe comune per tutti i calendari.
- *          Contine il parsing per il formato iCalendar
  *
  */
 
@@ -24,18 +23,12 @@
 #include "../CalendarEvent/CalendarEvent.h"
 #include "../DateUtils.h"
 
-/*
- * Indica se viene usato il colore indicato dal calendario
- * o quello specificato dall'utente
- */
-#define CALENDAR_OVERWRITE_COLOR 0
-
 /**
  * @class       CalendarClient
  *
  * @brief       Classe astratta per tutti i calendari.
  *              Consente di ottenere un oggetto CalendarEvent da una
- *              risorsa locale o remota.
+ *              risorsa remota.
  */
 
 class CalendarClient : public QObject {
@@ -78,20 +71,16 @@ public:
   ~CalendarClient();
 
   /**
-   * @brief   Restituisce un elenco di eventi che si verificano nella data
-   * inserita
+   * @brief     Restituisce un elenco di eventi che si verificano nella data
+   *            inserita
    */
   Q_INVOKABLE QList<QObject *> eventsForDate(const QDate &date);
 
   /**
-   * @brief   Restituisce l'elenco completo degli eventi gestiti da
-   * Calendarclient
+   * @brief     Restituisce l'elenco completo degli eventi gestiti da
+   *            CalendarClient
    */
   Q_INVOKABLE QList<QObject *> allEvents(void);
-
-  /**
-   * Protected
-   */
 
 protected:
   QString _color;
@@ -105,7 +94,7 @@ protected:
   // Flusso di prova per gestire il contenuto del file iCalendar
   QTextStream *_dataStream;
 
-  // Elenco degli eventi gestiti Calendarevent
+  // Elenco degli eventi gestiti CalendarEvent
   QList<CalendarEvent> _eventList;
 
   QNetworkAccessManager _networkManager;
@@ -115,25 +104,35 @@ protected:
   int _requestTimeoutMS;
 
   /**
-   * @brief   Helper function per codificare le richieste di autorizzazione di
-   * rete
+   * @brief     Helper function per codificare le richieste di autorizzazione di
+   *            rete
    */
   QString encodeBase64(QString string);
 
   /**
-   * @brief   Helper function per decodificare le stringhe ricevute
+   * @brief     Helper function per decodificare le stringhe ricevute
    */
   QString ascii2utf8(QString str);
 
   /**
-   * @brief   Parser per i campi del calendario da un iCalendar file.
+   * @brief   Parser per i campi del calendario da un iCalendar.
    */
-  void parseCALENDAR(QString href);
+  void parseVCALENDAR(QString href);
 
   /**
-   * @brief   Parser per i campi VEVENT di un iCalendar file.
+   * @brief   Parser per i campi del attivia' da un iCalendar.
    */
-  void parseVEVENT(QString href);
+  void parseVTODO(QString href);
+
+  /**
+   * @brief   Parser per i campi VEVENT di un evento VCALENDAR.
+   */
+  void parseCalendarVEVENT(QString href);
+
+  /**
+   * @brief   Parser per i campi VEVENT di un attivita' VTODO.
+   */
+  void parseTodoVEVENT(QString href);
 
   /**
    * @brief   Aggiunge un singolo evento a _eventList

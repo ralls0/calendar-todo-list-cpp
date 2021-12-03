@@ -1,10 +1,9 @@
 /**
  *
  * @author  Marco Manco
- * @date    28/11/21.
- * @file    GetChangedEvent.cpp
- * @brief   Invia una richiesta per recuperare tutti gli eventi del calendario
- * da una certa start_date fino ad una end_date
+ * @date    03/12/21.
+ * @file    GetChangedActivity.cpp
+ * @brief
  *
  */
 
@@ -19,7 +18,7 @@
   qDebug()
 #endif
 
-void CalendarClient_CalDAV::getChangedEvent(void) {
+void CalendarClient_CalDAV::getChangedActivity(void) {
   QDEBUG << "[i] (" << _displayName
          << ") Start getChangedEvent with year: " << _year
          << "month: " << _month;
@@ -52,11 +51,10 @@ void CalendarClient_CalDAV::getChangedEvent(void) {
                           " <D:prop>\r\n"
                           "   <D:getetag/>\r\n"
                           "   <C:calendar-data>\r\n"
-                          "     <C:comp name=\"VCALENDAR\">\r\n"
+                          "     <C:comp name=\"VTODO\">\r\n"
                           "       <C:prop name=\"VERSION\"/>\r\n"
                           "       <C:comp name=\"VEVENT\">\r\n"
                           "         <C:prop name=\"SUMMARY\"/>\r\n"
-                          "         <C:prop name=\"LOCATION\"/>\r\n"
                           "         <C:prop name=\"DESCRIPTION\"/>\r\n"
                           "         <C:prop name=\"UID\"/>\r\n"
                           "         <C:prop name=\"DTSTART\"/>\r\n"
@@ -66,7 +64,7 @@ void CalendarClient_CalDAV::getChangedEvent(void) {
                           "   </C:calendar-data>\r\n"
                           " </D:prop>\r\n"
                           " <C:filter>\r\n"
-                          "   <C:comp-filter name=\"VCALENDAR\">\r\n"
+                          "   <C:comp-filter name=\"VTODO\">\r\n"
                           "     <C:comp-filter name=\"VEVENT\">\r\n"
                           "       <C:time-range start=\"" +
                           QString::number(_year) + monthString +
@@ -123,7 +121,7 @@ void CalendarClient_CalDAV::getChangedEvent(void) {
   }
 }
 
-void CalendarClient_CalDAV::handleRequestChangesEventFinished(void) {
+void CalendarClient_CalDAV::handleRequestChangesActivityFinished(void) {
   _requestTimeoutTimer.stop();
 
   if (E_STATE_ERROR == _state) {
@@ -132,7 +130,7 @@ void CalendarClient_CalDAV::handleRequestChangesEventFinished(void) {
   }
 
   QDEBUG << "[i] (" << _displayName << ") "
-         << "HTTP RequestChangesEvent finished";
+         << "HTTP RequestChangesActivity finished";
 
   if (nullptr != _pReply) {
     QDomDocument doc;
@@ -212,7 +210,7 @@ void CalendarClient_CalDAV::handleRequestChangesEventFinished(void) {
             }
             _dataStream = new QTextStream(elCalendarData.text().toLatin1());
 
-            parseVCALENDAR(sHref);
+            parseVTODO(sHref);
 
             strCalendarData = elCalendarData.text();
           } else {
