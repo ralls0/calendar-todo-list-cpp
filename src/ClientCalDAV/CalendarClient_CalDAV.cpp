@@ -18,6 +18,30 @@
   qDebug()
 #endif
 
+CalendarClient_CalDAV::CalendarClient_CalDAV(QObject *parent)
+    : CalendarClient(parent) {
+  _auth = E_AUTH_UPWD;
+  _dataStream = nullptr;
+  _pUploadReply = nullptr;
+  _au = nullptr;
+
+  _username = "";
+  _password = "";
+  _hostURL = "";
+  _displayName = "";
+  _cTag = "";
+  _year = QDate::currentDate().year();
+  _month = QDate::currentDate().month();
+  _yearToBeRequested = QDate::currentDate().year();
+  ;
+  _monthToBeRequested = QDate::currentDate().month();
+  lastSyncYear = -1;
+  lastSyncMonth = -1;
+  _bRecoveredFromError = false;
+
+  setupStateMachine();
+}
+
 CalendarClient_CalDAV::CalendarClient_CalDAV(const QString &username,
                                              const QString &password,
                                              const QString &hostURL,

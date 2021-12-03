@@ -69,26 +69,18 @@ public:
   // URL of calendar file
   Q_PROPERTY(QString href READ getHREF WRITE setHREF NOTIFY hrefChanged)
 
+  // Specify if is an event or acivity
+  Q_PROPERTY(bool isCalendar READ getIsCalendar WRITE setIsCalendar NOTIFY
+                 isCalendarChanged)
+
   // Read-only boolean property which is set, if the event represents a specific
   // occurrence and an EXDATE value applies
   Q_PROPERTY(bool isCanceled READ getIsCanceled NOTIFY isCanceledChanged)
 
-  /***** End of: Q_PROPERTY Properties ************************************/ /*@}*/
-
-  /******************************************************************************/
-  /* Constructors */
-  /******************************************************************************/
 public:
   explicit CalendarEvent(QObject *parent);
   CalendarEvent(const CalendarEvent &other);
 
-  /******************************************************************************/
-  /* Destructor */
-  /******************************************************************************/
-public:
-  /******************************************************************************/
-  /* Public function prototypes */
-  /******************************************************************************/
 public:
   CalendarEvent &operator=(const CalendarEvent &other);
 
@@ -96,17 +88,6 @@ public:
 
   void copyFrom(const CalendarEvent &other);
 
-  /******************************************************************************/
-  /* Protected function prototypes */
-  /******************************************************************************/
-protected:
-  /******************************************************************************/
-  /* Private function prototypes */
-  /******************************************************************************/
-private:
-  /******************************************************************************/
-  /* Signals */
-  /******************************************************************************/
 signals:
   void colorChanged(QString &color);
   void calendarNameChanged(const QString &calendarName);
@@ -121,10 +102,8 @@ signals:
   void uidChanged(const QString &uid);
   void hrefChanged(const QString &href);
   void isCanceledChanged(const bool &isCanceled);
+  void isCalendarChanged(const bool &isCalendar);
 
-  /******************************************************************************/
-  /* Public slots */
-  /******************************************************************************/
 public slots:
   QString getColor(void) const;
   void setColor(const QString &color);
@@ -159,6 +138,9 @@ public slots:
   bool getIsCanceled() const;
   void setIsCanceled(const bool &isCanceled);
 
+  bool getIsCalendar() const;
+  void setIsCalendar(const bool &isCanceled);
+
   QString getUID(void) const;
   void setUID(const QString &uid);
 
@@ -185,6 +167,7 @@ protected:
   QString _UID;
   QString _HREF;
   bool _isCanceled;
+  bool _isCalendar;
   QObject *_calendarPointer;
 };
 

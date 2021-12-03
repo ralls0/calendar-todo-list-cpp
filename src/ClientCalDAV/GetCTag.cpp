@@ -63,8 +63,8 @@ void CalendarClient_CalDAV::getCTag(void) {
                                               buffer);
 
   if (_pReply) {
-    connect(_pReply, SIGNAL(CalendarClient::error()), this,
-            SLOT(CalendarClient_CalDAV::handleHTTPError()));
+    connect(_pReply, &QNetworkReply::errorOccurred, this,
+            &CalendarClient_CalDAV::handleHTTPError);
     connect(_pReply, SIGNAL(finished()), this,
             SLOT(handleRequestCTagFinished()));
 

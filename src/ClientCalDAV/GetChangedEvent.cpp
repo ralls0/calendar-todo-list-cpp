@@ -109,11 +109,11 @@ void CalendarClient_CalDAV::getChangedEvent(void) {
       _networkManager.sendCustomRequest(request, QByteArray("REPORT"), buffer);
 
   if (_pReply) {
-    connect(_pReply, SIGNAL(CalendarClient::error()), this,
-            SLOT(CalendarClient_CalDAV::handleHTTPError()));
+    connect(_pReply, &QNetworkReply::errorOccurred, this,
+            &CalendarClient_CalDAV::handleHTTPError);
 
     connect(_pReply, SIGNAL(finished()), this,
-            SLOT(handleRequestChangesFinished()));
+            SLOT(handleRequestChangesEventFinished()));
 
     _requestTimeoutTimer.start(_requestTimeoutMS);
   } else {

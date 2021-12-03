@@ -63,8 +63,8 @@ void CalendarClient_CalDAV::deleteEvent(QString href) {
   _pUploadReply = _uploadNetworkManager.deleteResource(request);
 
   if (_pUploadReply) {
-    connect(_pReply, SIGNAL(CalendarClient::error()), this,
-            SLOT(CalendarClient_CalDAV::handleHTTPError()));
+    connect(_pReply, &QNetworkReply::errorOccurred, this,
+            &CalendarClient_CalDAV::handleHTTPError);
 
     connect(_pUploadReply, SIGNAL(finished()), this,
             SLOT(handleUploadFinished()));
@@ -83,7 +83,7 @@ void CalendarClient_CalDAV::handleUploadFinished(void) {
   QDEBUG << _displayName << ": "
          << "HTTP upload finished";
 
-  if (nullptr != _pUploadReply) {
+  if (_pUploadReply) {
     std::cout << _displayName.toStdString() << ": "
               << "received:\r\n"
               << _pUploadReply->readAll().toStdString();

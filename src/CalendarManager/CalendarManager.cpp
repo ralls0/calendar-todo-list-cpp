@@ -87,7 +87,7 @@ void CalendarManager::loadSettings(void) {
 
   clearCalendarList();
 
-  while (false == bAbort) {
+  while (!bAbort) {
 
     QString group = "Calendar";
     group.append(QString::number(index));

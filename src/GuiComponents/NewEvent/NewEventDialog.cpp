@@ -243,7 +243,7 @@ void NewEventDialog::onSaveClick(void) {
       rrule = "FREQ=YEARLY;INTERVAL=1";
     QDateTime startDateTime = dte_startDateE->dateTime();
     QDateTime endDateTime = dte_endDateE->dateTime();
-    emit newEvent(uid, filename, summary, location, description, rrule, exdate,
+    emit newEvent(uid, filename, summary, location, description, rrule,
                   startDateTime, endDateTime);
   } else {
     // FIXME

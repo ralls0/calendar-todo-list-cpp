@@ -53,6 +53,9 @@ void WindowNewCalendar::createNewCalendar(const QString &displayName,
   }
   connect(_newEventDialog, &NewEventDialog::newEvent, _cals,
           &CalendarClient_CalDAV::saveEvent);
+
+  connect(_cals, &CalendarClient_CalDAV::accessTokenChanged, _cals,
+          &CalendarClient_CalDAV::getChangedActivity);
 }
 
 void WindowNewCalendar::createPreviewGroupBox() {

@@ -53,6 +53,7 @@ public:
   Q_PROPERTY(QString accessToken READ getAccessToken WRITE setAccessToken NOTIFY
                  accessTokenChanged)
 
+  CalendarClient_CalDAV(QObject *parent = nullptr);
   CalendarClient_CalDAV(const QString &username, const QString &password,
                         const QString &hostURL, const QString &displayName,
                         QObject *parent = nullptr);
@@ -135,6 +136,15 @@ public slots:
   void saveEvent(QString uid, QString filename, QString summary,
                  QString location, QString description, QString rrule,
                  QDateTime startDateTime, QDateTime endDateTime);
+
+  /**
+   * @brief Salva un task nel CalDAV Server.
+   *
+   * Se l'uid e' vuoto, un nuovo evento viene creato.
+   */
+  void saveActivity(QString uid, QString filename, QString summary,
+                    QString description, QDateTime startDateTime,
+                    QDateTime endDateTime);
 
   /**
    * @brief Elimina uno specifico evento dal CalDAV Server.

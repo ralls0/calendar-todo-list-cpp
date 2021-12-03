@@ -21,6 +21,7 @@ CalendarEvent::CalendarEvent(QObject *parent) : QObject(parent) {
   _rRULE = "";
   _color = QColor(rand() & 0xFF, rand() & 0xFF, rand() & 0xFF).name();
   _isCanceled = false;
+  _isCalendar = true;
   _UID = "";
   _HREF = "";
   _calendarPointer = NULL;
@@ -159,6 +160,15 @@ void CalendarEvent::setIsCanceled(const bool &isCanceled) {
   if (_isCanceled != isCanceled) {
     _isCanceled = isCanceled;
     emit isCanceledChanged(_isCanceled);
+  }
+}
+
+bool CalendarEvent::getIsCalendar() const { return _isCalendar; }
+
+void CalendarEvent::setIsCalendar(const bool &isCalendar) {
+  if (_isCalendar != isCalendar) {
+    _isCalendar = isCalendar;
+    emit isCanceledChanged(_isCalendar);
   }
 }
 

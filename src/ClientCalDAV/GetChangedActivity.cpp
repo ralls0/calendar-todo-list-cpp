@@ -51,26 +51,30 @@ void CalendarClient_CalDAV::getChangedActivity(void) {
                           " <D:prop>\r\n"
                           "   <D:getetag/>\r\n"
                           "   <C:calendar-data>\r\n"
-                          "     <C:comp name=\"VTODO\">\r\n"
-                          "       <C:prop name=\"VERSION\"/>\r\n"
-                          "       <C:comp name=\"VEVENT\">\r\n"
-                          "         <C:prop name=\"SUMMARY\"/>\r\n"
-                          "         <C:prop name=\"DESCRIPTION\"/>\r\n"
-                          "         <C:prop name=\"UID\"/>\r\n"
-                          "         <C:prop name=\"DTSTART\"/>\r\n"
-                          "         <C:prop name=\"DTEND\"/>\r\n"
+                          "     <C:comp name=\"VCALENDAR\">\r\n"
+                          "       <C:comp name=\"VTODO\">\r\n"
+                          "         <C:prop name=\"VERSION\"/>\r\n"
+                          "         <C:comp name=\"VEVENT\">\r\n"
+                          "           <C:prop name=\"SUMMARY\"/>\r\n"
+                          "           <C:prop name=\"DESCRIPTION\"/>\r\n"
+                          "           <C:prop name=\"UID\"/>\r\n"
+                          "           <C:prop name=\"DTSTART\"/>\r\n"
+                          "           <C:prop name=\"DTEND\"/>\r\n"
+                          "         </C:comp>\r\n"
                           "       </C:comp>\r\n"
                           "     </C:comp>\r\n"
                           "   </C:calendar-data>\r\n"
                           " </D:prop>\r\n"
                           " <C:filter>\r\n"
-                          "   <C:comp-filter name=\"VTODO\">\r\n"
-                          "     <C:comp-filter name=\"VEVENT\">\r\n"
-                          "       <C:time-range start=\"" +
+                          "   <C:comp-filter name=\"VCALENDAR\">\r\n"
+                          "     <C:comp-filter name=\"VTODO\">\r\n"
+                          "       <C:comp-filter name=\"VEVENT\">\r\n"
+                          "         <C:time-range start=\"" +
                           QString::number(_year) + monthString +
                           "01T000000Z\" end=\"" + QString::number(_year) +
                           monthString + lastDayString +
                           "T235959Z\"/>\r\n"
+                          "       </C:comp-filter>\r\n"
                           "     </C:comp-filter>\r\n"
                           "   </C:comp-filter>\r\n"
                           " </C:filter>\r\n"
@@ -107,11 +111,11 @@ void CalendarClient_CalDAV::getChangedActivity(void) {
       _networkManager.sendCustomRequest(request, QByteArray("REPORT"), buffer);
 
   if (_pReply) {
-    connect(_pReply, SIGNAL(CalendarClient::error()), this,
-            SLOT(CalendarClient_CalDAV::handleHTTPError()));
+    connect(_pReply, &QNetworkReply::errorOccurred, this,
+            &CalendarClient_CalDAV::handleHTTPError);
 
     connect(_pReply, SIGNAL(finished()), this,
-            SLOT(handleRequestChangesFinished()));
+            SLOT(handleRequestChangesActivityFinished()));
 
     _requestTimeoutTimer.start(_requestTimeoutMS);
   } else {
