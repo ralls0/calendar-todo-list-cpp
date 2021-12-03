@@ -6,7 +6,7 @@
  * @brief
  *
  */
-// https://apidata.googleusercontent.com/caldav/v2/pdsmariorossi@gmail.com/events/
+
 #include "WindowNewCalendar.h"
 
 #define DEBUG_OAUTH 1
@@ -54,6 +54,8 @@ void WindowNewCalendar::createNewCalendar(const QString &displayName,
   }
   connect(_newEventDialog, &NewEventDialog::newEvent, _cals,
           &CalendarClient_CalDAV::saveEvent);
+  connect(_cals, &CalendarClient_CalDAV::accessTokenChanged, _cals,
+          &CalendarClient_CalDAV::getChangedEvent);
 }
 
 void WindowNewCalendar::createPreviewGroupBox() {

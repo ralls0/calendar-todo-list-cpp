@@ -63,21 +63,14 @@ public:
       const QString &scope = "https://www.googleapis.com/auth/calendar",
       const QString &username = "", QObject *parent = nullptr);
   ~CalendarClient_CalDAV();
-  void getCTag(void);
+  void getCTag(void);         // FIXME
+  void getChangedEvent(void); // FIXME
 
 protected:
   /**
-   * @brief Retrieves a sync token from the calDAv server.
-   *
-   * If the token has changed, the changes shall be retrieved by calling
-   * sendRequestChanges().
-   */
-  void sendRequestSyncToken(void);
-
-  /**
    * @brief Obtains calendar information from the calDAV server.
    */
-  void getChangedEvent(void);
+  // void getChangedEvent(void); FIXME
   // void getCTag(void); FIXME
   void setupStateMachine(void);
 
@@ -95,7 +88,6 @@ protected:
   QString _accessToken;
 
   QString _cTag;
-  QString _syncToken;
 
   bool _bRecoveredFromError;
 
@@ -112,9 +104,6 @@ signals:
   void accessTokenChanged(QString username);
   void usernameChanged(QString username);
   void passwordChanged(QString password);
-
-  void syncTokenChanged(void); // emitted when the sync token has changed
-  void syncTokenHasNotChanged(void);
 
   void calendarHasNotChanged(void);
   void
@@ -162,15 +151,11 @@ public slots:
 protected slots:
   void handleHTTPError(void);
 
-  void handleRequestSyncTokenFinished(void);
   void handleRequestCTagFinished(void);
   void handleRequestChangesFinished(void);
 
   void handleStateWaitingEntry(void);
   void handleStateWaitingExit(void);
-
-  void handleStateRequestingSyncTokenEntry(void);
-  void handleStateRequestingSyncTokenExit(void);
 
   void handleStateRequestingChangesEntry(void);
   void handleStateRequestingChangesExit(void);

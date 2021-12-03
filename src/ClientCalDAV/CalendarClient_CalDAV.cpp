@@ -28,7 +28,6 @@ CalendarClient_CalDAV::CalendarClient_CalDAV(QObject *parent)
   _username = "";
   _password = "";
   _hostURL = "";
-  _syncToken = "";
   _displayName = "";
   _cTag = "";
   _year = 1;
@@ -55,7 +54,6 @@ CalendarClient_CalDAV::CalendarClient_CalDAV(const QString &username,
   _pUploadReply = nullptr;
   _au = nullptr;
 
-  _syncToken = "";
   _cTag = "";
   _year = 1;
   _month = 1;
@@ -82,7 +80,6 @@ CalendarClient_CalDAV::CalendarClient_CalDAV(
 
   _username = "";
   _password = "";
-  _syncToken = "";
   _cTag = "";
   _year = 1;
   _month = 1;
@@ -186,20 +183,6 @@ void CalendarClient_CalDAV::handleUploadHTTPError(void) {
     QDEBUG << _displayName << ": "
            << "ERROR: Invalid reply pointer when handling HTTP error.";
     emit error("Invalid reply pointer when handling HTTP error.");
-  }
-}
-
-void CalendarClient_CalDAV::handleUploadFinished(void) {
-  _uploadRequestTimeoutTimer.stop();
-
-  QDEBUG << _displayName << ": "
-         << "HTTP upload finished";
-
-  if (nullptr != _pUploadReply) {
-    std::cout << _displayName.toStdString() << ": "
-              << "received:\r\n"
-              << _pUploadReply->readAll().toStdString();
-    emit forceSynchronization();
   }
 }
 
@@ -345,259 +328,6 @@ void CalendarClient_CalDAV::handleRequestCTagFinished(void) {
   }
 }
 
-void CalendarClient_CalDAV::handleRequestSyncTokenFinished(void) {
-  _requestTimeoutTimer.stop();
-
-  if (E_STATE_ERROR == _state) {
-    QDEBUG << _displayName << ": "
-           << "Error state - aborting";
-  }
-
-  QDEBUG << _displayName << ": "
-         << "HTTP RequestSyncToken finished";
-
-  if (nullptr != _pReply) {
-    QDomDocument doc;
-
-    QString reply = _pReply->readAll();
-    QDEBUG << _displayName << "Response: " << reply;
-    reply = reply.replace("<D:", "<")
-                .replace("</D:", "</")
-                .replace("<cs:", "<")
-                .replace("</cs:", "</");
-    QDEBUG << _displayName << ": "
-           << "Response replaced: " << reply;
-
-    doc.setContent(reply);
-
-    QString sDisplayName = "";
-    QString sCTag = "";
-    QString sSyncToken = "";
-    QString sStatus = "";
-
-    QDomNodeList response = doc.elementsByTagName("prop");
-    for (int i = 0; i < response.size(); i++) {
-      QDomNode n = response.item(i);
-      QDomElement displayname = n.firstChildElement("displayname");
-      if (!displayname.isNull()) {
-        QDEBUG << _displayName << ": "
-               << "DISPLAYNAME = " << displayname.text();
-        sDisplayName = displayname.text();
-      }
-      QDomElement ctag = n.firstChildElement("getctag");
-      if (!ctag.isNull()) {
-        QDEBUG << _displayName << ": "
-               << "CTAG = " << ctag.text();
-        sCTag = ctag.text();
-      }
-      QDomElement syncToken = n.firstChildElement("sync-token");
-      if (!syncToken.isNull()) {
-        // QDEBUG << _displayName << ": " << "SYNC-TOKEN = " <<
-        // syncToken.text();
-        sSyncToken = syncToken.text();
-      }
-    }
-
-    response = doc.elementsByTagName("propstat");
-    for (int i = 0; i < response.size(); i++) {
-      QDomNode n = response.item(i);
-      QDomElement status = n.firstChildElement("status");
-      if (!status.isNull()) {
-        // QDEBUG << _displayName << ": " << "STATUS = " << status.text();
-        sStatus = status.text();
-      }
-    }
-
-    if ((!sSyncToken.isEmpty()) && (sStatus.endsWith("200 OK"))) {
-      bool bDisplayNameChanged = (_displayName != sDisplayName);
-      bool bSyncTokenChanged = (_syncToken != sSyncToken);
-
-      if (true == bSyncTokenChanged) {
-        QDEBUG << _displayName << ": "
-               << "sync token has changed from" << _syncToken << "to"
-               << sSyncToken;
-      }
-
-      _displayName = sDisplayName;
-      _cTag = sCTag;
-      _syncToken = sSyncToken;
-
-      if (false != bDisplayNameChanged) {
-        emit displayNameChanged(_displayName);
-      }
-
-      if (false == bSyncTokenChanged) {
-        QDEBUG << _displayName << ": "
-               << "sync token is unchanged";
-        emit syncTokenHasNotChanged();
-
-        if ((_year != lastSyncYear) || (_month != lastSyncMonth)) {
-          QDEBUG << _displayName << ": "
-                 << "year/month has changed from" << lastSyncYear
-                 << lastSyncMonth << "to" << _year << _month
-                 << "=> update required";
-          lastSyncMonth = _month;
-          lastSyncYear = _year;
-          emit calendarUpdateRequired();
-        } else {
-          QDEBUG << _displayName << ": "
-                 << "calendar has not changed, no update required";
-          _synchronizationTimer.start();
-          emit calendarHasNotChanged();
-        }
-      } else {
-        QDEBUG << _displayName << ": "
-               << "sync token has changed";
-        emit syncTokenChanged();
-        lastSyncMonth = _month;
-        lastSyncYear = _year;
-        emit calendarUpdateRequired();
-      }
-    } else {
-      QDEBUG << _displayName << ": "
-             << "ERROR: Receiving sync token failed. Status:" << sStatus;
-      emit error("Receiving sync token failed.");
-    }
-
-    QDEBUG << _displayName << ": "
-           << "\r\nHeaders:" << _pReply->rawHeaderList() << "\r\n";
-    if (_pReply->hasRawHeader("DAV")) {
-      QDEBUG << _displayName << ": "
-             << "DAV:" << _pReply->rawHeader("DAV");
-    }
-    if (_pReply->hasRawHeader("Server")) {
-      QDEBUG << _displayName << ": "
-             << "Server:" << _pReply->rawHeader("Server");
-    }
-    QDEBUG << _displayName << ": "
-           << "Status code:"
-           << _pReply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
-  } else {
-    QDEBUG << _displayName << ": "
-           << "ERROR: Invalid reply pointer when receiving sync token.";
-    emit error("Invalid reply pointer when receiving sync token.");
-  }
-}
-
-void CalendarClient_CalDAV::handleRequestChangesFinished(void) {
-  _requestTimeoutTimer.stop();
-
-  if (E_STATE_ERROR == _state) {
-    QDEBUG << _displayName << ": "
-           << "Error state - aborting";
-  }
-
-  QDEBUG << _displayName << ": "
-         << "HTTP RequestChanges finished";
-
-  if (nullptr != _pReply) {
-    QDomDocument doc;
-
-    QString reply = _pReply->readAll();
-    QDEBUG << _displayName << "Response: " << reply;
-    reply = reply.replace("<D:", "<")
-                .replace("</D:", "</")
-                .replace("<cs:", "<")
-                .replace("</cs:", "</");
-    QDEBUG << _displayName << ": "
-           << "Response replaced: " << reply;
-
-    doc.setContent(reply);
-
-    _eventList.clear();
-
-    QDomNodeList list_response = doc.elementsByTagName("response");
-    for (int i = 0; i < list_response.size(); i++) {
-      QDomNode thisResponse = list_response.item(i);
-
-      QDEBUG << _displayName << ": "
-             << "Response" << i;
-
-      QString sHref = "";
-      QString sETag = "";
-      QString sPropStatus = "";
-      QString strCalendarData = "";
-
-      QDomElement elHref = thisResponse.firstChildElement("href");
-      if (!elHref.isNull()) {
-        QDEBUG << _displayName << ": "
-               << "  HREF = " << elHref.text();
-        sHref = elHref.text();
-      } else {
-        QDEBUG << _displayName << ": "
-               << "  HREF = ";
-      }
-
-      QDomNode thisPropStat = thisResponse.firstChildElement("propstat");
-      if (!thisPropStat.isNull()) {
-
-        QDomElement elPropStatus = thisPropStat.firstChildElement("status");
-        if (!elPropStatus.isNull()) {
-          QDEBUG << _displayName << ": "
-                 << "    PROPSTATUS = " << elPropStatus.text();
-          sPropStatus = elPropStatus.text();
-        } else {
-          QDEBUG << _displayName << ": "
-                 << "    PROPSTATUS = ";
-        }
-
-        QDomNode thisProp = thisPropStat.firstChildElement("prop");
-        if (!thisProp.isNull()) {
-          QDomElement elETag = thisProp.firstChildElement("getetag");
-          if (!elETag.isNull()) {
-            // QDEBUG << _displayName << ": " << "    ETAG = " <<
-            // elETag.text();
-            sETag = elETag.text();
-          } else {
-            QDEBUG << _displayName << ": "
-                   << "    ETAG = ";
-          }
-
-          QDomElement elCalendarData =
-              thisProp.firstChildElement("cal:calendar-data");
-          if (!elCalendarData.isNull()) {
-            QDEBUG << _displayName << ": "
-                   << "    CALENDARDATA = " << elCalendarData.text();
-
-            if (_dataStream) {
-              delete _dataStream;
-            }
-            _dataStream = new QTextStream(elCalendarData.text().toLatin1());
-
-            parseCALENDAR(sHref);
-
-            strCalendarData = elCalendarData.text();
-          } else {
-            QDEBUG << _displayName << ": "
-                   << "    CALENDARDATA = ";
-          }
-        }
-      }
-    }
-
-    int iStatusCode =
-        _pReply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
-    QDEBUG << _displayName << ": "
-           << "Status code:" << iStatusCode;
-
-    if (207 != iStatusCode) {
-      QDEBUG << _displayName << ": "
-             << "ERROR: Invalid HTTP return code:" << iStatusCode;
-      emit error("Invalid HTTP return code.");
-    } else {
-      QDEBUG << _displayName << ": "
-             << "OK, restarting synchronization\r\n\r\n";
-      _synchronizationTimer.start();
-      emit eventsUpdated();
-    }
-
-  } else {
-    QDEBUG << _displayName << ": "
-           << "ERROR: Invalid reply pointer when receiving changes.";
-    emit error("Invalid reply pointer when receiving changes.");
-  }
-}
-
 /**
  * @brief         State machine implementation of class CalendarClient_CalDAV.
  */
@@ -605,7 +335,6 @@ void CalendarClient_CalDAV::setupStateMachine(void) {
   QStateMachine *pStateMachine = new QStateMachine(this);
 
   QState *pStateWaiting = new QState(pStateMachine);
-  QState *pStateRequestingSyncToken = new QState(pStateMachine);
   QState *pStateRequestingChanges = new QState(pStateMachine);
   QState *pStateProcessingChanges = new QState(pStateMachine);
   QState *pStateError = new QState(pStateMachine);
@@ -614,26 +343,10 @@ void CalendarClient_CalDAV::setupStateMachine(void) {
           SLOT(debug_handleTimerTimeout()));
 
   // pStateWaiting
-  pStateWaiting->addTransition(&_synchronizationTimer, SIGNAL(timeout()),
-                               pStateRequestingSyncToken);
-  pStateWaiting->addTransition(this, SIGNAL(forceSynchronization()),
-                               pStateRequestingSyncToken);
   connect(pStateWaiting, SIGNAL(entered()), this,
           SLOT(handleStateWaitingEntry()));
   connect(pStateWaiting, SIGNAL(exited()), this,
           SLOT(handleStateWaitingExit()));
-
-  // pStateRequestingSyncToken
-  pStateRequestingSyncToken->addTransition(
-      this, SIGNAL(calendarUpdateRequired()), pStateRequestingChanges);
-  pStateRequestingSyncToken->addTransition(
-      this, SIGNAL(calendarHasNotChanged()), pStateWaiting);
-  pStateRequestingSyncToken->addTransition(this, SIGNAL(error(QString)),
-                                           pStateError);
-  connect(pStateRequestingSyncToken, SIGNAL(entered()), this,
-          SLOT(handleStateRequestingSyncTokenEntry()));
-  connect(pStateRequestingSyncToken, SIGNAL(exited()), this,
-          SLOT(handleStateRequestingSyncTokenExit()));
 
   // pStateRequestingChanges
   pStateRequestingChanges->addTransition(this, SIGNAL(calendarUpdateRequired()),
@@ -700,17 +413,6 @@ void CalendarClient_CalDAV::handleStateWaitingExit(void) {
   emit syncStateChanged(_state);
   QDEBUG << _displayName << ": "
          << "leaving pStateWaiting";
-}
-
-void CalendarClient_CalDAV::handleStateRequestingSyncTokenEntry(void) {
-  QDEBUG << _displayName << ": "
-         << "entering pStateRequestingSyncToken";
-  sendRequestSyncToken();
-}
-
-void CalendarClient_CalDAV::handleStateRequestingSyncTokenExit(void) {
-  QDEBUG << _displayName << ": "
-         << "leaving pStateRequestingSyncToken";
 }
 
 void CalendarClient_CalDAV::handleStateRequestingChangesEntry(void) {

@@ -63,8 +63,8 @@ void CalendarClient_CalDAV::deleteEvent(QString href) {
   _pUploadReply = _uploadNetworkManager.deleteResource(request);
 
   if (NULL != _pUploadReply) {
-    connect(_pUploadReply, SIGNAL(error(QNetworkReply::NetworkError)), this,
-            SLOT(handleUploadHTTPError()));
+    connect(_pReply, SIGNAL(CalendarClient::error()), this,
+            SLOT(CalendarClient_CalDAV::handleHTTPError()));
 
     connect(_pUploadReply, SIGNAL(finished()), this,
             SLOT(handleUploadFinished()));
@@ -74,5 +74,19 @@ void CalendarClient_CalDAV::deleteEvent(QString href) {
     QDEBUG << _displayName << ": "
            << "ERROR: Invalid reply pointer when requesting URL.";
     emit error("Invalid reply pointer when requesting URL.");
+  }
+}
+
+void CalendarClient_CalDAV::handleUploadFinished(void) {
+  _uploadRequestTimeoutTimer.stop();
+
+  QDEBUG << _displayName << ": "
+         << "HTTP upload finished";
+
+  if (nullptr != _pUploadReply) {
+    std::cout << _displayName.toStdString() << ": "
+              << "received:\r\n"
+              << _pUploadReply->readAll().toStdString();
+    emit forceSynchronization();
   }
 }
