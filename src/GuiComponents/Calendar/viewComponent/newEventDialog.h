@@ -24,7 +24,7 @@
 #include <QRadioButton>
 #include <QTextEdit>
 #include <QWidget>
-#include "../Calendar/viewComponent/model/event.h"
+#include "model/event.h"
 class NewEventDialog : public QDialog {
   Q_OBJECT
 

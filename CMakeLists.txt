@@ -44,6 +44,24 @@ add_executable(calendar_todo_list_cpp
         src/GuiComponents/NewCalendar/NewCalendarDialog.cpp
         src/GuiComponents/NewEvent/NewEventDialog.cpp
         src/GuiComponents/NewEvent/NewEventDialog.h
+        src/GuiComponents/Calendar/viewComponent/util/dateutil.cpp
+        src/GuiComponents/Calendar/viewComponent/util/dateutil.h
+        src/GuiComponents/Calendar/viewComponent/customdialog.cpp
+        src/GuiComponents/Calendar/viewComponent/customdialog.h
+        src/GuiComponents/Calendar/viewComponent/model/date.h
+        src/GuiComponents/Calendar/viewComponent/model/event.h
+        src/GuiComponents/Calendar/viewComponent/model/category.h
+        src/GuiComponents/Calendar/viewComponent/qframe_extended.h
+        src/GuiComponents/Calendar/viewComponent/qwidget_extended.h
+        src/GuiComponents/Calendar/viewComponent/qwidget_extended.cpp
+        src/GuiComponents/Calendar/viewComponent/qlabel_event.cpp
+        src/GuiComponents/Calendar/viewComponent/qlabel_event.h
+        src/GuiComponents/Calendar/viewComponent/qpushbutton_extended.h
+        src/GuiComponents/Calendar/viewComponent/qpushbutton_extended.cpp
+        src/GuiComponents/Calendar/viewComponent/API/APImain.cpp
+        src/GuiComponents/Calendar/viewComponent/API/APImain.h
+        src/GuiComponents/Calendar/maincalendar.cpp
+        src/GuiComponents/Calendar/maincalendar.h
         )
 target_link_libraries(calendar_todo_list_cpp
         Qt::Core

@@ -1,12 +1,15 @@
+#include "src/GuiComponents/Calendar/maincalendar.h"
+
 #include <QApplication>
-#include <iostream>
 
-#include "./src/GuiComponents/NewCalendar/WindowNewCalendar.h"
 
-int main(int argc, char *argv[]) {
-  QApplication a(argc, argv);
+#include<QWidget>
+int main(int argc, char *argv[])
+{
+    QApplication a(argc, argv);
 
-  WindowNewCalendar window;
-  window.show();
-  return a.exec();
+
+    MainCalendar m;
+    m.show();
+    return a.exec();
 }
