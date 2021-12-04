@@ -4,7 +4,6 @@
  * @date    28/11/21.
  * @file    CalendarClient.h
  * @brief   Classe comune per tutti i calendari.
- *          Contine il parsing per il formato iCalendar
  *
  */
 
@@ -22,20 +21,14 @@
 #include <QtNetwork>
 
 #include "../CalendarEvent/CalendarEvent.h"
-#include "../DateUtils.h"
-
-/*
- * Indica se viene usato il colore indicato dal calendario
- * o quello specificato dall'utente
- */
-#define CALENDAR_OVERWRITE_COLOR 0
+#include "../Utils/DateUtils.h"
 
 /**
  * @class       CalendarClient
  *
  * @brief       Classe astratta per tutti i calendari.
  *              Consente di ottenere un oggetto CalendarEvent da una
- *              risorsa locale o remota.
+ *              risorsa remota.
  */
 
 class CalendarClient : public QObject {
@@ -48,13 +41,7 @@ public:
     E_STATE_ERROR // Errore nel calendario
   } E_CalendarState;
 
-  typedef enum {
-    E_CALENDAR_ICS,   // event source è un file iCalendar locale or remoto
-    E_CALENDAR_CALDAV // event source è un server CalDAV
-  } E_CalendarType;
-
   Q_ENUM(E_CalendarState)
-  Q_ENUM(E_CalendarType)
 
   // Colore del CalendarClient per la GUI
   Q_PROPERTY(QString color READ getColor WRITE setColor NOTIFY colorChanged)
@@ -62,9 +49,6 @@ public:
   // Sincronizzazione dello stato del CalendarClient
   Q_PROPERTY(
       E_CalendarState syncState READ getSyncState NOTIFY syncStateChanged)
-
-  // Tipo di calendario; i.e. qual è la fonte degli eventi del calendario
-  Q_PROPERTY(E_CalendarType calendarType READ getCalendarType CONSTANT)
 
   // URL della da cui vengono recuperati gli eventi del calendario
   // (percorso del file iCalendar, URL del server Caldav, ...)
@@ -87,25 +71,20 @@ public:
   ~CalendarClient();
 
   /**
-   * @brief   Restituisce un elenco di eventi che si verificano nella data
-   * inserita
+   * @brief     Restituisce un elenco di eventi che si verificano nella data
+   *            inserita
    */
   Q_INVOKABLE QList<QObject *> eventsForDate(const QDate &date);
 
   /**
-   * @brief   Restituisce l'elenco completo degli eventi gestiti da
-   * Calendarclient
+   * @brief     Restituisce l'elenco completo degli eventi gestiti da
+   *            CalendarClient
    */
   Q_INVOKABLE QList<QObject *> allEvents(void);
-
-  /**
-   * Protected
-   */
 
 protected:
   QString _color;
   E_CalendarState _state;
-  E_CalendarType _calendarType;
   QUrl _hostURL;
   QString _displayName;
 
@@ -115,7 +94,7 @@ protected:
   // Flusso di prova per gestire il contenuto del file iCalendar
   QTextStream *_dataStream;
 
-  // Elenco degli eventi gestiti Calendarevent
+  // Elenco degli eventi gestiti CalendarEvent
   QList<CalendarEvent> _eventList;
 
   QNetworkAccessManager _networkManager;
@@ -125,25 +104,35 @@ protected:
   int _requestTimeoutMS;
 
   /**
-   * @brief   Helper function per codificare le richieste di autorizzazione di
-   * rete
+   * @brief     Helper function per codificare le richieste di autorizzazione di
+   *            rete
    */
   QString encodeBase64(QString string);
 
   /**
-   * @brief   Helper function per decodificare le stringhe ricevute
+   * @brief     Helper function per decodificare le stringhe ricevute
    */
   QString ascii2utf8(QString str);
 
   /**
-   * @brief   Parser per i campi del calendario da un iCalendar file.
+   * @brief   Parser per i campi del calendario da un iCalendar.
    */
-  void parseCALENDAR(QString href);
+  void parseVCALENDAR(QString href);
 
   /**
-   * @brief   Parser per i campi VEVENT di un iCalendar file.
+   * @brief   Parser per i campi del attivia' da un iCalendar.
    */
-  void parseVEVENT(QString href);
+  void parseVTODO(QString href);
+
+  /**
+   * @brief   Parser per i campi VEVENT di un evento VCALENDAR.
+   */
+  void parseCalendarVEVENT(QString href);
+
+  /**
+   * @brief   Parser per i campi VEVENT di un attivita' VTODO.
+   */
+  void parseTodoVEVENT(QString href);
 
   /**
    * @brief   Aggiunge un singolo evento a _eventList
@@ -167,7 +156,6 @@ signals:
   void colorChanged(QString color);
   // emesso quando il calendario è entrato in un nuovo stato di sincronizzazione
   void syncStateChanged(E_CalendarState syncState);
-  void calendarTypeChanged(E_CalendarType calendarType);
   void hostURLChanged(QString hostURL);
   void displayNameChanged(QString hostURL);
 
@@ -212,7 +200,6 @@ public slots:
   void setColor(const QString &color);
 
   E_CalendarState getSyncState(void);
-  E_CalendarType getCalendarType(void);
 
   virtual bool setHostURL(const QUrl hostURL);
   QString getHostURL(void) const;

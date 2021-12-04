@@ -18,6 +18,26 @@
   qDebug()
 #endif
 
+// LOUSO SIA PER CREARE CHE PER MODIFICARE
+
+NewEventDialog::NewEventDialog(Event *event, QWidget *parent)
+    : QDialog(parent) {
+
+  bg_rgb = QColor(QWidget::palette().color(QWidget::backgroundRole()));
+  fg_rgb = QColor(QWidget::palette().color(QWidget::foregroundRole()));
+
+  createBaseInfoLayout(event);
+  createButtonGroupBox(event);
+
+  QGridLayout *layout = new QGridLayout;
+  layout->addWidget(gb_baseInfo, 0, 0);
+  layout->addWidget(_buttonBox, 2, 0, Qt::AlignRight);
+  layout->setSizeConstraint(QLayout::SetFixedSize);
+  setLayout(layout);
+
+  setWindowTitle((!event) ? tr("New Event") : tr("Modify Event"));
+}
+
 NewEventDialog::NewEventDialog(QWidget *parent) : QDialog(parent) {
 
   bg_rgb = QColor(QWidget::palette().color(QWidget::backgroundRole()));
@@ -35,7 +55,7 @@ NewEventDialog::NewEventDialog(QWidget *parent) : QDialog(parent) {
   setWindowTitle(tr("New Event"));
 }
 
-void NewEventDialog::createBaseInfoLayout() {
+void NewEventDialog::createBaseInfoLayout(Event *event) {
   gb_baseInfo = new QGroupBox;
   gb_baseInfo->setFlat(true);
   gb_baseInfo->setStyleSheet("border:0;");
@@ -54,13 +74,14 @@ void NewEventDialog::createBaseInfoLayout() {
   le_title->setPlaceholderText(tr("Title"));
   le_title->setObjectName("Title");
   le_title->setStyleSheet(t_styleSheet);
-
+  if (event != nullptr)
+    le_title->setText(event->getName().c_str());
   _groupBox = new QGroupBox();
 
   rb_event = new QRadioButton("Event");
   rb_activity = new QRadioButton("Activity");
-
   rb_event->setChecked(true);
+  rb_activity->setDisabled(true);
 
   _vbox = new QHBoxLayout;
   _vbox->addWidget(rb_event);
@@ -69,8 +90,8 @@ void NewEventDialog::createBaseInfoLayout() {
 
   _groupBox->setLayout(_vbox);
 
-  createEventLayout();
-  createActivityLayout();
+  createEventLayout(event);
+  createActivityLayout(event);
 
   connect(rb_event, &QRadioButton::toggled, e_event, &QWidget::setVisible);
   connect(rb_event, &QRadioButton::toggled, e_activity, &QWidget::setHidden);
@@ -86,7 +107,7 @@ void NewEventDialog::createBaseInfoLayout() {
   gb_baseInfo->setLayout(_baseInfoLayout);
 }
 
-void NewEventDialog::createEventLayout() {
+void NewEventDialog::createEventLayout(Event *event) {
   e_event = new QWidget;
 
   QString dte_styleSheet =
@@ -99,13 +120,21 @@ void NewEventDialog::createEventLayout() {
           .arg(bg_rgb.red())
           .arg(bg_rgb.green())
           .arg(bg_rgb.blue());
-  dte_startDateE = new QDateTimeEdit(QDate::currentDate());
+  QDate startD, endD;
+  if (event == nullptr) {
+    startD = QDate::currentDate();
+    endD = QDate::currentDate();
+  } else {
+    startD = QDate(event->getYearS(), event->getMonthS(), event->getDayS());
+    endD = QDate(event->getYearE(), event->getMonthE(), event->getDayE());
+  }
+  dte_startDateE = new QDateTimeEdit(startD);
   dte_startDateE->setMinimumDate(QDate::currentDate().addDays(-365));
   dte_startDateE->setMaximumDate(QDate::currentDate().addDays(365));
   dte_startDateE->setDisplayFormat("yyyy/MM/dd");
   dte_startDateE->setStyleSheet(dte_styleSheet);
 
-  dte_endDateE = new QDateTimeEdit(QDate::currentDate());
+  dte_endDateE = new QDateTimeEdit(endD);
   dte_endDateE->setMinimumDate(QDate::currentDate().addDays(-365));
   dte_endDateE->setMaximumDate(QDate::currentDate().addDays(365));
   dte_endDateE->setDisplayFormat("yyyy/MM/dd");
@@ -141,6 +170,8 @@ void NewEventDialog::createEventLayout() {
           .arg(bg_rgb.blue());
   le_location = new QLineEdit;
   le_location->setPlaceholderText("Location");
+  if (event != nullptr)
+    le_location->setText(event->getPlace().c_str());
   le_location->setStyleSheet(le_styleSheet);
   _pixmap = QPixmap("../img/place.png");
   _pixmap = _pixmap.scaled(QSize(18, 18), Qt::KeepAspectRatio);
@@ -151,6 +182,8 @@ void NewEventDialog::createEventLayout() {
   te_descriptionE = new QTextEdit;
   te_descriptionE->setMaximumHeight(100);
   te_descriptionE->setPlaceholderText("Description");
+  if (event != nullptr)
+    te_descriptionE->setText(event->getDescription().c_str());
 
   cb_calendar = new QComboBox;
   cb_calendar->addItem("Google");
@@ -170,7 +203,7 @@ void NewEventDialog::createEventLayout() {
   e_event->show();
 }
 
-void NewEventDialog::createActivityLayout() {
+void NewEventDialog::createActivityLayout(Event *event) {
   e_activity = new QWidget;
 
   dte_startDateA = new QDateTimeEdit(QDate::currentDate());
@@ -200,10 +233,10 @@ void NewEventDialog::createActivityLayout() {
   e_activity->hide();
 }
 
-void NewEventDialog::createButtonGroupBox() {
+void NewEventDialog::createButtonGroupBox(Event *event) {
   btn_cancel = new QPushButton(tr("Cancel"));
   btn_cancel->setCheckable(true);
-  btn_save = new QPushButton(tr("Add"));
+  btn_save = new QPushButton(!event ? tr("Add") : tr("Modify"));
   btn_save->setCheckable(true);
 
   connect(btn_save, &QPushButton::clicked, this, &NewEventDialog::onSaveClick);
@@ -243,7 +276,7 @@ void NewEventDialog::onSaveClick(void) {
       rrule = "FREQ=YEARLY;INTERVAL=1";
     QDateTime startDateTime = dte_startDateE->dateTime();
     QDateTime endDateTime = dte_endDateE->dateTime();
-    emit newEvent(uid, filename, summary, location, description, rrule, exdate,
+    emit newEvent(uid, filename, summary, location, description, rrule,
                   startDateTime, endDateTime);
   } else {
     // FIXME

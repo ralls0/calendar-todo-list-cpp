@@ -1,9 +1,9 @@
 /**
  *
  * @author  Marco Manco
- * @date    28/11/21.
- * @file    SaveEvent.cpp
- * @brief   Salva un evento nel calendario
+ * @date    03/12/21.
+ * @file    SaveActivity.cpp
+ * @brief   Salva un attivita' nel calendario
  *
  */
 
@@ -18,11 +18,10 @@
   qDebug()
 #endif
 
-void CalendarClient_CalDAV::saveEvent(QString uid, QString filename,
-                                      QString summary, QString location,
-                                      QString description, QString rrule,
-                                      QDateTime startDateTime,
-                                      QDateTime endDateTime) {
+void CalendarClient_CalDAV::saveActivity(QString uid, QString filename,
+                                         QString summary, QString description,
+                                         QDateTime startDateTime,
+                                         QDateTime endDateTime) {
   QDEBUG << "[i] (" << _displayName << ") "
          << "saving event" << summary;
 
@@ -77,17 +76,10 @@ void CalendarClient_CalDAV::saveEvent(QString uid, QString filename,
       "DTEND:" +
       endDateTime.toString("yyyyMMddTHHmmss") +
       "\r\n"
-      "LOCATION:" +
-      location +
-      "\r\n"
       "DESCRIPTION:" +
       description +
       "\r\n"
       "TRANSP:OPAQUE\r\n";
-
-  if (!rrule.isEmpty()) {
-    requestString.append("RRULE:" + rrule + "\r\n");
-  }
 
   requestString.append("END:VEVENT\r\nEND:VCALENDAR");
 

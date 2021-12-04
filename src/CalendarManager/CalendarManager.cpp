@@ -66,17 +66,14 @@ void CalendarManager::saveSettings(void) {
   for (int index = 0; index < _calendarList.count(); index++) {
     settings.beginGroup("Calendar" + QString::number(index));
     settings.setValue("DisplayName", _calendarList.at(index)->getDisplayName());
-    settings.setValue("Type", _calendarList.at(index)->getCalendarType());
     settings.setValue("URL", _calendarList.at(index)->getHostURL());
     settings.setValue("Color", _calendarList.at(index)->getColor());
-    if (CalendarClient::E_CALENDAR_CALDAV ==
-        _calendarList.at(index)->getCalendarType()) {
-      const CalendarClient_CalDAV *pCalDAVClient =
-          (const CalendarClient_CalDAV *)_calendarList[index];
-      settings.setValue("Username", pCalDAVClient->getUsername());
-      settings.setValue("Password",
-                        crypto.encryptToString(pCalDAVClient->getPassword()));
-    }
+    const CalendarClient_CalDAV *pCalDAVClient =
+        (const CalendarClient_CalDAV *)_calendarList[index];
+    settings.setValue("Username", pCalDAVClient->getUsername());
+    settings.setValue("Password",
+                      crypto.encryptToString(pCalDAVClient->getPassword()));
+    settings.setValue("AccessToken", pCalDAVClient->getAccessToken());
     settings.endGroup();
   }
 }
@@ -90,7 +87,7 @@ void CalendarManager::loadSettings(void) {
 
   clearCalendarList();
 
-  while (false == bAbort) {
+  while (!bAbort) {
 
     QString group = "Calendar";
     group.append(QString::number(index));
@@ -113,37 +110,18 @@ void CalendarManager::loadSettings(void) {
     int type = settings.value(key, -1).toInt();
 
     if (-1 != type) {
-      switch ((CalendarClient::E_CalendarType)type) {
-        //                case CalendarClient::E_CALENDAR_ICS:
-        //                {
-        //                    addICS_Calendar(color, displayName, QUrl(url));
-        //                    break;
-        //                } FIXME
+      key = group;
+      key.append("Username");
+      QString username = settings.value(key, "").toString();
 
-      case CalendarClient::E_CALENDAR_CALDAV: {
-        key = group;
-        key.append("Username");
-        QString username = settings.value(key, "").toString();
-
-        key = group;
-        key.append("Password");
-        QString password = settings.value(key, "").toString();
-        if (!password.isEmpty()) {
-          password = crypto.decryptToString(password);
-        }
-
-        addCalDAV_Calendar(color, displayName, QUrl(url), username, password);
-
-        break;
+      key = group;
+      key.append("Password");
+      QString password = settings.value(key, "").toString();
+      if (!password.isEmpty()) {
+        password = crypto.decryptToString(password);
       }
 
-      default: {
-        QDEBUG << "ERROR:" << type
-               << "is no valid CalendarClient::E_CalendarType";
-
-        break;
-      }
-      }
+      addCalDAV_Calendar(color, displayName, QUrl(url), username, password);
 
     } else {
       bAbort = true;
@@ -159,15 +137,11 @@ void CalendarManager::setDate(const QDate &newDate) {
     QDEBUG << "Date changed to " << newDate.toString();
     _date = newDate;
     foreach (CalendarClient *pListItem, _calendarList) {
-      if (CalendarClient::E_CALENDAR_CALDAV == pListItem->getCalendarType()) {
-        CalendarClient_CalDAV *pCalendarClient_CalDAV =
-            (CalendarClient_CalDAV *)pListItem;
-        pCalendarClient_CalDAV->setYear(newDate.year());
-        pCalendarClient_CalDAV->setMonth(newDate.month());
-      } else if (CalendarClient::E_CALENDAR_ICS ==
-                 pListItem->getCalendarType()) {
-        pListItem->startSynchronization();
-      }
+
+      CalendarClient_CalDAV *pCalendarClient_CalDAV =
+          (CalendarClient_CalDAV *)pListItem;
+      pCalendarClient_CalDAV->setYear(newDate.year());
+      pCalendarClient_CalDAV->setMonth(newDate.month());
     }
     emit dateChanged();
   }
@@ -206,24 +180,6 @@ void CalendarManager::addCalDAV_Calendar(QString color, QString calendarName,
 
   emit listOfCalendarsChanged();
 }
-
-// void CalendarManager::addICS_Calendar(QString color, QString calendarName,
-// QUrl url)
-//{
-//     CalendarClient_ICS* pCalendar = new CalendarClient_ICS(this);
-//
-//     pCalendar->setColor(color);
-//     pCalendar->setDisplayName(calendarName);
-//     pCalendar->setHostURL(url);
-//
-//     _calendarList.append(pCalendar);
-//
-//     connect(pCalendar, SIGNAL(eventsUpdated()), this,
-//     SLOT(handleEventUpdate()));
-//
-//     pCalendar->startSynchronization();
-//     emit listOfCalendarsChanged();
-// } FIXME add when you introduce support for ICS
 
 CalendarClient *CalendarManager::getListItemAt(int index) {
   if ((index < 0) || (index >= _calendarList.count())) {

@@ -1,14 +1,14 @@
 /**
  *
  * @author  Marco Manco
- * @date    28/11/21.
- * @file    WindowNewCalendar.h
+ * @date    05/12/21.
+ * @file    MainWindow.h
  * @brief
  *
  */
 
-#ifndef CALENDAR_TODO_LIST_CPP_WINDOWNEWCALENDAR_H
-#define CALENDAR_TODO_LIST_CPP_WINDOWNEWCALENDAR_H
+#ifndef CALENDAR_TODO_LIST_CPP_MAINWINDOW_H
+#define CALENDAR_TODO_LIST_CPP_MAINWINDOW_H
 
 #include <QCalendarWidget>
 #include <QCheckBox>
@@ -24,15 +24,16 @@
 #include <QWidget>
 #include <iostream>
 
-#include "../../ClientCalDAV/CalendarClient_CalDAV.h"
-#include "../NewEvent/NewEventDialog.h"
-#include "NewCalendarDialog.h"
+#include "../ClientCalDAV/CalendarClient_CalDAV.h"
+#include "Calendar/Calendar.h"
+#include "NewCalendar/NewCalendarDialog.h"
+#include "NewEvent/NewEventDialog.h"
 
-class WindowNewCalendar : public QWidget {
+class MainWindow : public QWidget {
   Q_OBJECT
 
 public:
-  WindowNewCalendar(QWidget *parent = nullptr);
+  MainWindow(QWidget *parent = nullptr);
 
 public slots:
   void createNewCalendar(const QString &displayName, const QString &hostURL,
@@ -46,8 +47,9 @@ private:
   QGridLayout *_previewLayout;
   NewCalendarDialog *_newCalendarDialog;
   NewEventDialog *_newEventDialog;
+  MainCalendar *_calendar;
 
   CalendarClient_CalDAV *_cals;
 };
 
-#endif // CALENDAR_TODO_LIST_CPP_WINDOWNEWCALENDAR_H
+#endif // CALENDAR_TODO_LIST_CPP_MAINWINDOW_H

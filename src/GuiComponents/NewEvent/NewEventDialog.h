@@ -10,6 +10,7 @@
 #ifndef CALENDAR_TODO_LIST_CPP_NEWEVENTDIALOG_H
 #define CALENDAR_TODO_LIST_CPP_NEWEVENTDIALOG_H
 
+#include "../Calendar/ViewComponents/Model/Event.h"
 #include <QComboBox>
 #include <QDateTimeEdit>
 #include <QDebug>
@@ -30,21 +31,21 @@ class NewEventDialog : public QDialog {
 
 public:
   NewEventDialog(QWidget *parent = nullptr);
-
+  NewEventDialog(Event *event, QWidget *parent = nullptr);
 public slots:
   void onSaveClick(void);
 
 signals:
   void newEvent(QString uid, QString filename, QString summary,
                 QString location, QString description, QString rrule,
-                QString exdate, QDateTime startDateTime, QDateTime endDateTime);
+                QDateTime startDateTime, QDateTime endDateTime);
   void newAction(); // FIXME
 
 private:
-  void createBaseInfoLayout();
-  void createEventLayout();
-  void createActivityLayout();
-  void createButtonGroupBox();
+  void createBaseInfoLayout(Event *event = nullptr);
+  void createEventLayout(Event *event = nullptr);
+  void createActivityLayout(Event *event = nullptr);
+  void createButtonGroupBox(Event *event = nullptr);
 
   QGridLayout *_baseInfoLayout;
   QGridLayout *_eventLayout;
@@ -65,7 +66,6 @@ private:
   QDateTimeEdit *dte_endDateE;
   QDateTimeEdit *dte_startDateA;
   QDateTimeEdit *dte_endDateA;
-
   QComboBox *cb_rrule;
   QComboBox *cb_calendar;
   QComboBox *cb_activity;
