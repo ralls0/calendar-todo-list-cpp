@@ -21,7 +21,7 @@
 #include <QtNetwork>
 
 #include "../CalendarEvent/CalendarEvent.h"
-#include "../DateUtils.h"
+#include "../Utils/DateUtils.h"
 
 /**
  * @class       CalendarClient

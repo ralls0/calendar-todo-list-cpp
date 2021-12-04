@@ -38,7 +38,7 @@
 #include "../ClientCalDAV/CalendarClient.h"
 #include "../ClientCalDAV/CalendarClient_CalDAV.h"
 // #include "CalendarClient_ICS.h"
-#include "../SimpleCrypt.h"
+#include "../Utils/SimpleCrypt.h"
 
 #define PWD_CRYPT Q_UINT64_C(0x3A3CF524EC443FB1)
 
