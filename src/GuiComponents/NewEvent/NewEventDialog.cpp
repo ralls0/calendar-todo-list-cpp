@@ -71,8 +71,7 @@ void NewEventDialog::createBaseInfoLayout(Event *event) {
           .arg(bg_rgb.green())
           .arg(bg_rgb.blue());
   le_title = new QLineEdit;
-  le_title->setPlaceholderText(!event ? tr("Title")
-                                      : tr(event->getName().c_str()));
+  le_title->setPlaceholderText(tr("Title"));
   le_title->setObjectName("Title");
   le_title->setStyleSheet(t_styleSheet);
   if (event != nullptr)
@@ -182,10 +181,9 @@ void NewEventDialog::createEventLayout(Event *event) {
 
   te_descriptionE = new QTextEdit;
   te_descriptionE->setMaximumHeight(100);
-  std::string addDesc = "Description: ";
+  te_descriptionE->setPlaceholderText("Description");
   if (event != nullptr)
-    addDesc.append(event->getDescription());
-  te_descriptionE->setPlaceholderText(addDesc.c_str());
+    te_descriptionE->setText(event->getDescription().c_str());
 
   cb_calendar = new QComboBox;
   cb_calendar->addItem("Google");

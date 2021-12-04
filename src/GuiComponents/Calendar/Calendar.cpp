@@ -463,7 +463,13 @@ void MainCalendar::display_days(Date date) {
       x++;
     } else {
       // mark the cell as disabled
-      this->frames[i]->setObjectName("disabled");
+      if ((i % 7) > 4) { // frame in the last two columns
+        // mark the cell as an holiday
+        this->frames[i]->setObjectName("holiday");
+      } else { // is a generic day
+        // mark the cell as enabled
+        this->frames[i]->setObjectName("disabled");
+      }
     }
     // Refresh the css rules
     this->frames[i]->setStyleSheet(_colorStyle.getCellStyle());
@@ -479,7 +485,7 @@ QFrameExtended *MainCalendar::createQFrameExtended(Date *date) {
   // vl->setMargin(0);
   vl->setSpacing(1);
   vl->addWidget(new QLabel); // qui scrivo in cella
-  frame->setMinimumWidth(150);
+  frame->setMinimumWidth(100);
   frame->setMinimumHeight(60);
   frame->setLayout(vl);
   frame->setStyleSheet(_colorStyle.getCellStyle());
