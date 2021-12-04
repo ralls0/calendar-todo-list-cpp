@@ -2,7 +2,7 @@
 #define QPUSHBUTTONEXTENDED_H
 
 #include <QPushButton>
-#include "model/event.h"
+#include "Model/event.h"
 
 class QPushButtonExtended : public QPushButton
 {

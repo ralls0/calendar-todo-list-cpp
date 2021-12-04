@@ -20,8 +20,7 @@
 
 void CalendarClient_CalDAV::saveEvent(QString uid, QString filename,
                                       QString summary, QString location,
-                                      QString description, QString rrule,
-                                      QString exdate, QDateTime startDateTime,
+                                      QString description, QString rrule, QDateTime startDateTime,
                                       QDateTime endDateTime) {
   QDEBUG << _displayName << ": "
          << "saving event" << summary;
@@ -87,10 +86,6 @@ void CalendarClient_CalDAV::saveEvent(QString uid, QString filename,
 
   if (!rrule.isEmpty()) {
     requestString.append("RRULE:" + rrule + "\r\n");
-  }
-
-  if (!exdate.isEmpty()) {
-    requestString.append("EXDATE:" + exdate + "\r\n");
   }
 
   requestString.append("END:VEVENT\r\nEND:VCALENDAR");

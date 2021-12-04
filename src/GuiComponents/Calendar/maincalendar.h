@@ -1,10 +1,17 @@
 #ifndef CALENDAR_TODO_LIST_CPP_WINDOWNEWCALENDAR_H
 #define CALENDAR_TODO_LIST_CPP_WINDOWNEWCALENDAR_H
 
-#include<QApplication>
+#include "../NewEvent/NewEventDialog.h"
+#include "ViewComponent/API/APImain.h"
+#include "ViewComponent/customDialog.h"
+#include "ViewComponent/qframe_extended.h"
+#include "ViewComponent/qlabel_event.h"
+#include "ViewComponent/qpushbutton_extended.h"
+#include "ViewComponent/qwidget_extended.h"
+#include "ViewComponent/Utils/dateutil.h"
+#include <QApplication>
 #include <QCalendarWidget>
 #include <QCheckBox>
-#include <QTableWidget>
 #include <QComboBox>
 #include <QDateEdit>
 #include <QDebug>
@@ -12,19 +19,12 @@
 #include <QGroupBox>
 #include <QLabel>
 #include <QLocale>
+#include <QMainWindow>
 #include <QPushButton>
+#include <QTableWidget>
 #include <QTextCharFormat>
 #include <QWidget>
 #include <iostream>
-#include <QMainWindow>
-#include "viewComponent/qwidget_extended.h"
-#include "viewComponent/qframe_extended.h"
-#include "viewComponent/util/dateutil.h"
-#include "viewComponent/qlabel_event.h"
-#include "viewComponent/qpushbutton_extended.h"
-#include "viewComponent/customdialog.h"
-#include "../NewEvent/newEventDialog.h"
-#include "viewComponent/API/APImain.h"
 
 /* Gets the current month displayed using an hack. Infact, the cell in the middle will have always a value setted.
  * This should be used when you don't care about the day */

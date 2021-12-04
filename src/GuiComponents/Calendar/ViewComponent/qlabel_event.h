@@ -3,7 +3,7 @@
 
 #include <QLabel>
 #include <QMouseEvent>
-#include "model/event.h"
+#include "Model/event.h"
 
 class QLabelEvent : public QLabel
 {

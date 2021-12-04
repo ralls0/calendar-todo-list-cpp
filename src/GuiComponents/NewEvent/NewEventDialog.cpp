@@ -7,7 +7,7 @@
  *
  */
 
-#include "newEventDialog.h"
+#include "NewEventDialog.h"
 
 #define DEBUG_OAUTH 1
 #if DEBUG_OAUTH
@@ -20,13 +20,13 @@
 
 //LOUSO SIA PER CREARE CHE PER MODIFICARE
 
-NewEventDialog::NewEventDialog(Event *e, QWidget *parent) : QDialog(parent) {
+NewEventDialog::NewEventDialog(Event *event, QWidget *parent) : QDialog(parent) {
 
   bg_rgb = QColor(QWidget::palette().color(QWidget::backgroundRole()));
   fg_rgb = QColor(QWidget::palette().color(QWidget::foregroundRole()));
-  ev_passed=e;
-  createBaseInfoLayout();
-  createButtonGroupBox();
+
+  createBaseInfoLayout(event);
+  createButtonGroupBox(event);
 
   QGridLayout *layout = new QGridLayout;
   layout->addWidget(gb_baseInfo, 0, 0);
@@ -34,14 +34,14 @@ NewEventDialog::NewEventDialog(Event *e, QWidget *parent) : QDialog(parent) {
   layout->setSizeConstraint(QLayout::SetFixedSize);
   setLayout(layout);
 
-  setWindowTitle( (!ev_passed) ? tr("New Event") : tr("Modify Event"));
+  setWindowTitle( (!event) ? tr("New Event") : tr("Modify Event"));
 }
 
 NewEventDialog::NewEventDialog(QWidget *parent) : QDialog(parent) {
 
   bg_rgb = QColor(QWidget::palette().color(QWidget::backgroundRole()));
   fg_rgb = QColor(QWidget::palette().color(QWidget::foregroundRole()));
-  ev_passed=nullptr;
+
   createBaseInfoLayout();
   createButtonGroupBox();
 
@@ -55,7 +55,7 @@ NewEventDialog::NewEventDialog(QWidget *parent) : QDialog(parent) {
 }
 
 
-void NewEventDialog::createBaseInfoLayout() {
+void NewEventDialog::createBaseInfoLayout(Event *event) {
   gb_baseInfo = new QGroupBox;
   gb_baseInfo->setFlat(true);
   gb_baseInfo->setStyleSheet("border:0;");
@@ -71,10 +71,10 @@ void NewEventDialog::createBaseInfoLayout() {
           .arg(bg_rgb.green())
           .arg(bg_rgb.blue());
   le_title = new QLineEdit;
-  le_title->setPlaceholderText( !ev_passed ? tr("Title") : tr( ev_passed->getName().c_str()));
+  le_title->setPlaceholderText( !event ? tr("Title") : tr( event->getName().c_str()));
   le_title->setObjectName("Title");
   le_title->setStyleSheet(t_styleSheet);
-  if(ev_passed!=nullptr) le_title->setText(ev_passed->getName().c_str());
+  if(event!=nullptr) le_title->setText(event->getName().c_str());
   _groupBox = new QGroupBox();
 
   rb_event = new QRadioButton("Event");
@@ -90,8 +90,8 @@ void NewEventDialog::createBaseInfoLayout() {
 
   _groupBox->setLayout(_vbox);
 
-  createEventLayout();
-  createActivityLayout();
+  createEventLayout(event);
+  createActivityLayout(event);
 
   connect(rb_event, &QRadioButton::toggled, e_event, &QWidget::setVisible);
   connect(rb_event, &QRadioButton::toggled, e_activity, &QWidget::setHidden);
@@ -107,7 +107,7 @@ void NewEventDialog::createBaseInfoLayout() {
   gb_baseInfo->setLayout(_baseInfoLayout);
 }
 
-void NewEventDialog::createEventLayout() {
+void NewEventDialog::createEventLayout(Event *event) {
   e_event = new QWidget;
 
   QString dte_styleSheet =
@@ -121,13 +121,13 @@ void NewEventDialog::createEventLayout() {
           .arg(bg_rgb.green())
           .arg(bg_rgb.blue());
   QDate startD,endD;
-  if(ev_passed==nullptr){
+  if(event==nullptr){
       startD=QDate::currentDate();
       endD=QDate::currentDate();
   }
   else{
-      startD= QDate(ev_passed->getYearS(),ev_passed->getMonthS(),ev_passed->getDayS());
-      endD=QDate(ev_passed->getYearE(),ev_passed->getMonthE(),ev_passed->getDayE());
+      startD= QDate(event->getYearS(),event->getMonthS(),event->getDayS());
+      endD=QDate(event->getYearE(),event->getMonthE(),event->getDayE());
   }
   dte_startDateE = new QDateTimeEdit(startD);
   dte_startDateE->setMinimumDate(QDate::currentDate().addDays(-365));
@@ -171,7 +171,7 @@ void NewEventDialog::createEventLayout() {
           .arg(bg_rgb.blue());
   le_location = new QLineEdit;
   le_location->setPlaceholderText("Location");
-  if(ev_passed!=nullptr) le_location->setText(ev_passed->getPlace().c_str());
+  if(event!=nullptr) le_location->setText(event->getPlace().c_str());
   le_location->setStyleSheet(le_styleSheet);
   _pixmap = QPixmap("../img/place.png");
   _pixmap = _pixmap.scaled(QSize(18, 18), Qt::KeepAspectRatio);
@@ -182,8 +182,8 @@ void NewEventDialog::createEventLayout() {
   te_descriptionE = new QTextEdit;
   te_descriptionE->setMaximumHeight(100);
   string addDesc="Description: ";
-  if(ev_passed!=nullptr)
-      addDesc.append(ev_passed->getDescription());
+  if(event!=nullptr)
+      addDesc.append(event->getDescription());
   te_descriptionE->setPlaceholderText( addDesc.c_str());
 
   cb_calendar = new QComboBox;
@@ -204,7 +204,7 @@ void NewEventDialog::createEventLayout() {
   e_event->show();
 }
 
-void NewEventDialog::createActivityLayout() {
+void NewEventDialog::createActivityLayout(Event *event) {
   e_activity = new QWidget;
 
   dte_startDateA = new QDateTimeEdit(QDate::currentDate());
@@ -234,10 +234,10 @@ void NewEventDialog::createActivityLayout() {
   e_activity->hide();
 }
 
-void NewEventDialog::createButtonGroupBox() {
+void NewEventDialog::createButtonGroupBox(Event *event) {
   btn_cancel = new QPushButton(tr("Cancel"));
   btn_cancel->setCheckable(true);
-  btn_save = new QPushButton( !ev_passed ? tr("Add") : tr("Modify"));
+  btn_save = new QPushButton( !event ? tr("Add") : tr("Modify"));
   btn_save->setCheckable(true);
 
   connect(btn_save, &QPushButton::clicked, this, &NewEventDialog::onSaveClick);

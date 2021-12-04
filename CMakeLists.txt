@@ -38,28 +38,26 @@ add_executable(calendar_todo_list_cpp
         src/CalendarEvent/CalendarEvent.cpp
         src/OAuth2/OAuth.h
         src/OAuth2/OAuth.cpp
-        src/GuiComponents/NewCalendar/WindowNewCalendar.h
-        src/GuiComponents/NewCalendar/WindowNewCalendar.cpp
         src/GuiComponents/NewCalendar/NewCalendarDialog.h
         src/GuiComponents/NewCalendar/NewCalendarDialog.cpp
         src/GuiComponents/NewEvent/NewEventDialog.cpp
         src/GuiComponents/NewEvent/NewEventDialog.h
-        src/GuiComponents/Calendar/viewComponent/util/dateutil.cpp
-        src/GuiComponents/Calendar/viewComponent/util/dateutil.h
-        src/GuiComponents/Calendar/viewComponent/customdialog.cpp
-        src/GuiComponents/Calendar/viewComponent/customdialog.h
-        src/GuiComponents/Calendar/viewComponent/model/date.h
-        src/GuiComponents/Calendar/viewComponent/model/event.h
-        src/GuiComponents/Calendar/viewComponent/model/category.h
-        src/GuiComponents/Calendar/viewComponent/qframe_extended.h
-        src/GuiComponents/Calendar/viewComponent/qwidget_extended.h
-        src/GuiComponents/Calendar/viewComponent/qwidget_extended.cpp
-        src/GuiComponents/Calendar/viewComponent/qlabel_event.cpp
-        src/GuiComponents/Calendar/viewComponent/qlabel_event.h
-        src/GuiComponents/Calendar/viewComponent/qpushbutton_extended.h
-        src/GuiComponents/Calendar/viewComponent/qpushbutton_extended.cpp
-        src/GuiComponents/Calendar/viewComponent/API/APImain.cpp
-        src/GuiComponents/Calendar/viewComponent/API/APImain.h
+        src/GuiComponents/Calendar/ViewComponent/Utils/dateutil.cpp
+        src/GuiComponents/Calendar/ViewComponent/Utils/dateutil.h
+        src/GuiComponents/Calendar/ViewComponent/customDialog.cpp
+        src/GuiComponents/Calendar/ViewComponent/customDialog.h
+        src/GuiComponents/Calendar/ViewComponent/Model/date.h
+        src/GuiComponents/Calendar/ViewComponent/Model/event.h
+        src/GuiComponents/Calendar/ViewComponent/Model/category.h
+        src/GuiComponents/Calendar/ViewComponent/qframe_extended.h
+        src/GuiComponents/Calendar/ViewComponent/qwidget_extended.h
+        src/GuiComponents/Calendar/ViewComponent/qwidget_extended.cpp
+        src/GuiComponents/Calendar/ViewComponent/qlabel_event.cpp
+        src/GuiComponents/Calendar/ViewComponent/qlabel_event.h
+        src/GuiComponents/Calendar/ViewComponent/qpushbutton_extended.h
+        src/GuiComponents/Calendar/ViewComponent/qpushbutton_extended.cpp
+        src/GuiComponents/Calendar/ViewComponent/API/APImain.cpp
+        src/GuiComponents/Calendar/ViewComponent/API/APImain.h
         src/GuiComponents/Calendar/maincalendar.cpp
         src/GuiComponents/Calendar/maincalendar.h
         )

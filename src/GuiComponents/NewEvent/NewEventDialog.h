@@ -24,13 +24,14 @@
 #include <QRadioButton>
 #include <QTextEdit>
 #include <QWidget>
-#include "../Calendar/viewComponent/model/event.h"
+#include "../Calendar/ViewComponent/Model/event.h"
+
 class NewEventDialog : public QDialog {
   Q_OBJECT
 
 public:
   NewEventDialog(QWidget *parent = nullptr);
-  NewEventDialog(Event * e  = nullptr, QWidget *parent = nullptr);
+  NewEventDialog(Event * e, QWidget *parent = nullptr);
 public slots:
   void onSaveClick(void);
 
@@ -41,10 +42,10 @@ signals:
   void newAction(); // FIXME
 
 private:
-  void createBaseInfoLayout();
-  void createEventLayout();
-  void createActivityLayout();
-  void createButtonGroupBox();
+  void createBaseInfoLayout(Event *event = nullptr);
+  void createEventLayout(Event *event = nullptr);
+  void createActivityLayout(Event *event = nullptr);
+  void createButtonGroupBox(Event *event = nullptr);
 
   QGridLayout *_baseInfoLayout;
   QGridLayout *_eventLayout;

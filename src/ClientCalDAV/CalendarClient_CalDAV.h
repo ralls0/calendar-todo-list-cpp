@@ -143,8 +143,7 @@ public slots:
    * If the uid parameter is empty, a new event will be created.
    */
   void saveEvent(QString uid, QString filename, QString summary,
-                 QString location, QString description, QString rrule,
-                 QString exdate, QDateTime startDateTime,
+                 QString location, QString description, QString rrule, QDateTime startDateTime,
                  QDateTime endDateTime);
 
   /**
