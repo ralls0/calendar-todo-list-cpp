@@ -23,9 +23,6 @@
 NewEventDialog::NewEventDialog(Event *event, QWidget *parent)
     : QDialog(parent) {
 
-  bg_rgb = QColor(QWidget::palette().color(QWidget::backgroundRole()));
-  fg_rgb = QColor(QWidget::palette().color(QWidget::foregroundRole()));
-
   createBaseInfoLayout(event);
   createButtonGroupBox(event);
 
@@ -35,13 +32,11 @@ NewEventDialog::NewEventDialog(Event *event, QWidget *parent)
   layout->setSizeConstraint(QLayout::SetFixedSize);
   setLayout(layout);
 
-  setWindowTitle((!event) ? tr("New Event") : tr("Modify Event"));
+  setWindowTitle((!event) ? tr("Modify Event") : tr("Modify Event"));
+  this->setStyleSheet(_colorStyle.getDialogStyle());
 }
 
 NewEventDialog::NewEventDialog(QWidget *parent) : QDialog(parent) {
-
-  bg_rgb = QColor(QWidget::palette().color(QWidget::backgroundRole()));
-  fg_rgb = QColor(QWidget::palette().color(QWidget::foregroundRole()));
 
   createBaseInfoLayout();
   createButtonGroupBox();
@@ -52,7 +47,8 @@ NewEventDialog::NewEventDialog(QWidget *parent) : QDialog(parent) {
   layout->setSizeConstraint(QLayout::SetFixedSize);
   setLayout(layout);
 
-  setWindowTitle(tr("New Event"));
+  setWindowTitle(tr("Create"));
+  this->setStyleSheet(_colorStyle.getDialogStyle());
 }
 
 void NewEventDialog::createBaseInfoLayout(Event *event) {
@@ -60,20 +56,9 @@ void NewEventDialog::createBaseInfoLayout(Event *event) {
   gb_baseInfo->setFlat(true);
   gb_baseInfo->setStyleSheet("border:0;");
 
-  QString t_styleSheet =
-      QString("QLineEdit {font-size: 24px; font-weight: bold;  border-bottom: "
-              "3px solid #232323; border-color: rgb(%1,%2,%3); "
-              "background-color: rgb(%4,%5,%6);}")
-          .arg(fg_rgb.red())
-          .arg(fg_rgb.green())
-          .arg(fg_rgb.blue())
-          .arg(bg_rgb.red())
-          .arg(bg_rgb.green())
-          .arg(bg_rgb.blue());
   le_title = new QLineEdit;
   le_title->setPlaceholderText(tr("Title"));
-  le_title->setObjectName("Title");
-  le_title->setStyleSheet(t_styleSheet);
+  le_title->setObjectName("title");
   if (event != nullptr)
     le_title->setText(event->getName().c_str());
   _groupBox = new QGroupBox();
@@ -81,7 +66,6 @@ void NewEventDialog::createBaseInfoLayout(Event *event) {
   rb_event = new QRadioButton("Event");
   rb_activity = new QRadioButton("Activity");
   rb_event->setChecked(true);
-  rb_activity->setDisabled(true);
 
   _vbox = new QHBoxLayout;
   _vbox->addWidget(rb_event);
@@ -110,16 +94,6 @@ void NewEventDialog::createBaseInfoLayout(Event *event) {
 void NewEventDialog::createEventLayout(Event *event) {
   e_event = new QWidget;
 
-  QString dte_styleSheet =
-      QString("QDateTimeEdit {border-bottom: "
-              "3px solid #232323; border-color: rgb(%1,%2,%3); "
-              "background-color: rgb(%4,%5,%6);}")
-          .arg(fg_rgb.red())
-          .arg(fg_rgb.green())
-          .arg(fg_rgb.blue())
-          .arg(bg_rgb.red())
-          .arg(bg_rgb.green())
-          .arg(bg_rgb.blue());
   QDate startD, endD;
   if (event == nullptr) {
     startD = QDate::currentDate();
@@ -131,48 +105,24 @@ void NewEventDialog::createEventLayout(Event *event) {
   dte_startDateE = new QDateTimeEdit(startD);
   dte_startDateE->setMinimumDate(QDate::currentDate().addDays(-365));
   dte_startDateE->setMaximumDate(QDate::currentDate().addDays(365));
-  dte_startDateE->setDisplayFormat("yyyy/MM/dd");
-  dte_startDateE->setStyleSheet(dte_styleSheet);
+  dte_startDateE->setDisplayFormat("yyyy/MM/dd hh:mm");
 
   dte_endDateE = new QDateTimeEdit(endD);
   dte_endDateE->setMinimumDate(QDate::currentDate().addDays(-365));
   dte_endDateE->setMaximumDate(QDate::currentDate().addDays(365));
-  dte_endDateE->setDisplayFormat("yyyy/MM/dd");
-  dte_endDateE->setStyleSheet(dte_styleSheet);
+  dte_endDateE->setDisplayFormat("yyyy/MM/dd hh:mm");
 
-  QString cb_styleSheet =
-      QString("QComboBox {border-bottom: "
-              "3px solid #232323; border-color: rgb(%1,%2,%3); "
-              "background-color: rgb(%4,%5,%6);}")
-          .arg(fg_rgb.red())
-          .arg(fg_rgb.green())
-          .arg(fg_rgb.blue())
-          .arg(bg_rgb.red())
-          .arg(bg_rgb.green())
-          .arg(bg_rgb.blue());
   cb_rrule = new QComboBox;
   cb_rrule->addItem("Non si ripete");
   cb_rrule->addItem("Ogni giorno");
   cb_rrule->addItem("Ogni settimana");
   cb_rrule->addItem("Ogni mese");
   cb_rrule->addItem("Ogni anno");
-  cb_rrule->setStyleSheet(cb_styleSheet);
 
-  QString le_styleSheet =
-      QString("QLineEdit {border-bottom: "
-              "3px solid #232323; border-color: rgb(%1,%2,%3); "
-              "background-color: rgb(%4,%5,%6);}")
-          .arg(fg_rgb.red())
-          .arg(fg_rgb.green())
-          .arg(fg_rgb.blue())
-          .arg(bg_rgb.red())
-          .arg(bg_rgb.green())
-          .arg(bg_rgb.blue());
   le_location = new QLineEdit;
   le_location->setPlaceholderText("Location");
   if (event != nullptr)
     le_location->setText(event->getPlace().c_str());
-  le_location->setStyleSheet(le_styleSheet);
   _pixmap = QPixmap("../img/place.png");
   _pixmap = _pixmap.scaled(QSize(18, 18), Qt::KeepAspectRatio);
   lbl_location = new QLabel;
@@ -189,7 +139,6 @@ void NewEventDialog::createEventLayout(Event *event) {
   cb_calendar->addItem("Google");
   cb_calendar->addItem("Sabre");
   cb_calendar->addItem("NextCloud");
-  cb_calendar->setStyleSheet(cb_styleSheet);
 
   _eventLayout = new QGridLayout;
   _eventLayout->addWidget(dte_startDateE, 0, 0);

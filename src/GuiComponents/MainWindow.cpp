@@ -58,13 +58,13 @@ void MainWindow::createNewCalendar(const QString &displayName,
 void MainWindow::createPreviewGroupBox() {
   _previewGroupBox = new QGroupBox;
   _previewGroupBox->setFlat(true);
-  _previewGroupBox->setStyleSheet("border:0;");
+  _previewGroupBox->setStyleSheet("QGroupBox {  border:0; }");
 
-  QPushButton *btn_addCalendar = new QPushButton("Add Calendar", nullptr);
+  QPushButton *btn_addCalendar = new QPushButton("Add Calendar +", nullptr);
   connect(btn_addCalendar, &QPushButton::clicked, _newCalendarDialog,
           &QWidget::show);
 
-  QPushButton *btn_addEvent = new QPushButton("Add Event", nullptr);
+  QPushButton *btn_addEvent = new QPushButton("Create +", nullptr);
   connect(btn_addEvent, &QPushButton::clicked, _newEventDialog, &QWidget::show);
 
   QWidget *_todo = new QWidget;

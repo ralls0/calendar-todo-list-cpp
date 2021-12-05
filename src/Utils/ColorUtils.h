@@ -11,6 +11,7 @@
 #define CALENDAR_TODO_LIST_CPP_UTILS_H
 
 #include <QColor>
+#include <QDebug>
 #include <QWidget>
 
 class WindowStyle : public QWidget {
@@ -21,15 +22,16 @@ public:
   QString getMainWindowStyle();
   QString getLabelDateStyle();
   QString getCellStyle();
+  QString getDialogStyle();
 
 private:
   QColor _bg;
   QColor _fg;
-  QString _holiday;
-  QString _today;
+  QString _dark;
+  QString _red;
   QString _selected;
-  QString bg_rgb;
-  QString fg_rgb;
+  QString bg_hex;
+  QString fg_hex;
 };
 
 #endif // CALENDAR_TODO_LIST_CPP_UTILS_H

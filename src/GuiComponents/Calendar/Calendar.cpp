@@ -463,13 +463,7 @@ void MainCalendar::display_days(Date date) {
       x++;
     } else {
       // mark the cell as disabled
-      if ((i % 7) > 4) { // frame in the last two columns
-        // mark the cell as an holiday
-        this->frames[i]->setObjectName("holiday");
-      } else { // is a generic day
-        // mark the cell as enabled
-        this->frames[i]->setObjectName("disabled");
-      }
+      this->frames[i]->setObjectName("disabled");
     }
     // Refresh the css rules
     this->frames[i]->setStyleSheet(_colorStyle.getCellStyle());
