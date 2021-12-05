@@ -42,20 +42,36 @@ void MainWindow::createNewCalendar(const QString &displayName,
 
   QDEBUG << "[i] Creating new calendar\n";
 
+  QString newDisplayName =
+      this->checkDisplayName(_cals->getListOfCalendarsClient(), displayName);
+
   if (isBasicAuth) {
     _cals->addCalDAV_Calendar(
-        QColor(rand() & 0xFF, rand() & 0xFF, rand() & 0xFF).name(), displayName,
-        hostURL, username, password,
+        QColor(rand() & 0xFF, rand() & 0xFF, rand() & 0xFF).name(),
+        newDisplayName, hostURL, username, password,
         CalendarClient_CalDAV::E_CalendarAuth::E_AUTH_UPWD);
   } else {
     _cals->addCalDAV_Calendar(
-        QColor(rand() & 0xFF, rand() & 0xFF, rand() & 0xFF).name(), displayName,
-        hostURL, clientSecret, "",
+        QColor(rand() & 0xFF, rand() & 0xFF, rand() & 0xFF).name(),
+        newDisplayName, hostURL, clientSecret, "",
         CalendarClient_CalDAV::E_CalendarAuth::E_AUTH_TOKEN);
   }
+}
 
-  /*connect(_newEventDialog, &NewEventDialog::newEvent, _cals,
-          &CalendarClient_CalDAV::saveEvent); FIXME*/
+void MainWindow::createNewEvent(QString uid, QString filename, QString summary,
+                                QString location, QString description,
+                                QString rrule, QDateTime startDateTime,
+                                QDateTime endDateTime, QString calendar) {
+  foreach (CalendarClient_CalDAV *pListItem,
+           _cals->getListOfCalendarsClient()) {
+    if (calendar == pListItem->getDisplayName()) {
+      pListItem->saveEvent(uid, filename, summary, location, description, rrule,
+                           startDateTime, endDateTime);
+      emit _cals->eventsUpdated();
+      emit _cals->listOfEventsChanged();
+      break;
+    }
+  }
 }
 
 void MainWindow::createNewCalendarDialog() {
@@ -66,6 +82,8 @@ void MainWindow::createNewCalendarDialog() {
 }
 void MainWindow::createNewEventDialog() {
   _newEventDialog = new NewEventDialog(_cals->getListOfCalendarsName());
+  connect(_newEventDialog, &NewEventDialog::newEvent, this,
+          &MainWindow::createNewEvent);
   _newEventDialog->show();
 }
 
@@ -91,4 +109,16 @@ void MainWindow::createPreviewGroupBox() {
   _previewLayout->addWidget(btn_addCalendar, 1, 0, Qt::AlignRight);
   _previewLayout->addWidget(btn_addEvent, 1, 1, Qt::AlignRight);
   _previewGroupBox->setLayout(_previewLayout);
+}
+
+QString MainWindow::checkDisplayName(QList<CalendarClient_CalDAV *> cals,
+                                     QString displayName) {
+  QString ndn = displayName;
+  foreach (CalendarClient *pListItem, cals) {
+    if (displayName == pListItem->getDisplayName()) {
+      ndn.append("-");
+      break;
+    }
+  }
+  return ndn;
 }
