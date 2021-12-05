@@ -10,6 +10,7 @@
 #ifndef CALENDAR_TODO_LIST_CPP_NEWEVENTDIALOG_H
 #define CALENDAR_TODO_LIST_CPP_NEWEVENTDIALOG_H
 
+#include "../../Utils/ColorUtils.h"
 #include "../Calendar/ViewComponents/Model/Event.h"
 #include <QComboBox>
 #include <QDateTimeEdit>
@@ -81,8 +82,7 @@ private:
   QPushButton *btn_cancel;
   QPushButton *btn_save;
 
-  QColor bg_rgb;
-  QColor fg_rgb;
+  WindowStyle _colorStyle;
 };
 
 #endif // CALENDAR_TODO_LIST_CPP_NEWEVENTDIALOG_H
