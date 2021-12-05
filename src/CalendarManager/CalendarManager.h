@@ -1,27 +1,29 @@
 /**
- *
  * @author  Marco Manco
  * @date    28/11/21.
  * @file    CalendarManager.h
  * @brief   Manages a list of CalendarClients
  *          A CalendarManager handles a list of CalendarClient objects and acts
- * as a central instance to obtain events for specific dates.
+ *          as a central instance to obtain events for specific dates.
  *
- *          Usage: The CalendarManager maintains a list of ICS file based or
- * calDAV server based CalendarClients.
+ *          Usage:  The CalendarManager maintains a list of calDAV server based
+ *                  CalendarClients.
  *
  *          The calendar settings are loaded at creation from an
  *          INI file which is specified as constructor parameter.
  *          At destruction, the CalendarManager stores the calendar settings to
- * this file. Additional calendars can be added by calling addCalDAV_Calendar()
- * or addICS_Calendar().
+ *          this file.
+ *          Additional calendars can be added by calling addCalDAV_Calendar().
  *
  *          The listOfCalendars property provides a list of all maintained
- * calendars. To remove an calendar from this list call removeListItemAt() with
- * the respective index. To receive a list of all events from all calendars use
- * the eventList property. However, if only events for a specific date are of
- * interest, first set the corresponding month and year via the date property
- * and call the eventsForDate() method with the questioned date as parameter.
+ *          calendars. To remove an calendar from this list call
+ *          removeListItemAt() with the respective index.
+ *          To receive a list of all events from all calendars use
+ *          the eventList property.
+ *          However, if only events for a specific date are of interest,
+ *          first set the corresponding month and year via the date property
+ *          and call the eventsForDate() method with the questioned date as
+ *          parameter.
  *
  */
 
@@ -37,7 +39,6 @@
 
 #include "../ClientCalDAV/CalendarClient.h"
 #include "../ClientCalDAV/CalendarClient_CalDAV.h"
-// #include "CalendarClient_ICS.h"
 #include "../Utils/SimpleCrypt.h"
 
 #define PWD_CRYPT Q_UINT64_C(0x3A3CF524EC443FB1)
@@ -109,10 +110,14 @@ public slots:
   void setDate(const QDate &newDate);
 
   QList<QObject *> getListOfCalendars(void);
+  QList<QString> getListOfCalendarsName(void);
   QList<QObject *> getListOfEvents(void);
 
-  void addCalDAV_Calendar(QString color, QString calendarName, QUrl url,
-                          QString username, QString password);
+  void
+  addCalDAV_Calendar(QString color, QString calendarName, QUrl url,
+                     QString username, QString password = "",
+                     CalendarClient_CalDAV::E_CalendarAuth type =
+                         CalendarClient_CalDAV::E_CalendarAuth::E_AUTH_UPWD);
 
   /**
    * @brief Returns a pointer to a specific calendar instance in the list of

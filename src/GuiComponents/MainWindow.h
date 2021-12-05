@@ -24,6 +24,7 @@
 #include <QWidget>
 #include <iostream>
 
+#include "../CalendarManager/CalendarManager.h"
 #include "../ClientCalDAV/CalendarClient_CalDAV.h"
 #include "Calendar/Calendar.h"
 #include "NewCalendar/NewCalendarDialog.h"
@@ -40,6 +41,9 @@ public slots:
                          bool isBasicAuth, const QString &username,
                          const QString &password, const QString &clientSecret);
 
+  void createNewCalendarDialog();
+  void createNewEventDialog();
+
 private:
   void createPreviewGroupBox();
 
@@ -49,7 +53,7 @@ private:
   NewEventDialog *_newEventDialog;
   MainCalendar *_calendar;
 
-  CalendarClient_CalDAV *_cals;
+  CalendarManager *_cals;
 };
 
 #endif // CALENDAR_TODO_LIST_CPP_MAINWINDOW_H

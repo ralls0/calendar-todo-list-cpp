@@ -19,12 +19,10 @@
 #endif
 
 MainWindow::MainWindow(QWidget *parent) : QWidget(parent) {
-  _newCalendarDialog = new NewCalendarDialog;
-  _newEventDialog = new NewEventDialog;
+  _newCalendarDialog = nullptr;
+  _newEventDialog = nullptr;
   _calendar = new MainCalendar;
-  _cals = nullptr;
-  connect(_newCalendarDialog, &NewCalendarDialog::newCalendar, this,
-          &MainWindow::createNewCalendar);
+  _cals = new CalendarManager(QString(QDir::currentPath() + "/initCals.ini"));
 
   createPreviewGroupBox();
 
@@ -45,14 +43,30 @@ void MainWindow::createNewCalendar(const QString &displayName,
   QDEBUG << "[i] Creating new calendar\n";
 
   if (isBasicAuth) {
-    _cals = new CalendarClient_CalDAV(username, password, hostURL, displayName,
-                                      nullptr);
+    _cals->addCalDAV_Calendar(
+        QColor(rand() & 0xFF, rand() & 0xFF, rand() & 0xFF).name(), displayName,
+        hostURL, username, password,
+        CalendarClient_CalDAV::E_CalendarAuth::E_AUTH_UPWD);
   } else {
-    _cals =
-        new CalendarClient_CalDAV(clientSecret, hostURL, displayName, nullptr);
+    _cals->addCalDAV_Calendar(
+        QColor(rand() & 0xFF, rand() & 0xFF, rand() & 0xFF).name(), displayName,
+        hostURL, clientSecret, "",
+        CalendarClient_CalDAV::E_CalendarAuth::E_AUTH_TOKEN);
   }
-  connect(_newEventDialog, &NewEventDialog::newEvent, _cals,
-          &CalendarClient_CalDAV::saveEvent);
+
+  /*connect(_newEventDialog, &NewEventDialog::newEvent, _cals,
+          &CalendarClient_CalDAV::saveEvent); FIXME*/
+}
+
+void MainWindow::createNewCalendarDialog() {
+  _newCalendarDialog = new NewCalendarDialog;
+  connect(_newCalendarDialog, &NewCalendarDialog::newCalendar, this,
+          &MainWindow::createNewCalendar);
+  _newCalendarDialog->show();
+}
+void MainWindow::createNewEventDialog() {
+  _newEventDialog = new NewEventDialog(_cals->getListOfCalendarsName());
+  _newEventDialog->show();
 }
 
 void MainWindow::createPreviewGroupBox() {
@@ -61,11 +75,12 @@ void MainWindow::createPreviewGroupBox() {
   _previewGroupBox->setStyleSheet("QGroupBox {  border:0; }");
 
   QPushButton *btn_addCalendar = new QPushButton("Add Calendar +", nullptr);
-  connect(btn_addCalendar, &QPushButton::clicked, _newCalendarDialog,
-          &QWidget::show);
+  connect(btn_addCalendar, &QPushButton::clicked, this,
+          &MainWindow::createNewCalendarDialog);
 
   QPushButton *btn_addEvent = new QPushButton("Create +", nullptr);
-  connect(btn_addEvent, &QPushButton::clicked, _newEventDialog, &QWidget::show);
+  connect(btn_addEvent, &QPushButton::clicked, this,
+          &MainWindow::createNewEventDialog);
 
   QWidget *_todo = new QWidget;
   _todo->setMinimumSize(450, 420);

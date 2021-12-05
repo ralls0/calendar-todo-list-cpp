@@ -27,6 +27,8 @@ CalendarClient_CalDAV::CalendarClient_CalDAV(QObject *parent)
 
   _username = "";
   _password = "";
+  _accessToken = "";
+  _filepath = "";
   _hostURL = "";
   _displayName = "";
   _cTag = "";
@@ -54,6 +56,9 @@ CalendarClient_CalDAV::CalendarClient_CalDAV(const QString &username,
   _pUploadReply = nullptr;
   _au = nullptr;
 
+  _accessToken = "";
+  _filepath = "";
+
   _cTag = "0";
   _year = QDate::currentDate().year();
   _month = QDate::currentDate().month();
@@ -75,6 +80,8 @@ CalendarClient_CalDAV::CalendarClient_CalDAV(const QString &filepath,
   _auth = E_AUTH_TOKEN;
   _dataStream = nullptr;
   _pUploadReply = nullptr;
+  _accessToken = "";
+  _filepath = filepath;
   _au = new (std::nothrow) OAuth(
       filepath,
       "https://www.googleapis.com/auth/calendar"); // FIXME IN CASO DI ERROR PER
@@ -110,7 +117,13 @@ void CalendarClient_CalDAV::setAccessToken(QString accessToken) {
   emit accessTokenChanged(_accessToken);
 }
 
+void CalendarClient_CalDAV::setFilePath(QString filepath) {
+  _filepath = filepath;
+  emit filePathChanged(_filepath);
+}
+
 QString CalendarClient_CalDAV::getAccessToken() const { return _accessToken; }
+QString CalendarClient_CalDAV::getFilePath() const { return _filepath; }
 
 void CalendarClient_CalDAV::setUsername(const QString username) {
   _username = username;
@@ -262,7 +275,7 @@ void CalendarClient_CalDAV::setupStateMachine(void) {
 }
 
 CalendarClient_CalDAV::E_CalendarAuth
-CalendarClient_CalDAV::getClientAuth(void) {
+CalendarClient_CalDAV::getClientAuth(void) const {
   return _auth;
 }
 

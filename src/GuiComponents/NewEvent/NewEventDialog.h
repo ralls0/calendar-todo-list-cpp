@@ -31,7 +31,7 @@ class NewEventDialog : public QDialog {
   Q_OBJECT
 
 public:
-  NewEventDialog(QWidget *parent = nullptr);
+  NewEventDialog(QList<QString> cals, QWidget *parent = nullptr);
   NewEventDialog(Event *event, QWidget *parent = nullptr);
 public slots:
   void onSaveClick(void);
@@ -43,9 +43,9 @@ signals:
   void newAction(); // FIXME
 
 private:
-  void createBaseInfoLayout(Event *event = nullptr);
-  void createEventLayout(Event *event = nullptr);
-  void createActivityLayout(Event *event = nullptr);
+  void createBaseInfoLayout(QList<QString> cals, Event *event = nullptr);
+  void createEventLayout(QList<QString> cals, Event *event = nullptr);
+  void createActivityLayout(QList<QString> cals, Event *event = nullptr);
   void createButtonGroupBox(Event *event = nullptr);
 
   QGridLayout *_baseInfoLayout;

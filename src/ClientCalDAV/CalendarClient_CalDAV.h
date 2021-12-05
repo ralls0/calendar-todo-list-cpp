@@ -52,6 +52,8 @@ public:
                  passwordChanged)
   Q_PROPERTY(QString accessToken READ getAccessToken WRITE setAccessToken NOTIFY
                  accessTokenChanged)
+  Q_PROPERTY(QString filepath READ getFilePath WRITE setFilePath NOTIFY
+                 filePathChanged)
 
   CalendarClient_CalDAV(QObject *parent = nullptr);
   CalendarClient_CalDAV(const QString &username, const QString &password,
@@ -82,6 +84,7 @@ protected:
   QString _username;
   QString _password;
   QString _accessToken;
+  QString _filepath;
 
   QString _cTag;
 
@@ -97,7 +100,8 @@ signals:
   void clientAuthChanged(E_CalendarAuth clientAuth);
   void yearChanged(const int &year);
   void monthChanged(const int &month);
-  void accessTokenChanged(QString username);
+  void accessTokenChanged(QString accessToken);
+  void filePathChanged(QString filepath);
   void usernameChanged(QString username);
   void passwordChanged(QString password);
 
@@ -107,7 +111,7 @@ signals:
 
 public slots:
 
-  E_CalendarAuth getClientAuth(void);
+  E_CalendarAuth getClientAuth(void) const;
 
   int getYear() const;
   void setYear(const int &year);
@@ -123,6 +127,8 @@ public slots:
 
   void setAccessToken(QString accessToken);
   QString getAccessToken(void) const;
+  void setFilePath(QString filepath);
+  QString getFilePath(void) const;
 
   void startSynchronization(void);
   void stopSynchronization(void);

@@ -23,7 +23,7 @@
 NewEventDialog::NewEventDialog(Event *event, QWidget *parent)
     : QDialog(parent) {
 
-  createBaseInfoLayout(event);
+  createBaseInfoLayout(QList<QString>(), event);
   createButtonGroupBox(event);
 
   QGridLayout *layout = new QGridLayout;
@@ -36,9 +36,9 @@ NewEventDialog::NewEventDialog(Event *event, QWidget *parent)
   this->setStyleSheet(_colorStyle.getDialogStyle());
 }
 
-NewEventDialog::NewEventDialog(QWidget *parent) : QDialog(parent) {
-
-  createBaseInfoLayout();
+NewEventDialog::NewEventDialog(QList<QString> cals, QWidget *parent)
+    : QDialog(parent) {
+  createBaseInfoLayout(cals);
   createButtonGroupBox();
 
   QGridLayout *layout = new QGridLayout;
@@ -51,7 +51,7 @@ NewEventDialog::NewEventDialog(QWidget *parent) : QDialog(parent) {
   this->setStyleSheet(_colorStyle.getDialogStyle());
 }
 
-void NewEventDialog::createBaseInfoLayout(Event *event) {
+void NewEventDialog::createBaseInfoLayout(QList<QString> cals, Event *event) {
   gb_baseInfo = new QGroupBox;
   gb_baseInfo->setFlat(true);
   gb_baseInfo->setStyleSheet("border:0;");
@@ -74,8 +74,8 @@ void NewEventDialog::createBaseInfoLayout(Event *event) {
 
   _groupBox->setLayout(_vbox);
 
-  createEventLayout(event);
-  createActivityLayout(event);
+  createEventLayout(cals, event);
+  createActivityLayout(cals, event);
 
   connect(rb_event, &QRadioButton::toggled, e_event, &QWidget::setVisible);
   connect(rb_event, &QRadioButton::toggled, e_activity, &QWidget::setHidden);
@@ -91,7 +91,7 @@ void NewEventDialog::createBaseInfoLayout(Event *event) {
   gb_baseInfo->setLayout(_baseInfoLayout);
 }
 
-void NewEventDialog::createEventLayout(Event *event) {
+void NewEventDialog::createEventLayout(QList<QString> cals, Event *event) {
   e_event = new QWidget;
 
   QDate startD, endD;
@@ -136,9 +136,15 @@ void NewEventDialog::createEventLayout(Event *event) {
     te_descriptionE->setText(event->getDescription().c_str());
 
   cb_calendar = new QComboBox;
-  cb_calendar->addItem("Google");
-  cb_calendar->addItem("Sabre");
-  cb_calendar->addItem("NextCloud");
+  if (!cals.isEmpty()) {
+    cb_calendar->addItems(cals);
+  } else {
+    if (event != nullptr) {
+      cb_calendar->addItem(QString(event->getCategory()->getName().c_str()));
+    } else {
+      cb_calendar->addItem(QString("Nessun Calendario"));
+    }
+  }
 
   _eventLayout = new QGridLayout;
   _eventLayout->addWidget(dte_startDateE, 0, 0);
@@ -152,7 +158,7 @@ void NewEventDialog::createEventLayout(Event *event) {
   e_event->show();
 }
 
-void NewEventDialog::createActivityLayout(Event *event) {
+void NewEventDialog::createActivityLayout(QList<QString> cals, Event *event) {
   e_activity = new QWidget;
 
   dte_startDateA = new QDateTimeEdit(QDate::currentDate());
@@ -169,9 +175,15 @@ void NewEventDialog::createActivityLayout(Event *event) {
   te_descriptionA->setPlaceholderText("Description");
 
   cb_activity = new QComboBox;
-  cb_activity->addItem("Google A");
-  cb_activity->addItem("Sabre A");
-  cb_activity->addItem("NextCloud A");
+  if (!cals.isEmpty()) {
+    cb_activity->addItems(cals);
+  } else {
+    if (event != nullptr) {
+      cb_activity->addItem(QString(event->getCategory()->getName().c_str()));
+    } else {
+      cb_activity->addItem(QString("Nessun Calendario"));
+    }
+  }
 
   _eventLayout = new QGridLayout;
   _eventLayout->addWidget(dte_startDateA, 0, 0);
