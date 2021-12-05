@@ -232,7 +232,7 @@ void MainCalendar::display_events(Date date) {
           this->selected_event = label_event;
       }*/
       // serve se ho tanti eventi sulla stessa cella
-      if (this->frames[i]->children().size() == 4) {
+      if (this->frames[i]->children().size() == 3) {
         QPushButtonExtended *button_show_all =
             new QPushButtonExtended("Show All");
         button_show_all->setIndex(i);
@@ -480,7 +480,7 @@ QFrameExtended *MainCalendar::createQFrameExtended(Date *date) {
   vl->setSpacing(1);
   vl->addWidget(new QLabel); // qui scrivo in cella
   frame->setMinimumWidth(100);
-  frame->setMinimumHeight(60);
+  frame->setMinimumHeight(100);
   frame->setLayout(vl);
   frame->setStyleSheet(_colorStyle.getCellStyle());
   frame->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
