@@ -39,7 +39,8 @@ public slots:
 signals:
   void newEvent(QString uid, QString filename, QString summary,
                 QString location, QString description, QString rrule,
-                QDateTime startDateTime, QDateTime endDateTime);
+                QDateTime startDateTime, QDateTime endDateTime,
+                QString calendar);
   void newAction(); // FIXME
 
 private:

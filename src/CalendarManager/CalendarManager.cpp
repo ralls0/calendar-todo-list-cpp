@@ -180,6 +180,13 @@ QList<QObject *> CalendarManager::getListOfCalendars(void) {
   }
   return returnList;
 }
+QList<CalendarClient_CalDAV *> CalendarManager::getListOfCalendarsClient(void) {
+  QList<CalendarClient_CalDAV *> returnList;
+  foreach (CalendarClient_CalDAV *pListItem, _calendarList) {
+    returnList.append(pListItem);
+  }
+  return returnList;
+}
 
 QList<QString> CalendarManager::getListOfCalendarsName(void) {
   QList<QString> returnList;

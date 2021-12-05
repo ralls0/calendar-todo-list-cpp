@@ -93,7 +93,8 @@ protected:
    */
   void loadSettings(void);
 
-  QList<CalendarClient *> _calendarList; // list of CalDAV or ICS calendars
+  QList<CalendarClient_CalDAV *>
+      _calendarList; // list of CalDAV or ICS calendars
   QString _iniFileName;
   QDate _date;
 
@@ -110,6 +111,7 @@ public slots:
   void setDate(const QDate &newDate);
 
   QList<QObject *> getListOfCalendars(void);
+  QList<CalendarClient_CalDAV *> getListOfCalendarsClient(void);
   QList<QString> getListOfCalendarsName(void);
   QList<QObject *> getListOfEvents(void);
 

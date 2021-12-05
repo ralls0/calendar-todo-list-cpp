@@ -25,6 +25,7 @@
 #include <iostream>
 
 #include "../CalendarManager/CalendarManager.h"
+#include "../ClientCalDAV/CalendarClient.h"
 #include "../ClientCalDAV/CalendarClient_CalDAV.h"
 #include "Calendar/Calendar.h"
 #include "NewCalendar/NewCalendarDialog.h"
@@ -40,12 +41,18 @@ public slots:
   void createNewCalendar(const QString &displayName, const QString &hostURL,
                          bool isBasicAuth, const QString &username,
                          const QString &password, const QString &clientSecret);
+  void createNewEvent(QString uid, QString filename, QString summary,
+                      QString location, QString description, QString rrule,
+                      QDateTime startDateTime, QDateTime endDateTime,
+                      QString calendar);
 
   void createNewCalendarDialog();
   void createNewEventDialog();
 
 private:
   void createPreviewGroupBox();
+  QString checkDisplayName(QList<CalendarClient_CalDAV *> cals,
+                           QString displayName);
 
   QGroupBox *_previewGroupBox;
   QGridLayout *_previewLayout;
