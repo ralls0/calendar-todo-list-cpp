@@ -36,6 +36,7 @@ class MainWindow : public QWidget {
 
 public:
   MainWindow(QWidget *parent = nullptr);
+  //~MainWindow();
 
 public slots:
   void createNewCalendar(const QString &displayName, const QString &hostURL,
