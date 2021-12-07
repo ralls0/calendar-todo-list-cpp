@@ -33,6 +33,8 @@ class NewEventDialog : public QDialog {
 public:
   NewEventDialog(QList<QString> cals, QWidget *parent = nullptr);
   NewEventDialog(Event *event, QWidget *parent = nullptr);
+  ~NewEventDialog();
+
 public slots:
   void onSaveClick(void);
 

@@ -51,6 +51,12 @@ NewEventDialog::NewEventDialog(QList<QString> cals, QWidget *parent)
   this->setStyleSheet(_colorStyle.getDialogStyle());
 }
 
+NewEventDialog::~NewEventDialog() {
+  delete _baseInfoLayout;
+  delete _eventLayout;
+  delete _activityLayout;
+}
+
 void NewEventDialog::createBaseInfoLayout(QList<QString> cals, Event *event) {
   gb_baseInfo = new QGroupBox;
   gb_baseInfo->setFlat(true);

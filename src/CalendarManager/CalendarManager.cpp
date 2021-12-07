@@ -59,6 +59,7 @@ void CalendarManager::clearCalendarList(void) {
 }
 
 void CalendarManager::saveSettings(void) {
+  QDEBUG << "[i] Store Setting..";
   SimpleCrypt crypto(PWD_CRYPT);
   QSettings settings(_iniFileName, QSettings::IniFormat);
   settings.clear();
@@ -84,11 +85,14 @@ void CalendarManager::saveSettings(void) {
                                            pCalDAVClient->getAccessToken()));
       settings.setValue("FilePath", pCalDAVClient->getFilePath());
     }
+    QDEBUG << "[i] Store Calendar: "
+           << _calendarList.at(index)->getDisplayName();
     settings.endGroup();
   }
 }
 
 void CalendarManager::loadSettings(void) {
+  QDEBUG << "[i] Load Setting...";
   SimpleCrypt crypto(PWD_CRYPT);
   QSettings settings(_iniFileName, QSettings::IniFormat);
 
@@ -149,6 +153,8 @@ void CalendarManager::loadSettings(void) {
         addCalDAV_Calendar(color, displayName, QUrl(url), filepath, accessToken,
                            CalendarClient_CalDAV::E_CalendarAuth::E_AUTH_TOKEN);
       }
+
+      QDEBUG << "[i] Load Calendar: " << displayName;
     } else {
       bAbort = true;
     }

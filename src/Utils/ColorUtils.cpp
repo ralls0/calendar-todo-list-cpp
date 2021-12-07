@@ -19,11 +19,9 @@
 #endif
 
 WindowStyle::WindowStyle(QWidget *parent) {
-  _bg = QColor(QWidget::palette().color(QWidget::backgroundRole()));
-  QDEBUG << "[i] background: " << _bg.name();
+  _bg = QColor(QWidget::palette().color(QPalette::Window));
   bg_hex = _bg.name();
-  _fg = QColor(QWidget::palette().color(QWidget::foregroundRole()));
-  QDEBUG << "[i] foreground: " << _fg.name();
+  _fg = QColor(QWidget::palette().color(QPalette::WindowText));
   fg_hex = _fg.name();
   _dark = QString("#302A32");
   _red = QString("#FD5545");

@@ -308,13 +308,13 @@ void MainCalendar::on_button_extended_click(int index) {
   // QLabel *label_day = static_cast<QLabel*> (frame->children().at(1));
   QLabel *label_day = new QLabel(text);
   label_day->setStyleSheet(
-      "box-shadow: 0px 1px 0px 0px #fff6af; background:linear-gradient(to "
+      "background:linear-gradient(to " // box-shadow: 0px 1px 0px 0px #fff6af;
       "bottom, #ffec64 5%, #ffab23 100%);"
       " background-color:#ffec64; border-radius:6px; border:1px solid #ffaa22; "
-      "display:inline-block;cursor:pointer;"
+      //"display:inline-block;cursor:pointer;"
       " color:#333333; font-family:Arial; font-size:15px; "
       "font-weight:bold;padding:6px 24px;text-decoration:none;"
-      "text-shadow:0px 1px 0px #ffee66;  text-align: center;");
+      "  text-align: center;"); // text-shadow:0px 1px 0px #ffee66;
   // label_day->setText(text);
   // label_day->setStyleSheet("QLabel { width: 100%; background-color: #ffffb3;
   // border-bottom: 1px solid #000000; margin-bottom: 2px; }");
@@ -327,14 +327,13 @@ void MainCalendar::on_button_extended_click(int index) {
   table->setItem(0, 2, new QTableWidgetItem("HOUR"));
   table->setItem(0, 3, new QTableWidgetItem("EDIT"));
   table->setItem(0, 4, new QTableWidgetItem("DELETE"));
-  table->setStyleSheet(" QHeaderView::section {background-color: #646464;"
-                       "padding: 4px;font-size: 14pt; "
-                       "border-style: none;  border-bottom: 1px solid #fffff8; "
-                       " border-right: 1px solid #fffff8;  }"
-                       " QHeaderView::section:horizontal{ visibility: hidden; "
-                       "border-top: 1px solid #fffff8;  }"
-                       "QHeaderView::section:vertical  {visibility: hidden; "
-                       "border-left: 1px solid #fffff8;   }");
+  table->setStyleSheet(
+      " QHeaderView::section {background-color: #646464;"
+      "padding: 4px;font-size: 14pt; "
+      "border-style: none;  border-bottom: 1px solid #fffff8; "
+      " border-right: 1px solid #fffff8;  }"
+      " QHeaderView::section:horizontal{ border-top: 1px solid #fffff8;  }"
+      "QHeaderView::section:vertical  { border-left: 1px solid #fffff8;   }");
   // QPushButton *edit = new QPushButton("EDIT");
   //  connect(edit, &QPushButton::clicked, this, &MainCalendar::on_event_click);
   for (QLabelEvent *label_event :
@@ -488,7 +487,7 @@ QFrameExtended *MainCalendar::createQFrameExtended(Date *date) {
 }
 
 MainCalendar::~MainCalendar() {
-  delete this->previewLayout;
+  // delete this->previewLayout;
   /* this->selection_start and this->selection_end are pointers to dates wrapped
    * inside some QFrameExtended widgets. When Qt frees QFrameExtended widgets
    * they will free their dates.

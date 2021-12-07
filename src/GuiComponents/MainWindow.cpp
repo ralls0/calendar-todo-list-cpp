@@ -34,6 +34,26 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent) {
   setWindowTitle(tr("Calendar Widget"));
 }
 
+/*MainWindow::~MainWindow() {
+  if(_previewGroupBox)
+    delete _previewGroupBox;
+
+  if(_previewLayout)
+    delete _previewLayout;
+
+  if(_newCalendarDialog)
+    delete _newCalendarDialog;
+
+  if(_newEventDialog)
+    delete _newEventDialog;
+
+  if(_calendar)
+    delete _calendar;
+
+  if(_cals)
+    delete _cals;
+}*/
+
 void MainWindow::createNewCalendar(const QString &displayName,
                                    const QString &hostURL, bool isBasicAuth,
                                    const QString &username,

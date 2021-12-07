@@ -34,6 +34,13 @@ NewCalendarDialog::NewCalendarDialog(QWidget *parent) : QDialog(parent) {
   setWindowTitle(tr("Adding Calendar"));
 }
 
+NewCalendarDialog::~NewCalendarDialog() {
+  delete _baseInfoGroupBox;
+  delete _baseInfoLayout;
+  delete _authGroupBox;
+  delete _authLayout;
+}
+
 void NewCalendarDialog::createBaseInfoGroupBox() {
   _baseInfoGroupBox = new QGroupBox(tr("Base Information"));
 
