@@ -11,7 +11,7 @@
 #define CALENDAR_TODO_LIST_CPP_NEWEVENTDIALOG_H
 
 #include "../../Utils/ColorUtils.h"
-#include "../Calendar/ViewComponents/Model/Event.h"
+#include "../Calendar/Event.h"
 #include <QComboBox>
 #include <QDateTimeEdit>
 #include <QDebug>

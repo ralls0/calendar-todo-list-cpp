@@ -10,8 +10,8 @@
 #ifndef CALENDAR_TODO_LIST_CPP_QFRAMEEXTENDED_H
 #define CALENDAR_TODO_LIST_CPP_QFRAMEEXTENDED_H
 
-#include "Model/Date.h"
-#include "Utils/DateUtils.h"
+#include "Date.h"
+#include "DateUtils.h"
 #include <QDebug>
 #include <QFrame>
 #include <QObject>

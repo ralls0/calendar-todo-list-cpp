@@ -10,7 +10,7 @@
 #ifndef CALENDAR_TODO_LIST_CPP_QLABELEVENT_H
 #define CALENDAR_TODO_LIST_CPP_QLABELEVENT_H
 
-#include "Model/Event.h"
+#include "Event.h"
 #include <QLabel>
 #include <QMouseEvent>
 

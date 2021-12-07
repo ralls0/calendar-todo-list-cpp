@@ -12,13 +12,13 @@
 
 #include "../../Utils/ColorUtils.h"
 #include "../NewEvent/NewEventDialog.h"
-#include "./ViewComponents/API/APImain.h"
-#include "./ViewComponents/CustomDialog.h"
-#include "./ViewComponents/QFrameExtended.h"
-#include "./ViewComponents/QLabelEvent.h"
-#include "./ViewComponents/QPushButtonExtended.h"
-#include "./ViewComponents/QWidgetExtended.h"
-#include "./ViewComponents/Utils/DateUtils.h"
+#include "APImain.h"
+#include "CustomDialog.h"
+#include "DateUtils.h"
+#include "QFrameExtended.h"
+#include "QLabelEvent.h"
+#include "QPushButtonExtended.h"
+#include "QWidgetExtended.h"
 #include <QApplication>
 #include <QCalendarWidget>
 #include <QCheckBox>
