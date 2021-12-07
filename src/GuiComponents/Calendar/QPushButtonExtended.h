@@ -10,7 +10,7 @@
 #ifndef CALENDAR_TODO_LIST_CPP_QPUSHBUTTONEXTENDED_H
 #define CALENDAR_TODO_LIST_CPP_QPUSHBUTTONEXTENDED_H
 
-#include "Model/Event.h"
+#include "Event.h"
 #include <QPushButton>
 
 class QPushButtonExtended : public QPushButton {

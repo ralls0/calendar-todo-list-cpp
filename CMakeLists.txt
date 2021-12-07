@@ -41,7 +41,34 @@ add_executable(calendar_todo_list_cpp
         src/GuiComponents/NewCalendar/NewCalendarDialog.cpp
         src/GuiComponents/NewEvent/NewEventDialog.cpp
         src/GuiComponents/NewEvent/NewEventDialog.h
-        src/ClientCalDAV/GetCTag.cpp src/ClientCalDAV/Parsing.cpp src/ClientCalDAV/GetChangedActivity.cpp src/ClientCalDAV/SaveActivity.cpp src/GuiComponents/Calendar/Calendar.cpp src/GuiComponents/Calendar/Calendar.h src/GuiComponents/Calendar/ViewComponents/CustomDialog.cpp src/GuiComponents/Calendar/ViewComponents/CustomDialog.h src/GuiComponents/Calendar/ViewComponents/QFrameExtended.cpp src/GuiComponents/Calendar/ViewComponents/QFrameExtended.h src/GuiComponents/Calendar/ViewComponents/QLabelEvent.cpp src/GuiComponents/Calendar/ViewComponents/QLabelEvent.h src/GuiComponents/Calendar/ViewComponents/QPushButtonExtended.cpp src/GuiComponents/Calendar/ViewComponents/QPushButtonExtended.h src/GuiComponents/Calendar/ViewComponents/QWidgetExtended.cpp src/GuiComponents/Calendar/ViewComponents/QWidgetExtended.h src/GuiComponents/Calendar/ViewComponents/API/APImain.cpp src/GuiComponents/Calendar/ViewComponents/API/APImain.h src/GuiComponents/Calendar/ViewComponents/Model/Date.cpp src/GuiComponents/Calendar/ViewComponents/Model/Date.h src/GuiComponents/Calendar/ViewComponents/Model/Event.cpp src/GuiComponents/Calendar/ViewComponents/Model/Event.h src/GuiComponents/Calendar/ViewComponents/Model/Category.cpp src/GuiComponents/Calendar/ViewComponents/Model/Category.h src/GuiComponents/Calendar/ViewComponents/Utils/DateUtils.cpp src/GuiComponents/Calendar/ViewComponents/Utils/DateUtils.h src/Utils/ColorUtils.h src/Utils/ColorUtils.cpp src/GuiComponents/MainWindow.cpp src/GuiComponents/MainWindow.h)
+        src/ClientCalDAV/GetCTag.cpp src/ClientCalDAV/Parsing.cpp
+        src/ClientCalDAV/GetChangedActivity.cpp
+        src/ClientCalDAV/SaveActivity.cpp
+        src/GuiComponents/Calendar/Calendar.cpp
+        src/GuiComponents/Calendar/Calendar.h
+        src/GuiComponents/Calendar/CustomDialog.cpp
+        src/GuiComponents/Calendar/CustomDialog.h
+        src/GuiComponents/Calendar/QFrameExtended.cpp
+        src/GuiComponents/Calendar/QFrameExtended.h
+        src/GuiComponents/Calendar/QLabelEvent.cpp
+        src/GuiComponents/Calendar/QLabelEvent.h
+        src/GuiComponents/Calendar/QPushButtonExtended.cpp
+        src/GuiComponents/Calendar/QPushButtonExtended.h
+        src/GuiComponents/Calendar/QWidgetExtended.cpp
+        src/GuiComponents/Calendar/QWidgetExtended.h
+        src/GuiComponents/Calendar/APImain.cpp
+        src/GuiComponents/Calendar/APImain.h
+        src/GuiComponents/Calendar/Date.cpp
+        src/GuiComponents/Calendar/Date.h
+        src/GuiComponents/Calendar/Event.cpp
+        src/GuiComponents/Calendar/Event.h
+        src/GuiComponents/Calendar/Category.cpp
+        src/GuiComponents/Calendar/Category.h
+        src/GuiComponents/Calendar/DateUtils.cpp
+        src/GuiComponents/Calendar/DateUtils.h
+        src/Utils/ColorUtils.h src/Utils/ColorUtils.cpp
+        src/GuiComponents/MainWindow.cpp
+        src/GuiComponents/MainWindow.h)
 target_link_libraries(calendar_todo_list_cpp
         Qt::Core
         Qt::Core5Compat
