@@ -11,7 +11,7 @@
 #define CALENDAR_TODO_LIST_CPP_QFRAMEEXTENDED_H
 
 #include "Date.h"
-#include "DateUtils.h"
+#include "DateUtil.h"
 #include <QDebug>
 #include <QFrame>
 #include <QObject>
