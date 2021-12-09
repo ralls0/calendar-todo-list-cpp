@@ -64,8 +64,8 @@ add_executable(calendar_todo_list_cpp
         src/GuiComponents/Calendar/Event.h
         src/GuiComponents/Calendar/Category.cpp
         src/GuiComponents/Calendar/Category.h
-        src/GuiComponents/Calendar/DateUtils.cpp
-        src/GuiComponents/Calendar/DateUtils.h
+        src/GuiComponents/Calendar/DateUtil.cpp
+        src/GuiComponents/Calendar/DateUtil.h
         src/Utils/ColorUtils.h src/Utils/ColorUtils.cpp
         src/GuiComponents/MainWindow.cpp
         src/GuiComponents/MainWindow.h)

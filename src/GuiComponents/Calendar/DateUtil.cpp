@@ -7,7 +7,7 @@
  *
  */
 
-#include "DateUtils.h"
+#include "DateUtil.h"
 
 static std::string months[] = {"January",   "February", "March",    "April",
                                "May",       "June",     "July",     "August",

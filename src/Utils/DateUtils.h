@@ -7,7 +7,7 @@
  *
  */
 
-#ifndef CALENDAR_TODO_LIST_CPP_DATEUTILS_H
+#ifndef CALENDAR_TODO_LIST_CPP_DATEUTIL_H
 #define CALENDAR_TODO_LIST_CPP_DATEUTILS_H
 
 #include <QDate>
@@ -65,4 +65,4 @@ public:
   static int lastDayOfMonth(int year, int month);
 };
 
-#endif // CALENDAR_TODO_LIST_CPP_DATEUTILS_H
+#endif // CALENDAR_TODO_LIST_CPP_DATEUTIL_H

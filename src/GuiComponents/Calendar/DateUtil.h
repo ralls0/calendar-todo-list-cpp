@@ -7,8 +7,8 @@
  *
  */
 
-#ifndef CALENDAR_TODO_LIST_CPP_DATEUTILS_H
-#define CALENDAR_TODO_LIST_CPP_DATEUTILS_H
+#ifndef CALENDAR_TODO_LIST_CPP_DATEUTIL_H
+#define CALENDAR_TODO_LIST_CPP_DATEUTIL_H
 
 #include <QDebug>
 #include <list>
@@ -41,4 +41,4 @@ public:
   static bool is_leap(int year);
 };
 
-#endif // CALENDAR_TODO_LIST_CPP_DATEUTILS_H
+#endif // CALENDAR_TODO_LIST_CPP_DATEUTIL_H
