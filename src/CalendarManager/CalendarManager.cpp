@@ -206,6 +206,8 @@ QList<QObject *> CalendarManager::getListOfEvents(void) {
   QList<QObject *> returnList;
   foreach (CalendarClient *pListItem, _calendarList) {
     returnList.append(pListItem->allEvents());
+
+
   }
 
   return returnList;
