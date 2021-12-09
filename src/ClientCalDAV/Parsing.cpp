@@ -40,6 +40,7 @@ void CalendarClient::parseVTODO(QString href) {
   }
 }
 
+
 void CalendarClient::parseCalendarVEVENT(QString href) {
   CalendarEvent event(this);
   event.setIsCalendar(true);

@@ -107,6 +107,7 @@ signals:
 
 public slots:
 
+
   QDate getDate() const;
   void setDate(const QDate &newDate);
 

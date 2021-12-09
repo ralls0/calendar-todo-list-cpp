@@ -9,6 +9,7 @@
 
 #include "CalendarEvent.h"
 
+
 CalendarEvent::CalendarEvent(QObject *parent) : QObject(parent) {
   _calendarName = "unnamed";
   _name = "";

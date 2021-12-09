@@ -19,6 +19,7 @@ class QLabelEvent : public QLabel {
 private:
   Event *event;
 
+
 public:
   explicit QLabelEvent(QWidget *parent = 0);
   ~QLabelEvent();

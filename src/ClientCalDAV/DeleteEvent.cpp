@@ -18,6 +18,7 @@
   qDebug()
 #endif
 
+
 void CalendarClient_CalDAV::deleteEvent(QString href) {
   if (href.isEmpty()) {
     return;

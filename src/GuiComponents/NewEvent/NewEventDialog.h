@@ -27,6 +27,7 @@
 #include <QTextEdit>
 #include <QWidget>
 
+
 class NewEventDialog : public QDialog {
   Q_OBJECT
 

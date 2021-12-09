@@ -206,10 +206,13 @@ QList<QObject *> CalendarManager::getListOfEvents(void) {
   QList<QObject *> returnList;
   foreach (CalendarClient *pListItem, _calendarList) {
     returnList.append(pListItem->allEvents());
+
+
   }
 
   return returnList;
 }
+
 
 void CalendarManager::addCalDAV_Calendar(
     QString color, QString calendarName, QUrl url, QString username,

@@ -25,6 +25,7 @@ Event::Event(Event &event) {
   this->ggE = event.getDayE();
 }
 
+
 Event::Event(unsigned int id, std::string name, const std::string &description,
              const std::string &place, Category *category, time_t start,
              time_t end, int ggS, int mmS, int yyS, int ggE, int mmE, int yyE) {

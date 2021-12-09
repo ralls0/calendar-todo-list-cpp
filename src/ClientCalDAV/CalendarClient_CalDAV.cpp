@@ -72,6 +72,7 @@ CalendarClient_CalDAV::CalendarClient_CalDAV(const QString &username,
   setupStateMachine();
 }
 
+
 CalendarClient_CalDAV::CalendarClient_CalDAV(const QString &filepath,
                                              const QString &hostURL,
                                              const QString &displayName,

@@ -18,6 +18,7 @@
   qDebug()
 #endif
 
+
 NewCalendarDialog::NewCalendarDialog(QWidget *parent) : QDialog(parent) {
 
   createBaseInfoGroupBox();
