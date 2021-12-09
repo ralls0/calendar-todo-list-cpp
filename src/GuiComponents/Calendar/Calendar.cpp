@@ -54,7 +54,7 @@ MainCalendar::MainCalendar(QWidget *parent) : QWidget(parent) {
     hlbutton->addWidget(back, 1, Qt::AlignRight);
     hlbutton->addWidget(next, 1, Qt::AlignLeft);
     wbutton->setLayout(hlbutton);
-    hl->addWidget(label_date, 1, Qt::AlignLeft);
+    hl->addWidget(label_date, 1);
     hl->addWidget(wbutton, 1, Qt::AlignRight);
     this->layout =
             new QVBoxLayout; // layout verticale dove sopra bottoni sotto calendario
@@ -503,7 +503,7 @@ QFrameExtended *MainCalendar::createQFrameExtended(Date *date) {
     vl->setSpacing(1);
     vl->addWidget(new QLabel); // qui scrivo in cella
     frame->setMinimumWidth(100);
-    frame->setMinimumHeight(100);
+    frame->setMinimumHeight(80);
     frame->setLayout(vl);
     frame->setStyleSheet(_colorStyle.getCellStyle());
     frame->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
