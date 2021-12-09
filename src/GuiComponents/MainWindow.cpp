@@ -124,7 +124,7 @@ void MainWindow::createPreviewGroupBox() {
             &MainWindow::createNewEventDialog);
 
     QWidget *_todo = new QWidget;
-    _todo->setMinimumSize(450, 420);
+    _todo->setMinimumSize(450, 320);
 
     _previewLayout = new QGridLayout;
     _previewLayout->addWidget(_calendar, 0, 0);
