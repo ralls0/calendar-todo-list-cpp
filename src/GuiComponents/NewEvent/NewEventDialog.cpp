@@ -18,6 +18,7 @@
   qDebug()
 #endif
 
+
 // LOUSO SIA PER CREARE CHE PER MODIFICARE
 
 NewEventDialog::NewEventDialog(Event *event, QWidget *parent)

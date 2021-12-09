@@ -20,6 +20,7 @@ QLabelEvent::~QLabelEvent() {
     delete this->event;
 }
 
+
 void QLabelEvent::mousePressEvent(QMouseEvent *e) {
   emit clicked(this, e->button());
 }

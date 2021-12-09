@@ -21,6 +21,7 @@
   qDebug()
 #endif
 
+
 MainCalendar::MainCalendar(QWidget *parent) : QWidget(parent) {
 
   /* connect(_newCalendarDialog, &NewCalendarDialog::newCalendar, this,

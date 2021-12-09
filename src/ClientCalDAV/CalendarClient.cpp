@@ -649,6 +649,7 @@ QList<QObject *> CalendarClient::eventsForDate(const QDate &date) {
 }
 
 QList<QObject *> CalendarClient::allEvents(void) {
+
   QList<QObject *> events;
 
   foreach (CalendarEvent evt, _eventList) {
@@ -659,6 +660,7 @@ QList<QObject *> CalendarClient::allEvents(void) {
 
   return events;
 }
+
 
 int CalendarClient::getRequestTimeoutMS(void) const {
   return _requestTimeoutMS;

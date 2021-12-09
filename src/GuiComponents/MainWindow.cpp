@@ -18,6 +18,7 @@
   qDebug()
 #endif
 
+
 MainWindow::MainWindow(QWidget *parent) : QWidget(parent) {
   _newCalendarDialog = nullptr;
   _newEventDialog = nullptr;

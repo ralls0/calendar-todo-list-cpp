@@ -18,6 +18,7 @@
   qDebug()
 #endif
 
+
 void CalendarClient_CalDAV::saveActivity(QString uid, QString filename,
                                          QString summary, QString description,
                                          QDateTime startDateTime,

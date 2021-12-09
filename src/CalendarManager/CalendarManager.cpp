@@ -213,6 +213,7 @@ QList<QObject *> CalendarManager::getListOfEvents(void) {
   return returnList;
 }
 
+
 void CalendarManager::addCalDAV_Calendar(
     QString color, QString calendarName, QUrl url, QString username,
     QString password, CalendarClient_CalDAV::E_CalendarAuth type) {

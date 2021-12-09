@@ -82,6 +82,8 @@ public:
    */
   Q_INVOKABLE QList<QObject *> allEvents(void);
 
+
+
 protected:
   QString _color;
   E_CalendarState _state;

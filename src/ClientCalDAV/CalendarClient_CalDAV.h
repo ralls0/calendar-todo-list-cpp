@@ -63,6 +63,7 @@ public:
                         const QString &displayName, QObject *parent = nullptr);
   ~CalendarClient_CalDAV();
 
+
 protected:
   /**
    * @brief     Ottiene le informazioni del calendario dall CalDAV Server.
