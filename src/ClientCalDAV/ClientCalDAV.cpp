@@ -17,7 +17,12 @@ ClientCalDAV::ClientCalDAV(const QString &username, const QString &password,
   _requestTimeoutMS = 32000;
   _requestTimeoutTimer.setSingleShot(true);
 
-  _synchronizationTimer.setSingleShot(false);
+  /*
+   * Il timer è impostato su singolo scatto,
+   * quindi non è necessario interromperlo
+   * nel caso in cui la sincronizzazione non sia riuscita
+   */
+  _synchronizationTimer.setSingleShot(true);
   _synchronizationTimer.setInterval(64000);
 
   // Creazione di un colore generato in modo randomico
@@ -51,7 +56,12 @@ ClientCalDAV::ClientCalDAV(const QString &filepath, const QString &hostURL,
   _requestTimeoutMS = 32000;
   _requestTimeoutTimer.setSingleShot(true);
 
-  _synchronizationTimer.setSingleShot(false);
+  /*
+   * Il timer è impostato su singolo scatto,
+   * quindi non è necessario interromperlo
+   * nel caso in cui la sincronizzazione non sia riuscita
+   */
+  _synchronizationTimer.setSingleShot(true);
   _synchronizationTimer.setInterval(64000);
 
   // Creazione di un colore generato in modo randomico
