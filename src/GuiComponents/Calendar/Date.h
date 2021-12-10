@@ -15,7 +15,6 @@
 #include <string>
 #include <time.h>
 
-
 class Date {
 
 public:

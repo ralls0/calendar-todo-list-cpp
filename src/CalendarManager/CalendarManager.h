@@ -37,114 +37,115 @@
 #include <QSettings>
 #include <QUrl>
 
-#include "../ClientCalDAV/CalendarClient.h"
-#include "../ClientCalDAV/CalendarClient_CalDAV.h"
+#include "../ClientCalDAV/ClientCalDAV.h"
 #include "../Utils/SimpleCrypt.h"
 
 #define PWD_CRYPT Q_UINT64_C(0x3A3CF524EC443FB1)
 
 class CalendarManager : public QObject {
-    Q_OBJECT
+  Q_OBJECT
 
 public:
-    Q_PROPERTY(QDate date READ getDate WRITE setDate NOTIFY dateChanged)
+  Q_PROPERTY(QDate date READ getDate WRITE setDate NOTIFY dateChanged)
 
-    Q_PROPERTY(QList<QObject *> listOfCalendars READ getListOfCalendars NOTIFY
-    listOfCalendarsChanged)
+  Q_PROPERTY(QList<QObject *> listOfCalendars READ getListOfCalendars NOTIFY
+                 listOfCalendarsChanged)
 
-    Q_PROPERTY(QList<QObject *> eventList READ getListOfEvents NOTIFY
-    listOfEventsChanged)
+  Q_PROPERTY(QList<QObject *> eventList READ getListOfEvents NOTIFY
+                 listOfEventsChanged)
 
-    CalendarManager(QString iniFileName, QObject *parent = NULL);
+  CalendarManager(QString iniFileName, QObject *parent = NULL);
 
-    ~CalendarManager();
+  ~CalendarManager();
 
-    /**
-     * @brief Returns a list of events which occur on a specific date
-     *
-     * @note In case month or year have changed, it is necessary to set the date
-     * property first
-     * @see setDate()
-     */
-    Q_INVOKABLE QList<QObject *> eventsForDate(const QDate &date);
+  /**
+   * @brief Returns a list of events which occur on a specific date
+   *
+   * @note In case month or year have changed, it is necessary to set the date
+   * property first
+   * @see setDate()
+   */
+  Q_INVOKABLE QList<QObject *> eventsForDate(const QDate &date);
 
 protected:
-    /**
-     * @brief Erases the list of CalendarClients (_calendarList)
-     */
-    void clearCalendarList(void);
+  /**
+   * @brief Erases the list of CalendarClients (_calendarList)
+   */
+  void clearCalendarList(void);
 
-    /**
-     * @brief Saves calendar settings to INI file
-     *
-     * Saved information for each CalendarClient instance: type, display name,
-     * color, URL and in case of calDAV calendars also the username and password.
-     * Passwords are save encrypted (using SimpleCrypt) so at least you won't
-     * have any files containing your owncloud password in plaintext on your disk.
-     */
-    void saveSettings(void);
+  /**
+   * @brief Saves calendar settings to INI file
+   *
+   * Saved information for each CalendarClient instance: type, display name,
+   * color, URL and in case of calDAV calendars also the username and password.
+   * Passwords are save encrypted (using SimpleCrypt) so at least you won't
+   * have any files containing your owncloud password in plaintext on your disk.
+   */
+  void saveSettings(void);
 
-    /**
-     * @brief Loads calendar settings from INI file
-     *
-     * @note _calendarList will be erased and rebuild during this procedure!
-     *
-     * @see saveSettings()
-     */
-    void loadSettings(void);
+  /**
+   * @brief Loads calendar settings from INI file
+   *
+   * @note _calendarList will be erased and rebuild during this procedure!
+   *
+   * @see saveSettings()
+   */
+  void loadSettings(void);
 
-    QList<CalendarClient_CalDAV *>
-            _calendarList; // list of CalDAV or ICS calendars
-    QString _iniFileName;
-    QDate _date;
+  QList<ClientCalDAV *>
+      _calendarList; // list of CalDAV calendars
+  QString _iniFileName;
+  QDate _date;
 
-    signals:
-            void dateChanged(void);
-    void listOfCalendarsChanged( QList<QString> t); // emitted when _calendarList has changed
+signals:
+  void dateChanged(void);
+  void listOfCalendarsChanged(
+      QList<QString> t); // emitted when _calendarList has changed
 
-    void listOfEventsChanged(QList<QObject *> t); // emitted during handleEventUpdate()
-    void eventsUpdated(void);       // emitted during handleEventUpdate()
+  void
+  listOfEventsChanged(QList<QObject *> t); // emitted during handleEventUpdate()
+  void eventsUpdated(void);                // emitted during handleEventUpdate()
 
 public slots:
 
-            QDate getDate() const;
-    void setDate(const QDate &newDate);
+  QDate getDate() const;
+  void setDate(const QDate &newDate);
 
-    QList<QObject *> getListOfCalendars(void);
-    QList<CalendarClient_CalDAV *> getListOfCalendarsClient(void);
-    QList<QString> getListOfCalendarsName(void);
-    QList<QObject *> getListOfEvents(void);
+  QList<QObject *> getListOfCalendars(void);
+  QList<ClientCalDAV *> getListOfCalendarsClient(void);
+  QList<QString> getListOfCalendarsName(void);
+  QList<QObject *> getListOfEvents(void);
 
-    void
-    addCalDAV_Calendar(QString color, QString calendarName, QUrl url,
-                       QString username, QString password = "",
-                       CalendarClient_CalDAV::E_CalendarAuth type =
-                       CalendarClient_CalDAV::E_CalendarAuth::E_AUTH_UPWD);
+  void
+  addCalDAV_Calendar(QString color, QString calendarName, QUrl url,
+                     QString username, QString password = "",
+                     ClientCalDAV::E_CalendarAuth type =
+                         ClientCalDAV::E_CalendarAuth::E_AUTH_UPWD);
 
-    /**
-     * @brief Returns a pointer to a specific calendar instance in the list of
-     * calendars
-     */
-    CalendarClient *getListItemAt(int index);
+  /**
+   * @brief Returns a pointer to a specific calendar instance in the list of
+   * calendars
+   */
+  ClientCalDAV *getListItemAt(int index);
 
-    /**
-     * @brief Removes a CalendarClient instance from list of calendars
-     *
-     * @retval Returns false if the requested index does not exist
-     * @note If called without parameter, the last calendar in the list will be
-     * removed
-     */
-    bool removeListItemAt(int index = -1);
+  /**
+   * @brief Removes a CalendarClient instance from list of calendars
+   *
+   * @retval Returns false if the requested index does not exist
+   * @note If called without parameter, the last calendar in the list will be
+   * removed
+   */
+  bool removeListItemAt(int index = -1);
 
-    int getCalendarCount(void) const;
+  int getCalendarCount(void) const;
 
 protected slots:
 
-            /**
-             * @brief Slot to be called when a CalendarClient instance reports an event
-             * update
-             */
-            void handleEventUpdate(void);
+  /**
+   * @brief Slot to be called when a CalendarClient instance reports an event
+   * update
+   */
+  void handleEventUpdate(void);
 };
 
 #endif // CALENDAR_TODO_LIST_CPP_CALENDARMANAGER_H

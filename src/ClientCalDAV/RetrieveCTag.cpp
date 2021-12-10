@@ -7,19 +7,9 @@
  *
  */
 
-#include "CalendarClient_CalDAV.h"
+#include "ClientCalDAV.h"
 
-
-#define DEBUG_CALENDARCLIENT_CALDAV 1
-#if DEBUG_CALENDARCLIENT_CALDAV
-#define QDEBUG qDebug()
-#else
-#define QDEBUG                                                                 \
-  if (0)                                                                       \
-  qDebug()
-#endif
-
-void CalendarClient_CalDAV::getCTag(void) {
+void ClientCalDAV::retrieveCTag(void) {
   QString authorization = "";
   if (_auth == E_AUTH_UPWD) {
     authorization.append("Basic ");
@@ -50,7 +40,7 @@ void CalendarClient_CalDAV::getCTag(void) {
 
   QNetworkRequest request;
   request.setUrl(_hostURL);
-  request.setRawHeader("User-Agent", "CalendarClient_CalDAV");
+  request.setRawHeader("User-Agent", "ClientCalDAV");
   request.setRawHeader("Authorization", authorization.toUtf8());
   request.setRawHeader("Depth", "0");
   request.setRawHeader("Content-Type", "application/xml; charset=utf-8");
@@ -65,7 +55,7 @@ void CalendarClient_CalDAV::getCTag(void) {
 
   if (_pReply) {
     connect(_pReply, &QNetworkReply::errorOccurred, this,
-            &CalendarClient_CalDAV::handleHTTPError);
+            &ClientCalDAV::handleHTTPError);
     connect(_pReply, SIGNAL(finished()), this,
             SLOT(handleRequestCTagFinished()));
 
@@ -77,7 +67,7 @@ void CalendarClient_CalDAV::getCTag(void) {
   }
 }
 
-void CalendarClient_CalDAV::handleRequestCTagFinished(void) {
+void ClientCalDAV::handleRequestCTagFinished(void) {
   _requestTimeoutTimer.stop();
 
   if (E_STATE_ERROR == _state) {

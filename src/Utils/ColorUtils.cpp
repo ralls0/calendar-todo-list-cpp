@@ -35,7 +35,8 @@ QString WindowStyle::getMainWindowStyle() {
 }
 
 QString WindowStyle::getLabelDateStyle() {
-  return QString("QLabel { color: %1; qproperty-alignment: AlignLeft; padding-right: 100px; font-size: 24px; font-weight: "
+  return QString("QLabel { color: %1; qproperty-alignment: AlignLeft; "
+                 "padding-right: 100px; font-size: 24px; font-weight: "
                  "bold; }")
       .arg(fg_hex);
 }

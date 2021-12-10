@@ -18,7 +18,6 @@ QPushButtonExtended::QPushButtonExtended(const char *text, QWidget *parent)
           &QPushButtonExtended::button_clicked);
 }
 
-
 QPushButtonExtended::QPushButtonExtended(QWidget *parent)
     : QPushButton(parent) {
   // clicked can't be overwritten

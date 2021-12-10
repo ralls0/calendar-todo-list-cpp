@@ -14,7 +14,6 @@
 #include <QKeyEvent>
 #include <QLabel>
 
-
 class CustomDialog : public QDialog {
   Q_OBJECT
 

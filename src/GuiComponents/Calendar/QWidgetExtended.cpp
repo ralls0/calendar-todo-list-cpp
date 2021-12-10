@@ -13,7 +13,6 @@
 
 QWidgetExtended::QWidgetExtended(QWidget *parent) : QWidget(parent) {}
 
-
 void QWidgetExtended::signalEvent(QMouseEvent *event, int code) {
   QFrameExtended frame;
   QWidget *widget = this->childAt(event->pos());

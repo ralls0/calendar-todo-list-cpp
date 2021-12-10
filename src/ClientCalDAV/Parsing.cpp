@@ -7,18 +7,9 @@
  *
  */
 
-#include "CalendarClient.h"
+#include "ClientCalDAV.h"
 
-#define DEBUG_CALENDARCLIENT 1
-#if DEBUG_CALENDARCLIENT
-#define QDEBUG qDebug()
-#else
-#define QDEBUG                                                                 \
-  if (0)                                                                       \
-  qDebug()
-#endif
-
-void CalendarClient::parseVCALENDAR(QString href) {
+void ClientCalDAV::parseVCALENDAR(QString href) {
   QString line = _dataStream->readLine();
 
   while (!line.isNull()) {
@@ -29,7 +20,7 @@ void CalendarClient::parseVCALENDAR(QString href) {
   }
 }
 
-void CalendarClient::parseVTODO(QString href) {
+void ClientCalDAV::parseVTODO(QString href) {
   QString line = _dataStream->readLine();
 
   while (!line.isNull()) {
@@ -40,8 +31,7 @@ void CalendarClient::parseVTODO(QString href) {
   }
 }
 
-
-void CalendarClient::parseCalendarVEVENT(QString href) {
+void ClientCalDAV::parseCalendarVEVENT(QString href) {
   CalendarEvent event(this);
   event.setIsCalendar(true);
   event.setColor(_color);
@@ -109,7 +99,7 @@ void CalendarClient::parseCalendarVEVENT(QString href) {
   }
 }
 
-void CalendarClient::parseTodoVEVENT(QString href) {
+void ClientCalDAV::parseTodoVEVENT(QString href) {
   CalendarEvent event(this);
   event.setIsCalendar(false);
   event.setColor(_color);

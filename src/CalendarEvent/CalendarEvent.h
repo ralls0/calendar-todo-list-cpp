@@ -13,7 +13,6 @@
  *
  */
 
-
 #ifndef CALENDAR_TODO_LIST_CPP_CALENDAREVENT_H
 #define CALENDAR_TODO_LIST_CPP_CALENDAREVENT_H
 
@@ -137,7 +136,7 @@ public slots:
   void setCategories(const QString &categories);
 
   bool getIsCanceled() const;
-  void setIsCanceled(const bool &isCanceled);
+  void setIsCanceled(const bool &isCanceled); // FIXME usato nella lista di eventi se EXDATE
 
   bool getIsCalendar() const;
   void setIsCalendar(const bool &isCanceled);

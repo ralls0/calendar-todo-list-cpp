@@ -14,7 +14,6 @@
 #include <ctime>
 #include <iostream>
 
-
 /* A todo is defined as an event with special dates, they are the following:
  * start = end = 29/01/2105 09:40 , the UTC timestamp is: 4262665200
  * Note: this value is incompatible for 32bit systems due to the 2038 year bug

@@ -17,7 +17,6 @@ static std::string week_days[] = {"Monday", "Tuesday",  "Wednesday", "Thursday",
 
 DateUtil::DateUtil() {}
 
-
 Date DateUtil::get_current_date() {
   return date_from_timestamp(static_cast<unsigned long>(time(NULL)));
 }

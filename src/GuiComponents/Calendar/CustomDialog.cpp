@@ -17,7 +17,6 @@ CustomDialog::CustomDialog(QLayout *layout, QWidget *parent) : QDialog(parent) {
   setLayout(layout);
 }
 
-
 CustomDialog::~CustomDialog() {}
 
 void CustomDialog::keyPressEvent(QKeyEvent *e) {
