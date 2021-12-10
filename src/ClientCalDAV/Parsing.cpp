@@ -18,6 +18,7 @@ void ClientCalDAV::parseVCALENDAR(QString href) {
     }
     line = _dataStream->readLine();
   }
+  emit eventsUpdated();
 }
 
 void ClientCalDAV::parseVTODO(QString href) {
@@ -29,6 +30,7 @@ void ClientCalDAV::parseVTODO(QString href) {
     }
     line = _dataStream->readLine();
   }
+  emit eventsUpdated();
 }
 
 void ClientCalDAV::parseCalendarVEVENT(QString href) {
@@ -78,8 +80,6 @@ void ClientCalDAV::parseCalendarVEVENT(QString href) {
       event.setEndDateTime(utcTime.toLocalTime());
     } else if (key == QLatin1String("RRULE")) {
       event.setRRULE(value);
-    } else if (key == QLatin1String("EXDATE")) {
-      event.setExdates(value);
     } else if (key == QLatin1String("SUMMARY")) {
       event.setName(value);
     } else if (key == QLatin1String("LOCATION")) {
@@ -151,6 +151,6 @@ void ClientCalDAV::parseTodoVEVENT(QString href) {
     }
   }
   if (event.name() != "") {
-    _eventList.append(event);
+    _eventList.append(event); // FIXME
   }
 }

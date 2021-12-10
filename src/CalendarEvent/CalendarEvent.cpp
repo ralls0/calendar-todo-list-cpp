@@ -17,7 +17,6 @@ CalendarEvent::CalendarEvent(QObject *parent) : QObject(parent) {
   _startDateTime = QDateTime();
   _endDateTime = QDateTime();
   _categories = "";
-  _exdates = "";
   _rRULE = "";
   _color = QColor(rand() & 0xFF, rand() & 0xFF, rand() & 0xFF).name();
   _isCanceled = false;
@@ -49,7 +48,6 @@ void CalendarEvent::copyFrom(const CalendarEvent &other) {
   setStartDateTime(other._startDateTime);
   setEndDateTime(other._endDateTime);
   setCategories(other._categories);
-  setExdates(other._exdates);
   setRRULE(other._rRULE);
   setIsCanceled(other._isCanceled);
   setUID(other._UID);
@@ -133,15 +131,6 @@ void CalendarEvent::setRRULE(const QString &rrule) {
   if (_rRULE != rrule) {
     _rRULE = rrule;
     emit rruleChanged(_rRULE);
-  }
-}
-
-QString CalendarEvent::getExdates() const { return _exdates; }
-
-void CalendarEvent::setExdates(const QString &exdates) {
-  if (_exdates != exdates) {
-    _exdates = exdates;
-    emit exdatesChanged(_exdates);
   }
 }
 

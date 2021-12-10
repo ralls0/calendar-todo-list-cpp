@@ -133,10 +133,69 @@ void MainCalendar::setCalendarList(QList<QString> t) {
   }
 }
 
-void MainCalendar::updateListOfEvents(QList<QObject *> t) {
+void MainCalendar::updateListOfEvents(QList<QObject *> eventList) {
+  if (eventList.isEmpty())
+    return;
   std::cout << "CIAONE";
-  for (QObject *x : t) {
-    std::cout << "ciaone";
+  QDate date = QDateTime::currentDateTime().date();
+
+  // Remove all displayed events
+  remove_events_from_all_frames();
+
+  // Find at which cell the month starts
+  int start_offset;
+  for (start_offset = 0; start_offset < 42; start_offset++) {
+    // Looks where is the first day of the month
+    if (this->frames[start_offset]->getDate() != NULL)
+      break;
+  }
+
+  for (QObject *event : eventList) {
+
+    QDate start = event->property("startDateTime").toDate();
+    QDate end = event->property("endDateTime").toDate();
+
+    if (((start.month() < date.month()) && (start.year() == date.year())) ||
+        (start.year() < date.year()))
+      start = QDate(date.year(), date.month(), 1);
+
+    if (((end.month() > start.month()) && (end.year() == start.year())) ||
+        (end.year() > start.year()))
+      end = start.addMonths(1).addDays(-1);
+    // sovrascrive tutto perche' gli eventi vanno presi un mese alla volta, non
+    // c'è controllo annoframe==annoevento && meseframe==meseevento
+    for (int i = start_offset + start.day() - 1; i < (start_offset + end.day());
+         i++) {
+      QLabelEvent *label_event = createLabelEvent(new Event(
+          i, event->property("name").toString().toStdString(),
+          event->property("description").toString().toStdString(),
+          event->property("location").toString().toStdString(),
+          new Category(i, "Prova", "#35A0F0"),
+          event->property("startDateTime").toDateTime().toMSecsSinceEpoch(),
+          event->property("startDateTime")
+              .toDateTime()
+              .toMSecsSinceEpoch())); // FIXME
+
+      /*if ((selected_event != NULL) && (selected_event->equals(*event))) {
+          label_event->markSelection(true);
+          this->selected_event = label_event;
+      }*/
+      // serve se ho tanti eventi sulla stessa cella
+      if (this->frames[i]->children().size() == 3) {
+        QPushButtonExtended *button_show_all =
+            new QPushButtonExtended("Show All");
+        button_show_all->setIndex(i);
+        connect(button_show_all, &QPushButtonExtended::on_click, this,
+                &MainCalendar::on_button_extended_click);
+        this->frames[i]->layout()->addWidget(button_show_all);
+        label_event->setHidden(true);
+      } else if (this->frames[i]->children().size() > 4)
+        label_event->setHidden(true);
+      // Events will be copied and wrapped inside the QLabelEvent widgets
+      // if(this->frames[i]->getDate()->compareTo(event->get))
+      (static_cast<QVBoxLayout *>(this->frames[i]->layout()))
+          ->insertWidget(1, label_event);
+    }
   }
 }
 
@@ -402,7 +461,7 @@ void MainCalendar::on_button_extended_click(int index) {
 
 QLabelEvent *MainCalendar::createLabelEvent(Event *event) {
   // Make a copy
-  Event *newEvent = new Event(*event);
+  Event *newEvent = event;
   QLabelEvent *label_event = new QLabelEvent;
   label_event->setEvent(newEvent);
   label_event->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);

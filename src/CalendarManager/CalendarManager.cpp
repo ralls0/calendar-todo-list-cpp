@@ -264,5 +264,7 @@ int CalendarManager::getCalendarCount(void) const {
 
 void CalendarManager::handleEventUpdate(void) {
   emit eventsUpdated();
+  if (this->getListOfEvents().isEmpty())
+    return;
   emit listOfEventsChanged(this->getListOfEvents());
 }

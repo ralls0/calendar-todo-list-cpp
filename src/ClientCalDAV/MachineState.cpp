@@ -47,8 +47,6 @@ void ClientCalDAV::setupStateMachine(void) {
           SLOT(handleStateCheckingChangesExit()));
 
   // pStateRequestingChanges
-  pStateRequestingChanges->addTransition(this, SIGNAL(calendarUpdateRequired()),
-                                         pStateProcessingChanges);
   pStateRequestingChanges->addTransition(
       this, SIGNAL(calendarHasNotChanged()), // FIXME REPLICARE PER IL TODO
       pStateWaiting);
