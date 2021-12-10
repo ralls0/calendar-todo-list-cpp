@@ -227,7 +227,6 @@ void ClientCalDAV::handleRequestChangesEventFinished(void) {
       QDEBUG << "[i] (" << _displayName << ") "
              << "OK, restarting synchronization\r\n\r\n";
       _synchronizationTimer.start();
-      emit eventsUpdated();
     }
 
   } else {

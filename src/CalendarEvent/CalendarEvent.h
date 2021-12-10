@@ -55,10 +55,6 @@ public:
   // iCalendar RRULE value as string
   Q_PROPERTY(QString rrule READ getRRULE WRITE setRRULE NOTIFY rruleChanged)
 
-  // iCalendar EXDATE value as string
-  Q_PROPERTY(
-      QString exdates READ getExdates WRITE setExdates NOTIFY exdatesChanged)
-
   // Event categories, separated by ","
   Q_PROPERTY(QString categories READ getCategories WRITE setCategories NOTIFY
                  categoriesChanged)
@@ -129,9 +125,6 @@ public slots:
   QString getRRULE() const;
   void setRRULE(const QString &rRule);
 
-  QString getExdates() const;
-  void setExdates(const QString &exdates);
-
   QString getCategories() const;
   void setCategories(const QString &categories);
 
@@ -163,7 +156,6 @@ protected:
   QDateTime _startDateTime;
   QDateTime _endDateTime;
   QString _rRULE;
-  QString _exdates;
   QString _categories;
   QString _UID;
   QString _HREF;
