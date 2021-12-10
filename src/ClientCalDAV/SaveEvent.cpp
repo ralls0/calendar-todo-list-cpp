@@ -18,11 +18,10 @@
   qDebug()
 #endif
 
-void ClientCalDAV::saveEvent(QString uid, QString filename,
-                                      QString summary, QString location,
-                                      QString description, QString rrule,
-                                      QDateTime startDateTime,
-                                      QDateTime endDateTime) {
+void ClientCalDAV::saveEvent(QString uid, QString filename, QString summary,
+                             QString location, QString description,
+                             QString rrule, QDateTime startDateTime,
+                             QDateTime endDateTime) {
   QDEBUG << "[i] (" << _displayName << ") "
          << "saving event" << summary;
 

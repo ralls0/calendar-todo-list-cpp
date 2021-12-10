@@ -56,6 +56,12 @@ public:
 
   Q_ENUM(E_CalendarAuth)
 
+  /**
+   *
+   * @brief     for usage of Q_PROPERTY see upstream [Reading and Writing
+   * Properties with the
+   * MOS](https://doc.qt.io/qt-5/properties.html#reading-and-writing-properties-with-the-meta-object-system)
+   */
   // Colore del CalendarClient per la GUI
   Q_PROPERTY(QString color READ getColor WRITE setColor NOTIFY colorChanged)
 
@@ -117,6 +123,8 @@ public:
   /**
    * @brief     Restituisce un elenco di eventi che si verificano nella data
    *            inserita
+   * @note      About Q_INVOKABLE se upstream
+   * (Q_INVOKABLE)[https://doc.qt.io/qt-5/qobject.html#Q_INVOKABLE]
    */
   Q_INVOKABLE QList<QObject *> eventsForDate(const QDate &date);
 
@@ -124,9 +132,8 @@ public:
    * @brief     Restituisce un elenco di eventi che si verificano nel range di
    * date inserite
    */
-  Q_INVOKABLE QList<QObject *>
-  eventsInRange(const QDate &startDate,
-                const QDate &endDate); // TODO: Implementarla
+  Q_INVOKABLE QList<QObject *> eventsInRange(const QDate &startDate,
+                                             const QDate &endDate);
 
   /**
    * @brief     Restituisce l'elenco completo degli eventi gestiti da
@@ -140,13 +147,10 @@ protected:
   void retrieveCTag(void);
   void setupStateMachine(void);
 
-  int lastSyncYear; // FIXME Se non viene usato eliminami
-  int lastSyncMonth;
-
   // Tipo di auth verso il server
   E_CalendarAuth _auth;
 
-  int _yearToBeRequested; // FIXME Dove viene usato?
+  int _yearToBeRequested;
   int _monthToBeRequested;
 
   int _year;
@@ -166,7 +170,7 @@ protected:
   // e' sul server
   QString _cTag;
 
-  bool _bRecoveredFromError; // FIXME cos'e'?
+  bool _bRecoveredFromError;
 
   OAuth *_au;
 
@@ -263,8 +267,11 @@ signals:
   void passwordChanged(QString password);
 
   void calendarHasNotChanged(void);
+  void calendarCTagHasNotChanged(void);
+  void calendarCTagChanged(void);
   void calendarUpdateRequired(void); // Emesso quando year/month sono cambiati
                                      // rispetto alla scorsa sincronizzazione
+  void calendarCheckCTag(void);
 
 public slots:
   QString getCTag(void) const;
@@ -334,8 +341,8 @@ public slots:
    * Se l'uid e' vuoto, un nuovo evento viene creato.
    */
   void saveTask(QString uid, QString filename, QString summary,
-                    QString description, QDateTime startDateTime,
-                    QDateTime endDateTime);
+                QString description, QDateTime startDateTime,
+                QDateTime endDateTime);
 
   /**
    * @brief Elimina uno specifico evento dal CalDAV Server.
@@ -351,6 +358,9 @@ protected slots:
 
   void handleStateWaitingEntry(void);
   void handleStateWaitingExit(void);
+
+  void handleStateCheckingChangesEntry(void);
+  void handleStateCheckingChangesExit(void);
 
   void handleStateRequestingChangesEntry(void);
   void handleStateRequestingChangesExit(void);

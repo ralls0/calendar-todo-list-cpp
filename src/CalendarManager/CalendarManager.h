@@ -92,8 +92,7 @@ protected:
    */
   void loadSettings(void);
 
-  QList<ClientCalDAV *>
-      _calendarList; // list of CalDAV calendars
+  QList<ClientCalDAV *> _calendarList; // list of CalDAV calendars
   QString _iniFileName;
   QDate _date;
 
@@ -116,11 +115,10 @@ public slots:
   QList<QString> getListOfCalendarsName(void);
   QList<QObject *> getListOfEvents(void);
 
-  void
-  addCalDAV_Calendar(QString color, QString calendarName, QUrl url,
-                     QString username, QString password = "",
-                     ClientCalDAV::E_CalendarAuth type =
-                         ClientCalDAV::E_CalendarAuth::E_AUTH_UPWD);
+  void addCalDAV_Calendar(QString color, QString calendarName, QUrl url,
+                          QString username, QString password = "",
+                          ClientCalDAV::E_CalendarAuth type =
+                              ClientCalDAV::E_CalendarAuth::E_AUTH_UPWD);
 
   /**
    * @brief Returns a pointer to a specific calendar instance in the list of

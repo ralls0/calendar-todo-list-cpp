@@ -29,7 +29,7 @@ add_executable(calendar_todo_list_cpp
         src/ClientCalDAV/ClientCalDAV.h
         src/ClientCalDAV/ClientCalDAV.cpp
         src/ClientCalDAV/DeleteEvent.cpp
-        src/ClientCalDAV/GetChangedEvent.cpp
+        src/ClientCalDAV/RetrieveChangedEvent.cpp
         src/ClientCalDAV/SaveEvent.cpp
         src/CalendarManager/CalendarManager.h
         src/CalendarManager/CalendarManager.cpp

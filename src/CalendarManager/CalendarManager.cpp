@@ -73,14 +73,12 @@ void CalendarManager::saveSettings(void) {
         (const ClientCalDAV *)_calendarList[index];
     if (pCalDAVClient->getClientAuth() ==
         ClientCalDAV::E_CalendarAuth::E_AUTH_UPWD) {
-      settings.setValue("Type",
-                        ClientCalDAV::E_CalendarAuth::E_AUTH_UPWD);
+      settings.setValue("Type", ClientCalDAV::E_CalendarAuth::E_AUTH_UPWD);
       settings.setValue("Username", pCalDAVClient->getUsername());
       settings.setValue("Password",
                         crypto.encryptToString(pCalDAVClient->getPassword()));
     } else {
-      settings.setValue("Type",
-                        ClientCalDAV::E_CalendarAuth::E_AUTH_TOKEN);
+      settings.setValue("Type", ClientCalDAV::E_CalendarAuth::E_AUTH_TOKEN);
       settings.setValue("AccessToken", crypto.encryptToString(
                                            pCalDAVClient->getAccessToken()));
       settings.setValue("FilePath", pCalDAVClient->getFilePath());
@@ -170,8 +168,7 @@ void CalendarManager::setDate(const QDate &newDate) {
     _date = newDate;
     foreach (ClientCalDAV *pListItem, _calendarList) {
 
-      ClientCalDAV *pClientCalDAV =
-          (ClientCalDAV *)pListItem;
+      ClientCalDAV *pClientCalDAV = (ClientCalDAV *)pListItem;
       pClientCalDAV->setYear(newDate.year());
       pClientCalDAV->setMonth(newDate.month());
     }
@@ -211,16 +208,16 @@ QList<QObject *> CalendarManager::getListOfEvents(void) {
   return returnList;
 }
 
-void CalendarManager::addCalDAV_Calendar(
-    QString color, QString calendarName, QUrl url, QString username,
-    QString password, ClientCalDAV::E_CalendarAuth type) {
+void CalendarManager::addCalDAV_Calendar(QString color, QString calendarName,
+                                         QUrl url, QString username,
+                                         QString password,
+                                         ClientCalDAV::E_CalendarAuth type) {
   ClientCalDAV *pCalendar;
   if (type == ClientCalDAV::E_CalendarAuth::E_AUTH_UPWD) {
     pCalendar = new ClientCalDAV(username, password, url.toString(),
-                                          calendarName, this);
+                                 calendarName, this);
   } else {
-    pCalendar =
-        new ClientCalDAV(username, url.toString(), calendarName, this);
+    pCalendar = new ClientCalDAV(username, url.toString(), calendarName, this);
   }
 
   pCalendar->setColor(color);

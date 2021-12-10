@@ -189,7 +189,7 @@ void ClientCalDAV::handleRequestChangesEventFinished(void) {
             sETag = elETag.text();
           } else {
             QDEBUG << "[i] (" << _displayName << ") "
-                   << "    ETAG = ";
+                   << "    ETAG = empty";
           }
 
           QDomElement elCalendarData =
