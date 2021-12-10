@@ -19,7 +19,6 @@ private:
   int index;
   Event *ev;
 
-
 public:
   explicit QPushButtonExtended(const char *text, QWidget *parent = 0);
   QPushButtonExtended(QWidget *parent = 0);

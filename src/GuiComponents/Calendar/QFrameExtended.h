@@ -19,7 +19,6 @@
 class QFrameExtended : public QFrame {
   Q_OBJECT
 
-
 private:
   Date *date;
 

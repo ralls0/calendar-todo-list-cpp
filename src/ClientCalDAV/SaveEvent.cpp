@@ -7,7 +7,7 @@
  *
  */
 
-#include "CalendarClient_CalDAV.h"
+#include "ClientCalDAV.h"
 
 #define DEBUG_CALENDARCLIENT_CALDAV 1
 #if DEBUG_CALENDARCLIENT_CALDAV
@@ -18,8 +18,7 @@
   qDebug()
 #endif
 
-
-void CalendarClient_CalDAV::saveEvent(QString uid, QString filename,
+void ClientCalDAV::saveEvent(QString uid, QString filename,
                                       QString summary, QString location,
                                       QString description, QString rrule,
                                       QDateTime startDateTime,
@@ -101,7 +100,7 @@ void CalendarClient_CalDAV::saveEvent(QString uid, QString filename,
 
   QNetworkRequest request;
   request.setUrl(QUrl(_hostURL.toString() + filename));
-  request.setRawHeader("User-Agent", "CalendarClient_CalDAV");
+  request.setRawHeader("User-Agent", "ClientCalDAV");
   request.setRawHeader("Authorization", authorization.toUtf8());
   request.setRawHeader("Depth", "0");
   request.setRawHeader("Prefer", "return-minimal");
@@ -116,7 +115,7 @@ void CalendarClient_CalDAV::saveEvent(QString uid, QString filename,
 
   if (_pUploadReply) {
     connect(_pReply, &QNetworkReply::errorOccurred, this,
-            &CalendarClient_CalDAV::handleHTTPError);
+            &ClientCalDAV::handleHTTPError);
 
     connect(_pUploadReply, SIGNAL(finished()), this,
             SLOT(handleUploadFinished()));

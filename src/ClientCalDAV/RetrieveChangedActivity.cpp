@@ -7,19 +7,9 @@
  *
  */
 
+#include "ClientCalDAV.h"
 
-#include "CalendarClient_CalDAV.h"
-
-#define DEBUG_CALENDARCLIENT_CALDAV 1
-#if DEBUG_CALENDARCLIENT_CALDAV
-#define QDEBUG qDebug()
-#else
-#define QDEBUG                                                                 \
-  if (0)                                                                       \
-  qDebug()
-#endif
-
-void CalendarClient_CalDAV::getChangedActivity(void) {
+void ClientCalDAV::retrieveChangedTask(void) {
   QDEBUG << "[i] (" << _displayName
          << ") Start getChangedEvent with year: " << _year
          << "month: " << _month;
@@ -98,7 +88,7 @@ void CalendarClient_CalDAV::getChangedActivity(void) {
 
   QNetworkRequest request;
   request.setUrl(_hostURL);
-  request.setRawHeader("User-Agent", "CalendarClient_CalDAV");
+  request.setRawHeader("User-Agent", "ClientCalDAV");
   request.setRawHeader("Authorization", authorization.toUtf8());
   request.setRawHeader("Depth", "1");
   request.setRawHeader("Content-Type", "application/xml; charset=utf-8");
@@ -113,7 +103,7 @@ void CalendarClient_CalDAV::getChangedActivity(void) {
 
   if (_pReply) {
     connect(_pReply, &QNetworkReply::errorOccurred, this,
-            &CalendarClient_CalDAV::handleHTTPError);
+            &ClientCalDAV::handleHTTPError);
 
     connect(_pReply, SIGNAL(finished()), this,
             SLOT(handleRequestChangesActivityFinished()));
@@ -126,7 +116,7 @@ void CalendarClient_CalDAV::getChangedActivity(void) {
   }
 }
 
-void CalendarClient_CalDAV::handleRequestChangesActivityFinished(void) {
+void ClientCalDAV::handleRequestChangesActivityFinished(void) {
   _requestTimeoutTimer.stop();
 
   if (E_STATE_ERROR == _state) {

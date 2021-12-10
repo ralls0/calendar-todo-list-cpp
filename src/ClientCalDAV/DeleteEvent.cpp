@@ -7,19 +7,9 @@
  *
  */
 
-#include "CalendarClient_CalDAV.h"
+#include "ClientCalDAV.h"
 
-#define DEBUG_CALENDARCLIENT_CALDAV 0
-#if DEBUG_CALENDARCLIENT_CALDAV
-#define QDEBUG qDebug()
-#else
-#define QDEBUG                                                                 \
-  if (0)                                                                       \
-  qDebug()
-#endif
-
-
-void CalendarClient_CalDAV::deleteEvent(QString href) {
+void ClientCalDAV::deleteEvent(QString href) {
   if (href.isEmpty()) {
     return;
   }
@@ -47,7 +37,7 @@ void CalendarClient_CalDAV::deleteEvent(QString href) {
 
   QNetworkRequest request;
   request.setUrl(QUrl(_hostURL.toString() + filename));
-  request.setRawHeader("User-Agent", "CalendarClient_CalDAV");
+  request.setRawHeader("User-Agent", "ClientCalDAV");
   request.setRawHeader("Authorization", authorization.toUtf8());
   request.setRawHeader("Depth", "0");
   request.setRawHeader("Prefer", "return-minimal");
@@ -65,7 +55,7 @@ void CalendarClient_CalDAV::deleteEvent(QString href) {
 
   if (_pUploadReply) {
     connect(_pReply, &QNetworkReply::errorOccurred, this,
-            &CalendarClient_CalDAV::handleHTTPError);
+            &ClientCalDAV::handleHTTPError);
 
     connect(_pUploadReply, SIGNAL(finished()), this,
             SLOT(handleUploadFinished()));
@@ -78,7 +68,7 @@ void CalendarClient_CalDAV::deleteEvent(QString href) {
   }
 }
 
-void CalendarClient_CalDAV::handleUploadFinished(void) {
+void ClientCalDAV::handleUploadFinished(void) {
   _uploadRequestTimeoutTimer.stop();
 
   QDEBUG << _displayName << ": "
