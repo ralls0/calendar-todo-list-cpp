@@ -9,10 +9,9 @@
 
 #include "ClientCalDAV.h"
 
-void ClientCalDAV::saveTask(QString uid, QString filename,
-                                         QString summary, QString description,
-                                         QDateTime startDateTime,
-                                         QDateTime endDateTime) {
+void ClientCalDAV::saveTask(QString uid, QString filename, QString summary,
+                            QString description, QDateTime startDateTime,
+                            QDateTime endDateTime) {
   QDEBUG << "[i] (" << _displayName << ") "
          << "saving event" << summary;
 

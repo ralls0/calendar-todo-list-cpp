@@ -8,23 +8,43 @@
  */
 
 #include "ClientCalDAV.h"
-
+/**
+ * @brief       About QStateMachine se [QStateMachine
+ * details](https://doc.qt.io/qt-5/qstatemachine.html#details)
+ */
 void ClientCalDAV::setupStateMachine(void) {
   QStateMachine *pStateMachine = new QStateMachine(this);
 
   QState *pStateWaiting = new QState(pStateMachine);
   QState *pStateRequestingChanges = new QState(pStateMachine);
+  QState *pStateCheckingChanges = new QState(pStateMachine);
   QState *pStateProcessingChanges = new QState(pStateMachine);
   QState *pStateError = new QState(pStateMachine);
 
-  connect(&_synchronizationTimer, SIGNAL(timeout()), this,
-          SLOT(debug_handleTimerTimeout()));
+  pStateWaiting->addTransition(&_synchronizationTimer, SIGNAL(timeout()),
+                               pStateCheckingChanges);
+  pStateWaiting->addTransition(this, SIGNAL(accessTokenChanged(QString)),
+                               pStateCheckingChanges);
+  pStateWaiting->addTransition(this, SIGNAL(passwordChanged(QString)),
+                               pStateCheckingChanges);
 
   // pStateWaiting
   connect(pStateWaiting, SIGNAL(entered()), this,
           SLOT(handleStateWaitingEntry()));
   connect(pStateWaiting, SIGNAL(exited()), this,
           SLOT(handleStateWaitingExit()));
+
+  pStateCheckingChanges->addTransition(this, SIGNAL(error(QString)),
+                                       pStateError);
+  pStateCheckingChanges->addTransition(this, SIGNAL(calendarCTagChanged()),
+                                       pStateRequestingChanges);
+  pStateCheckingChanges->addTransition(
+      this, SIGNAL(calendarCTagHasNotChanged()), pStateWaiting);
+
+  connect(pStateCheckingChanges, SIGNAL(entered()), this,
+          SLOT(handleStateCheckingChangesEntry()));
+  connect(pStateCheckingChanges, SIGNAL(exited()), this,
+          SLOT(handleStateCheckingChangesExit()));
 
   // pStateRequestingChanges
   pStateRequestingChanges->addTransition(this, SIGNAL(calendarUpdateRequired()),

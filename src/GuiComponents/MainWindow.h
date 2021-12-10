@@ -51,8 +51,7 @@ public slots:
 
 private:
   void createPreviewGroupBox();
-  QString checkDisplayName(QList<ClientCalDAV *> cals,
-                           QString displayName);
+  QString checkDisplayName(QList<ClientCalDAV *> cals, QString displayName);
 
   QGroupBox *_previewGroupBox;
   QGridLayout *_previewLayout;

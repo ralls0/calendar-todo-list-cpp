@@ -57,8 +57,7 @@ void ClientCalDAV::handleHTTPError(void) {
 }
 
 void ClientCalDAV::handleStateWaitingEntry(void) {
-  QDEBUG << "[i] (" << _displayName << ") "
-         << "entering pStateWaiting";
+  QDEBUG << "[i] (" << _displayName << ") Entering pStateWaiting";
   _state = E_STATE_IDLE;
   emit syncStateChanged(_state);
 
@@ -80,37 +79,42 @@ void ClientCalDAV::handleStateWaitingEntry(void) {
 void ClientCalDAV::handleStateWaitingExit(void) {
   _state = E_STATE_BUSY;
   emit syncStateChanged(_state);
-  QDEBUG << "[i] (" << _displayName << ") "
-         << "leaving pStateWaiting";
+  QDEBUG << "[i] (" << _displayName << ") Leaving pStateWaiting";
+}
+
+void ClientCalDAV::handleStateCheckingChangesEntry(void) {
+  QDEBUG << "[i] (" << _displayName << ") Entering pStateCheckingChanges";
+  retrieveCTag();
+}
+
+void ClientCalDAV::handleStateCheckingChangesExit(void) {
+  QDEBUG << "[i] (" << _displayName << ") Leaving pStateCheckingChanges";
 }
 
 void ClientCalDAV::handleStateRequestingChangesEntry(void) {
-  QDEBUG << "[i] (" << _displayName << ") "
-         << "entering pStateRequestingChanges";
+  QDEBUG << "[i] (" << _displayName << ") Entering pStateRequestingChanges";
+  emit calendarUpdateRequired();
   retrieveChangedEvent();
 }
 
 void ClientCalDAV::handleStateRequestingChangesExit(void) {
-  QDEBUG << "[i] (" << _displayName << ") "
-         << "leaving pStateRequestingChanges";
+  QDEBUG << "[i] (" << _displayName << ") Leaving pStateRequestingChanges";
 }
 
 void ClientCalDAV::handleStateProcessingChangesEntry(void) {
-  QDEBUG << "[i] (" << _displayName << ") "
-         << "entering pStateProcessingChanges";
+  QDEBUG << "[i] (" << _displayName << ") Entering pStateProcessingChanges";
 }
 
 void ClientCalDAV::handleStateProcessingChangesExit(void) {
-  QDEBUG << "[i] (" << _displayName << ") "
-         << "leaving pStateProcessingChanges";
+  QDEBUG << "[i] (" << _displayName << ") Leaving pStateProcessingChanges";
 }
 
 void ClientCalDAV::handleStateErrorEntry(void) {
-  QDEBUG << "[i] (" << _displayName << ") "
-         << "entering state error";
+  QDEBUG << "[i] (" << _displayName << ") Entering state error";
 }
 
 void ClientCalDAV::debug_handleTimerTimeout(void) {
   QDEBUG << "[i] (" << _displayName << ") "
          << "~~~~~~sync timer timeout~~~~~~";
+  emit calendarCheckCTag();
 }

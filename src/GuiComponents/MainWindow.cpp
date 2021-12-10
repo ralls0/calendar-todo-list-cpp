@@ -87,8 +87,7 @@ void MainWindow::createNewEvent(QString uid, QString filename, QString summary,
                                 QString location, QString description,
                                 QString rrule, QDateTime startDateTime,
                                 QDateTime endDateTime, QString calendar) {
-  foreach (ClientCalDAV *pListItem,
-           _cals->getListOfCalendarsClient()) {
+  foreach (ClientCalDAV *pListItem, _cals->getListOfCalendarsClient()) {
     if (calendar == pListItem->getDisplayName()) {
       pListItem->saveEvent(uid, filename, summary, location, description, rrule,
                            startDateTime, endDateTime);

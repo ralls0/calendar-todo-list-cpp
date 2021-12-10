@@ -91,25 +91,17 @@ void ClientCalDAV::handleRequestCTagFinished(void) {
 
     doc.setContent(reply);
 
-    QString sDisplayName = "";
     QString sCTag = "";
     QString sStatus = "";
 
     QDomNodeList response = doc.elementsByTagName("prop");
-    QDEBUG << "[i] (" << _displayName << ") "
-           << "response.size() = " << response.size();
+    QDEBUG << "[i] (" << _displayName
+           << ") response.size() = " << response.size();
     for (int i = 0; i < response.size(); i++) {
       QDomNode n = response.item(i);
-      QDomElement displayname = n.firstChildElement("displayname");
-      if (!displayname.isNull()) {
-        QDEBUG << "[i] (" << _displayName << ") "
-               << "DISPLAYNAME = " << displayname.text();
-        sDisplayName = displayname.text();
-      }
       QDomElement ctag = n.firstChildElement("getctag");
       if (!ctag.isNull()) {
-        QDEBUG << "[i] (" << _displayName << ") "
-               << "CTAG = " << ctag.text();
+        QDEBUG << "[i] (" << _displayName << ") CTAG = " << ctag.text();
         sCTag = ctag.text();
       }
     }
@@ -119,47 +111,32 @@ void ClientCalDAV::handleRequestCTagFinished(void) {
       QDomNode n = response.item(i);
       QDomElement status = n.firstChildElement("status");
       if (!status.isNull()) {
-        QDEBUG << "[i] (" << _displayName << ") "
-               << "STATUS = " << status.text();
+        QDEBUG << "[i] (" << _displayName << ") STATUS = " << status.text();
         sStatus = status.text();
       }
     }
 
     if ((!sCTag.isEmpty()) && (sStatus.endsWith("200 OK"))) {
-      bool bDisplayNameChanged = (_displayName != sDisplayName);
       bool bCTagChanged = (_cTag != sCTag);
 
-      _displayName = sDisplayName;
       _cTag = sCTag;
 
-      if (bDisplayNameChanged) {
-        emit displayNameChanged(_displayName);
+      if (bCTagChanged) {
+        QDEBUG << "[i] (" << _displayName << ") ctag has changed";
+        emit calendarCTagChanged();
+      } else {
+        QDEBUG << "[i] (" << _displayName << ") ctag has not changed";
+        emit calendarCTagHasNotChanged();
       }
 
-      if (bCTagChanged) {
-        QDEBUG << "[i] (" << _displayName << ") "
-               << "ctag has changed";
-        emit calendarUpdateRequired();
-      }
+      QDEBUG << "[i] (" << _displayName << ") Restarting synchronization\r\n";
+      _synchronizationTimer.start();
     } else {
       QDEBUG << "[i] (" << _displayName << ") "
              << "ERROR: Receiving ctag failed. Status:" << sStatus;
       emit error("Receiving ctag failed.");
     }
 
-    QDEBUG << "[i] (" << _displayName << ") "
-           << "\r\nHeaders:" << _pReply->rawHeaderList() << "\r\n";
-    if (_pReply->hasRawHeader("DAV")) {
-      QDEBUG << "[i] (" << _displayName << ") "
-             << "DAV:" << _pReply->rawHeader("DAV");
-    }
-    if (_pReply->hasRawHeader("Server")) {
-      QDEBUG << "[i] (" << _displayName << ") "
-             << "Server:" << _pReply->rawHeader("Server");
-    }
-    QDEBUG << "[i] (" << _displayName << ") "
-           << "Status code:"
-           << _pReply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
   } else {
     QDEBUG << "[i] (" << _displayName << ") "
            << "ERROR: Invalid reply pointer when receiving ctag.";

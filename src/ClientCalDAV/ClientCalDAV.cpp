@@ -17,12 +17,7 @@ ClientCalDAV::ClientCalDAV(const QString &username, const QString &password,
   _requestTimeoutMS = 32000;
   _requestTimeoutTimer.setSingleShot(true);
 
-  /*
-   * Il timer è impostato su singolo scatto,
-   * quindi non è necessario interromperlo
-   * nel caso in cui la sincronizzazione non sia riuscita
-   */
-  _synchronizationTimer.setSingleShot(true);
+  _synchronizationTimer.setSingleShot(false);
   _synchronizationTimer.setInterval(64000);
 
   // Creazione di un colore generato in modo randomico
@@ -43,14 +38,9 @@ ClientCalDAV::ClientCalDAV(const QString &username, const QString &password,
   _yearToBeRequested = QDate::currentDate().year();
   ;
   _monthToBeRequested = QDate::currentDate().month();
-  lastSyncYear = -1;
-  lastSyncMonth = -1;
   _bRecoveredFromError = false;
 
   setupStateMachine();
-
-  emit calendarUpdateRequired();
-  // retrieveChangedEvent(); FIXME: Se l'emit non funziona
 }
 
 ClientCalDAV::ClientCalDAV(const QString &filepath, const QString &hostURL,
@@ -61,12 +51,7 @@ ClientCalDAV::ClientCalDAV(const QString &filepath, const QString &hostURL,
   _requestTimeoutMS = 32000;
   _requestTimeoutTimer.setSingleShot(true);
 
-  /*
-   * Il timer è impostato su singolo scatto,
-   * quindi non è necessario interromperlo
-   * nel caso in cui la sincronizzazione non sia riuscita
-   */
-  _synchronizationTimer.setSingleShot(true);
+  _synchronizationTimer.setSingleShot(false);
   _synchronizationTimer.setInterval(64000);
 
   // Creazione di un colore generato in modo randomico
@@ -92,14 +77,9 @@ ClientCalDAV::ClientCalDAV(const QString &filepath, const QString &hostURL,
   _yearToBeRequested = QDate::currentDate().year();
   ;
   _monthToBeRequested = QDate::currentDate().month();
-  lastSyncYear = -1;
-  lastSyncMonth = -1;
   _bRecoveredFromError = false;
 
   setupStateMachine();
-
-  emit calendarUpdateRequired();
-  // retrieveChangedEvent(); FIXME: Se l'emit non funziona
 }
 
 ClientCalDAV::~ClientCalDAV() {
@@ -166,7 +146,6 @@ void ClientCalDAV::setDisplayName(QString name) {
   _displayName = name;
   emit displayNameChanged(_displayName);
 }
-
 
 int ClientCalDAV::getYear() const { return _year; }
 
@@ -237,7 +216,6 @@ void ClientCalDAV::setMonth(const int &month) {
   }
 }
 
-ClientCalDAV::E_CalendarAuth
-ClientCalDAV::getClientAuth(void) const {
+ClientCalDAV::E_CalendarAuth ClientCalDAV::getClientAuth(void) const {
   return _auth;
 }
