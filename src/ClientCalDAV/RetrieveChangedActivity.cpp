@@ -226,8 +226,9 @@ void ClientCalDAV::handleRequestChangesActivityFinished(void) {
              << "ERROR: Invalid HTTP return code:" << iStatusCode;
       emit error("Invalid HTTP return code.");
     } else {
-      QDEBUG << "[i] (" << _displayName << ") "
-             << "OK, restarting synchronization\r\n\r\n";
+      QDEBUG << "[i] (" << _displayName << ") Events updated";
+      emit eventsUpdated();
+      QDEBUG << "[i] (" << _displayName << ") Restarting synchronization\r\n";
       _synchronizationTimer.start();
     }
 

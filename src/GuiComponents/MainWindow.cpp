@@ -9,8 +9,8 @@
 
 #include "MainWindow.h"
 
-#define DEBUG_OAUTH 1
-#if DEBUG_OAUTH
+#define DEBUG_MAINWINDOW 1
+#if DEBUG_MAINWINDOW
 #define QDEBUG qDebug()
 #else
 #define QDEBUG                                                                 \
@@ -28,6 +28,8 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent) {
           &MainCalendar::setCalendarList);
   connect(_cals, &CalendarManager::listOfEventsChanged, _calendar,
           &MainCalendar::updateListOfEvents);
+  connect(_calendar, &MainCalendar::calendarDateChanged, _cals,
+          &CalendarManager::setDate);
 
   createPreviewGroupBox();
 
