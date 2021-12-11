@@ -27,6 +27,8 @@ void ClientCalDAV::setupStateMachine(void) {
                                pStateCheckingChanges);
   pStateWaiting->addTransition(this, SIGNAL(passwordChanged(QString)),
                                pStateCheckingChanges);
+  pStateWaiting->addTransition(this, SIGNAL(forceSynchronization()),
+                               pStateRequestingChanges);
 
   // pStateWaiting
   connect(pStateWaiting, SIGNAL(entered()), this,

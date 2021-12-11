@@ -110,7 +110,7 @@ MainCalendar::MainCalendar(QWidget *parent) : QWidget(parent) {
   window->setMinimumWidth(1100);*/
   // Fill the grid with the days of the default month (i.e. the current month)
   display_days(current_date);
-  display_events(current_date);
+  // display_events(current_date);
   setLayout(this->layout);
 
   // Set QWidget as the central layout of the main window
@@ -209,7 +209,8 @@ void MainCalendar::on_back_button_click() {
   display_days(newDate);
   /* Reload events */
   // this->selected_event = NULL;
-  display_events(newDate);
+  // display_events(newDate);
+  emit calendarDateChanged(QDate(newDate.getYear(), newDate.getMonth(), 1));
 }
 
 void MainCalendar::on_next_button_click() {
@@ -221,7 +222,8 @@ void MainCalendar::on_next_button_click() {
   display_days(newDate);
   /* Reload events */
   // this->selected_event = NULL;
-  display_events(newDate);
+  // display_events(newDate);
+  emit calendarDateChanged(QDate(newDate.getYear(), newDate.getMonth(), 1));
 }
 
 void MainCalendar::display_events(Date date) {
@@ -461,7 +463,7 @@ void MainCalendar::on_button_extended_click(int index) {
 
 QLabelEvent *MainCalendar::createLabelEvent(Event *event) {
   // Make a copy
-  Event *newEvent = event;
+  Event *newEvent = new Event(*event);
   QLabelEvent *label_event = new QLabelEvent;
   label_event->setEvent(newEvent);
   label_event->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);

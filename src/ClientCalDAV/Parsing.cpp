@@ -18,7 +18,6 @@ void ClientCalDAV::parseVCALENDAR(QString href) {
     }
     line = _dataStream->readLine();
   }
-  emit eventsUpdated();
 }
 
 void ClientCalDAV::parseVTODO(QString href) {
@@ -30,7 +29,6 @@ void ClientCalDAV::parseVTODO(QString href) {
     }
     line = _dataStream->readLine();
   }
-  emit eventsUpdated();
 }
 
 void ClientCalDAV::parseCalendarVEVENT(QString href) {
