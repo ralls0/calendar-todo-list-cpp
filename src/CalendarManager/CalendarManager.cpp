@@ -202,7 +202,9 @@ QList<QString> CalendarManager::getListOfCalendarsName(void) {
 QList<QObject *> CalendarManager::getListOfEvents(void) {
   QList<QObject *> returnList;
   foreach (ClientCalDAV *pListItem, _calendarList) {
-    returnList.append(pListItem->allEvents());
+    returnList.append(pListItem->eventsInRange(
+        QDate(_date.year(), _date.month(), 1),
+        QDate(_date.year(), _date.month(), 1).addMonths(1).addDays(-1)));
   }
 
   return returnList;

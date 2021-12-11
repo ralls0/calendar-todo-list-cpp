@@ -7,7 +7,7 @@
     "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
     "client_secret": "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",
     "redirect_uris": [
-      "http://127.0.0.1:8080/"
+      "http://127.0.0.1:57518/"
     ]
   }
 }

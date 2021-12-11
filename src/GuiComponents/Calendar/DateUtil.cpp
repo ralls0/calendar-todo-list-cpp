@@ -12,8 +12,8 @@
 static std::string months[] = {"January",   "February", "March",    "April",
                                "May",       "June",     "July",     "August",
                                "September", "October",  "November", "December"};
-static std::string week_days[] = {"Monday", "Tuesday",  "Wednesday", "Thursday",
-                                  "Friday", "Saturday", "Sunday"};
+static std::string week_days[] = {"Mon", "Tue", "Wed", "Thu",
+                                  "Fri", "Sat", "Sun"};
 
 DateUtil::DateUtil() {}
 

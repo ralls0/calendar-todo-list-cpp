@@ -136,7 +136,6 @@ void MainCalendar::setCalendarList(QList<QString> t) {
 void MainCalendar::updateListOfEvents(QList<QObject *> eventList) {
   if (eventList.isEmpty())
     return;
-  std::cout << "CIAONE";
   QDate date = QDateTime::currentDateTime().date();
 
   // Remove all displayed events
@@ -170,16 +169,23 @@ void MainCalendar::updateListOfEvents(QList<QObject *> eventList) {
           i, event->property("name").toString().toStdString(),
           event->property("description").toString().toStdString(),
           event->property("location").toString().toStdString(),
-          new Category(i, "Prova", "#35A0F0"),
+          new Category(i, "Prova",
+                       event->property("color").toString().toStdString()),
           event->property("startDateTime").toDateTime().toMSecsSinceEpoch(),
-          event->property("startDateTime")
+          event->property("endDateTime")
               .toDateTime()
               .toMSecsSinceEpoch())); // FIXME
 
-      /*if ((selected_event != NULL) && (selected_event->equals(*event))) {
-          label_event->markSelection(true);
-          this->selected_event = label_event;
-      }*/
+      /*std::cout << "Start: " <<
+event->property("startDateTime").toDateTime().toMSecsSinceEpoch() << " End: " <<
+event->property("endDateTime")
+    .toDateTime()
+    .toMSecsSinceEpoch();*/
+      QDEBUG << "[i] Inserisco LabelEvent: "
+             << event->property("name").toString()
+             << "Start: " << event->property("startDateTime").toDateTime()
+             << "End: " << event->property("endDateTime").toDateTime();
+
       // serve se ho tanti eventi sulla stessa cella
       if (this->frames[i]->children().size() == 3) {
         QPushButtonExtended *button_show_all =
@@ -191,8 +197,8 @@ void MainCalendar::updateListOfEvents(QList<QObject *> eventList) {
         label_event->setHidden(true);
       } else if (this->frames[i]->children().size() > 4)
         label_event->setHidden(true);
+
       // Events will be copied and wrapped inside the QLabelEvent widgets
-      // if(this->frames[i]->getDate()->compareTo(event->get))
       (static_cast<QVBoxLayout *>(this->frames[i]->layout()))
           ->insertWidget(1, label_event);
     }
@@ -560,8 +566,10 @@ QFrameExtended *MainCalendar::createQFrameExtended(Date *date) {
   // vl->setMargin(0);
   vl->setSpacing(1);
   vl->addWidget(new QLabel); // qui scrivo in cella
-  frame->setMinimumWidth(100);
+  frame->setMinimumWidth(120);
   frame->setMinimumHeight(80);
+  frame->setMaximumWidth(140);
+  frame->setMaximumHeight(100);
   frame->setLayout(vl);
   frame->setStyleSheet(_colorStyle.getCellStyle());
   frame->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
