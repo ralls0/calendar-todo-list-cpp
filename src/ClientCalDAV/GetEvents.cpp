@@ -41,7 +41,9 @@ ClientCalDAV::handleSingleEvent(CalendarEvent &evt,
     event = new CalendarEvent(this);
     event->copyFrom(evt);
 
-    QDEBUG << "[i] (" << _displayName << ") Appended: " << event->name();
+    QDEBUG << "[i] (" << _displayName << ") Appended: " << event->name()
+           << " Start: " << event->getStartDateTime()
+           << " End: " << event->getEndDateTime();
   }
 
   return event;
@@ -68,8 +70,8 @@ QList<QObject *> ClientCalDAV::eventsInRange(const QDate &startDate,
   QDateTime startOfQuestionedDate(startDate, QTime(0, 0, 1));
   QDateTime endOfQuestionedDate(endDate, QTime(23, 59, 59));
   QDEBUG << "[i] (" << _displayName
-         << ") startOfQuestionedDate: " << startOfQuestionedDate.toString()
-         << " endOfQuestionedDate: " << endOfQuestionedDate;
+         << ") StartOfQuestionedDate: " << startOfQuestionedDate.toString()
+         << "\r\nEndOfQuestionedDate: " << endOfQuestionedDate.toString();
 
   foreach (CalendarEvent evt, _eventList) {
     // skip se l'evento inizia nel futuro
@@ -86,8 +88,6 @@ QList<QObject *> ClientCalDAV::eventsInRange(const QDate &startDate,
       CalendarEvent *e =
           handleSingleEvent(evt, startOfQuestionedDate, endOfQuestionedDate);
       if (e != nullptr) {
-        QDEBUG << "[i] (" << _displayName << ") Appended"
-               << e->property("name");
         events.append(e);
       } else {
         QDEBUG << "[i] (" << _displayName << ") Event not in range";
@@ -195,7 +195,7 @@ QList<QObject *> ClientCalDAV::eventsInRange(const QDate &startDate,
       }
 
       QDateTime testStartDateTime = evt.getStartDateTime();
-      QDateTime testEndDateTime = evt.getStartDateTime();
+      QDateTime testEndDateTime = evt.getEndDateTime();
 
       if (strFREQ == "WEEKLY") {
         QDEBUG << "[i] (" << _displayName << ")" << evt.name()
@@ -206,18 +206,22 @@ QList<QObject *> ClientCalDAV::eventsInRange(const QDate &startDate,
 
           int occurrences = 0;
           while (testStartDateTime <= endOfQuestionedDate) {
-            occurrences++;
+            // check if event is not excluded by EXDATEs
+            bool bOccurrenceIsCanceled =
+                isDateExcluded(evt.getExdates(), testStartDateTime.date());
+            if (!bOccurrenceIsCanceled) {
+              occurrences++;
+            }
 
             // verifica se la data corrisponde all'intervallo delle date
             if ((testStartDateTime >= startOfQuestionedDate) &&
                 (testStartDateTime <= endOfQuestionedDate)) {
-              QDEBUG << "[i] (" << _displayName << ") "
-                     << "found match on"
+              QDEBUG << "[i] (" << _displayName << ") Found match on"
                      << testStartDateTime.toString("yyyy-MM-dd HH:mm:ss");
 
               CalendarEvent *event = new CalendarEvent(this);
               event->copyFrom(evt);
-              event->setIsCanceled(false);
+              event->setIsCanceled(bOccurrenceIsCanceled);
               event->setStartDateTime(testStartDateTime);
               event->setEndDateTime(testEndDateTime);
 
@@ -281,7 +285,12 @@ QList<QObject *> ClientCalDAV::eventsInRange(const QDate &startDate,
             int occurrences = 0;
 
             while (testStartDateTime <= endOfQuestionedDate) {
-              occurrences++;
+              // check if event is not excluded by EXDATEs
+              bool bOccurrenceIsCanceled =
+                  isDateExcluded(evt.getExdates(), testStartDateTime.date());
+              if (!bOccurrenceIsCanceled) {
+                occurrences++;
+              }
 
               // verifica se la data corrisponde all'intervallo delle date
               if ((testStartDateTime >= startOfQuestionedDate) &&
@@ -294,7 +303,7 @@ QList<QObject *> ClientCalDAV::eventsInRange(const QDate &startDate,
                 event->copyFrom(evt);
                 event->setStartDateTime(testStartDateTime);
                 event->setEndDateTime(testEndDateTime);
-                event->setIsCanceled(false);
+                event->setIsCanceled(bOccurrenceIsCanceled);
 
                 QDEBUG << "[i] (" << _displayName << ") Appended"
                        << event->name();
@@ -330,7 +339,12 @@ QList<QObject *> ClientCalDAV::eventsInRange(const QDate &startDate,
 
           int occurrences = 0;
           while (testStartDateTime <= endOfQuestionedDate) {
-            occurrences++;
+            // check if event is not excluded by EXDATEs
+            bool bOccurrenceIsCanceled =
+                isDateExcluded(evt.getExdates(), testStartDateTime.date());
+            if (!bOccurrenceIsCanceled) {
+              occurrences++;
+            }
 
             // verifica se la data corrisponde al intervallo delle date
             if ((testStartDateTime >= startOfQuestionedDate) &&
@@ -342,7 +356,7 @@ QList<QObject *> ClientCalDAV::eventsInRange(const QDate &startDate,
               event->copyFrom(evt);
               event->setStartDateTime(testStartDateTime);
               event->setEndDateTime(testEndDateTime);
-              event->setIsCanceled(false);
+              event->setIsCanceled(bOccurrenceIsCanceled);
 
               QDEBUG << "[i] (" << _displayName << ") Appended"
                      << event->name();
@@ -352,9 +366,8 @@ QList<QObject *> ClientCalDAV::eventsInRange(const QDate &startDate,
             // abortire se si applica la regola COUNT
             if (!strCOUNT.isEmpty()) {
               if (occurrences >= iCount) {
-                // QDEBUG << "[i] (" << _displayName << ") " << "monthly, count
-                // reached"
-                // << occurrences;
+                QDEBUG << "[i] (" << _displayName << ") Monthly, count reached"
+                       << occurrences;
                 break;
               }
             }
@@ -421,14 +434,18 @@ QList<QObject *> ClientCalDAV::eventsInRange(const QDate &startDate,
               int occurrences = 0;
 
               while (testStartDateTime <= endOfQuestionedDate) {
-                occurrences++;
+                // check if event is not excluded by EXDATEs
+                bool bOccurrenceIsCanceled =
+                    isDateExcluded(evt.getExdates(), testStartDateTime.date());
+                if (!bOccurrenceIsCanceled) {
+                  occurrences++;
+                }
 
                 // 2: Se (testStartDateTime nel periodo in questione),
                 // aggiungi l'evento alla lista degli eventi
                 if ((testStartDateTime >= startOfQuestionedDate) &&
                     (testStartDateTime <= endOfQuestionedDate)) {
-                  QDEBUG << "[i] (" << _displayName << ") "
-                         << "found match on"
+                  QDEBUG << "[i] (" << _displayName << ") Found match on"
                          << testStartDateTime.toString("yyyy-MM-dd HH:mm:ss")
                          << weekday;
 
@@ -436,18 +453,18 @@ QList<QObject *> ClientCalDAV::eventsInRange(const QDate &startDate,
                   event->copyFrom(evt);
                   event->setStartDateTime(testStartDateTime);
                   event->setEndDateTime(testEndDateTime);
-                  event->setIsCanceled(false);
+                  event->setIsCanceled(bOccurrenceIsCanceled);
 
-                  // QDEBUG << "[i] (" << _displayName << ") " << "appended" <<
-                  // event->name();
+                  QDEBUG << "[i] (" << _displayName << ") Appended"
+                         << event->name();
                   events.append(event);
                 }
 
                 // abortire se si applica la regola COUNT
                 if (!strCOUNT.isEmpty()) {
                   if (occurrences >= iCount) {
-                    QDEBUG << "[i] (" << _displayName << ") "
-                           << "monthly, count reached" << occurrences;
+                    QDEBUG << "[i] (" << _displayName
+                           << ") Monthly, count reached" << occurrences;
                     break;
                   }
                 }
@@ -501,15 +518,20 @@ QList<QObject *> ClientCalDAV::eventsInRange(const QDate &startDate,
                 QDate weekDayDate = DateUtils::getWeekdayOfMonth(
                     iWeekday, iWeekdaySelector, testStartDateTime.date());
                 if (weekDayDate.isValid()) {
-                  occurrences++;
+                  // check if event is not excluded by EXDATEs
+                  bool bOccurrenceIsCanceled = isDateExcluded(
+                      evt.getExdates(), testStartDateTime.date());
+                  if (!bOccurrenceIsCanceled) {
+                    occurrences++;
+                  }
 
                   testStartDateTime.setDate(weekDayDate);
 
                   // check if date matches questioned date range
                   if ((testStartDateTime >= startOfQuestionedDate) &&
                       (testStartDateTime <= endOfQuestionedDate)) {
-                    QDEBUG << "[i] (" << _displayName << ") "
-                           << "found match" << occurrences << "on"
+                    QDEBUG << "[i] (" << _displayName << ") Found match"
+                           << occurrences << "on"
                            << testStartDateTime.toString("yyyy-MM-dd HH:mm:ss")
                            << weekday;
 
@@ -517,10 +539,10 @@ QList<QObject *> ClientCalDAV::eventsInRange(const QDate &startDate,
                     event->copyFrom(evt);
                     event->setStartDateTime(testStartDateTime);
                     event->setEndDateTime(testEndDateTime);
-                    event->setIsCanceled(false);
+                    event->setIsCanceled(bOccurrenceIsCanceled);
 
-                    QDEBUG << "[i] (" << _displayName << ") "
-                           << "appended" << event->name();
+                    QDEBUG << "[i] (" << _displayName << ") Appended"
+                           << event->name();
                     events.append(event);
                   }
 
@@ -578,23 +600,27 @@ QList<QObject *> ClientCalDAV::eventsInRange(const QDate &startDate,
         int occurrences = 1; // start date counts as first occurrence
 
         while (testStartDateTime <= endOfQuestionedDate) {
-          occurrences++;
+          // check if event is not excluded by EXDATEs
+          bool bOccurrenceIsCanceled =
+              isDateExcluded(evt.getExdates(), testStartDateTime.date());
+          if (!bOccurrenceIsCanceled) {
+            occurrences++;
+          }
 
           // check if date matches questioned date range
           if ((testStartDateTime >= startOfQuestionedDate) &&
               (testStartDateTime <= endOfQuestionedDate)) {
-            QDEBUG << "[i] (" << _displayName << ") "
-                   << "found yearly match" << occurrences << "on"
+            QDEBUG << "[i] (" << _displayName << ") Found yearly match"
+                   << occurrences << "on"
                    << testStartDateTime.toString("yyyy-MM-dd HH:mm:ss");
 
             CalendarEvent *event = new CalendarEvent(this);
             event->copyFrom(evt);
             event->setStartDateTime(testStartDateTime);
             event->setEndDateTime(testEndDateTime);
-            event->setIsCanceled(false);
+            event->setIsCanceled(bOccurrenceIsCanceled);
 
-            QDEBUG << "[i] (" << _displayName << ") "
-                   << "appended" << event->name();
+            QDEBUG << "[i] (" << _displayName << ") Appended" << event->name();
             events.append(event);
           }
 

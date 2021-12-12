@@ -73,6 +73,10 @@ public:
   // occurrence and an EXDATE value applies
   Q_PROPERTY(bool isCanceled READ getIsCanceled NOTIFY isCanceledChanged)
 
+  // iCalendar EXDATE value as string
+  Q_PROPERTY(
+      QString exdates READ getExdates WRITE setExdates NOTIFY exdatesChanged)
+
 public:
   explicit CalendarEvent(QObject *parent);
   CalendarEvent(const CalendarEvent &other);
@@ -141,6 +145,9 @@ public slots:
   QString getHREF(void) const;
   void setHREF(const QString &href);
 
+  QString getExdates() const;
+  void setExdates(const QString &exdates);
+
   // to edit an event and upload it back to the CalDAV server we need to know
   // the CalendarClient object where this event originates from
   QObject *getCalendarPointer(void) const;
@@ -159,6 +166,7 @@ protected:
   QString _categories;
   QString _UID;
   QString _HREF;
+  QString _exdates;
   bool _isCanceled;
   bool _isCalendar;
   QObject *_calendarPointer;
