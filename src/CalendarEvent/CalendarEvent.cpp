@@ -178,3 +178,12 @@ void CalendarEvent::setHREF(const QString &href) {
     emit hrefChanged(_HREF);
   }
 }
+
+QString CalendarEvent::getExdates() const { return _exdates; }
+
+void CalendarEvent::setExdates(const QString &exdates) {
+  if (_exdates != exdates) {
+    _exdates = exdates;
+    emit exdatesChanged(_exdates);
+  }
+}

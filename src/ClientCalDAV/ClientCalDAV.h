@@ -233,6 +233,12 @@ protected:
   CalendarEvent *handleSingleEvent(CalendarEvent &evt,
                                    const QDateTime &startOfQuestionedDate,
                                    const QDateTime &endOfQuestionedDate);
+  /**
+   * @brief Returns true, if a questioned date is excluded by the event EXDATE
+   * value.
+   */
+  bool isDateExcluded(const QString strExdates,
+                      const QDate &questionedDate) const;
 
 signals:
 

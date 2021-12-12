@@ -78,6 +78,8 @@ void ClientCalDAV::parseCalendarVEVENT(QString href) {
       event.setEndDateTime(utcTime.toLocalTime());
     } else if (key == QLatin1String("RRULE")) {
       event.setRRULE(value);
+    } else if (key == QLatin1String("EXDATE")) {
+      event.setExdates(value);
     } else if (key == QLatin1String("SUMMARY")) {
       event.setName(value);
     } else if (key == QLatin1String("LOCATION")) {
@@ -151,4 +153,40 @@ void ClientCalDAV::parseTodoVEVENT(QString href) {
   if (event.name() != "") {
     _eventList.append(event); // FIXME
   }
+}
+
+bool ClientCalDAV::isDateExcluded(const QString strExdates,
+                                  const QDate &questionedDate) const {
+  QStringList strlstExdates = strExdates.split(",", Qt::SkipEmptyParts);
+  bool bRet = false;
+
+  if (strlstExdates.isEmpty()) {
+    return false;
+  }
+
+  foreach (const QString &strExdate, strlstExdates) {
+    QDateTime excludeDate;
+    excludeDate = QDateTime::fromString(strExdate, "yyyyMMdd'T'hhmmss'Z'");
+    if (!excludeDate.isValid())
+      excludeDate = QDateTime::fromString(strExdate, "yyyyMMdd'T'hhmmss");
+    if (!excludeDate.isValid())
+      excludeDate = QDateTime::fromString(strExdate, "yyyyMMddhhmmss");
+    if (!excludeDate.isValid())
+      excludeDate = QDateTime::fromString(strExdate, "yyyyMMdd");
+    if (!excludeDate.isValid()) {
+      QDEBUG << _displayName << ": "
+             << "could not parse EXDATE" << strExdate;
+    } else {
+      excludeDate.setDate(excludeDate.toLocalTime().date());
+      if (excludeDate.date() == questionedDate) {
+        // event occurence is excluded
+        // QDEBUG << m_DisplayName << ": " << "event is excluded by EXDATE" <<
+        // strExdate;
+        bRet = true;
+        break;
+      }
+    }
+  }
+
+  return bRet;
 }
