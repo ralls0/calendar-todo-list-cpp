@@ -35,7 +35,7 @@ class MainWindow : public QWidget {
 
 public:
   MainWindow(QWidget *parent = nullptr);
-  //~MainWindow();
+  ~MainWindow();
 
 public slots:
   void createNewCalendar(const QString &displayName, const QString &hostURL,
@@ -51,7 +51,7 @@ public slots:
 
 private:
   void createPreviewGroupBox();
-  QString checkDisplayName(QList<ClientCalDAV *> cals, QString displayName);
+  QString checkDisplayName(QList<QObject *> cals, QString displayName);
 
   QGroupBox *_previewGroupBox;
   QGridLayout *_previewLayout;

@@ -194,7 +194,8 @@ QList<QObject *> ClientCalDAV::eventsInRange(const QDate &startDate,
         }
       }
 
-      QDateTime testDateTime = evt.getStartDateTime();
+      QDateTime testStartDateTime = evt.getStartDateTime();
+      QDateTime testEndDateTime = evt.getStartDateTime();
 
       if (strFREQ == "WEEKLY") {
         QDEBUG << "[i] (" << _displayName << ")" << evt.name()
@@ -204,20 +205,21 @@ QList<QObject *> ClientCalDAV::eventsInRange(const QDate &startDate,
           // ripete ogni ennesima settimana dalla data di inizio
 
           int occurrences = 0;
-          while (testDateTime <= endOfQuestionedDate) {
+          while (testStartDateTime <= endOfQuestionedDate) {
             occurrences++;
 
             // verifica se la data corrisponde all'intervallo delle date
-            if ((testDateTime >= startOfQuestionedDate) &&
-                (testDateTime <= endOfQuestionedDate)) {
+            if ((testStartDateTime >= startOfQuestionedDate) &&
+                (testStartDateTime <= endOfQuestionedDate)) {
               QDEBUG << "[i] (" << _displayName << ") "
                      << "found match on"
-                     << testDateTime.toString("yyyy-MM-dd HH:mm:ss");
+                     << testStartDateTime.toString("yyyy-MM-dd HH:mm:ss");
 
               CalendarEvent *event = new CalendarEvent(this);
               event->copyFrom(evt);
               event->setIsCanceled(false);
-              event->setStartDateTime(testDateTime);
+              event->setStartDateTime(testStartDateTime);
+              event->setEndDateTime(testEndDateTime);
 
               QDEBUG << "[i] (" << _displayName << ") Appended"
                      << event->name();
@@ -235,13 +237,14 @@ QList<QObject *> ClientCalDAV::eventsInRange(const QDate &startDate,
 
             // abortire se si applica la regola UNTIL
             if (!strUNTIL.isEmpty()) {
-              if (testDateTime > dtUntil) {
+              if (testStartDateTime > dtUntil) {
                 QDEBUG << "[i] (" << _displayName << ") Weekly, until reached";
                 break;
               }
             }
 
-            testDateTime = testDateTime.addDays(7 * iInterval);
+            testStartDateTime = testStartDateTime.addDays(7 * iInterval);
+            testEndDateTime = testEndDateTime.addDays(7 * iInterval);
           }
         } else {
           // ripete ogni ennesima settimana dalla data di inizio in determinati
@@ -252,7 +255,8 @@ QList<QObject *> ClientCalDAV::eventsInRange(const QDate &startDate,
               strBYDAY.toUpper().trimmed().split(",", Qt::SkipEmptyParts);
 
           foreach (QString weekday, listOfWeekdays) {
-            testDateTime = evt.getStartDateTime();
+            testStartDateTime = evt.getStartDateTime();
+            testEndDateTime = evt.getEndDateTime();
 
             int iWeekday = DateUtils::getWeekdayIndexFromString(weekday);
 
@@ -265,29 +269,31 @@ QList<QObject *> ClientCalDAV::eventsInRange(const QDate &startDate,
 
             // se la data di prova non inizia nel giorno feriale in questione,
             // passa alla successiva occorrenza nel giorno feriale
-            if (testDateTime.date().dayOfWeek() != iWeekday) {
-              int weekdayDiff = iWeekday - testDateTime.date().dayOfWeek();
+            if (testStartDateTime.date().dayOfWeek() != iWeekday) {
+              int weekdayDiff = iWeekday - testStartDateTime.date().dayOfWeek();
               if (weekdayDiff < 0) {
                 weekdayDiff += 7;
               }
-              testDateTime = testDateTime.addDays(weekdayDiff);
+              testStartDateTime = testStartDateTime.addDays(weekdayDiff);
+              testEndDateTime = testEndDateTime.addDays(weekdayDiff);
             }
 
             int occurrences = 0;
 
-            while (testDateTime <= endOfQuestionedDate) {
+            while (testStartDateTime <= endOfQuestionedDate) {
               occurrences++;
 
               // verifica se la data corrisponde all'intervallo delle date
-              if ((testDateTime >= startOfQuestionedDate) &&
-                  (testDateTime <= endOfQuestionedDate)) {
+              if ((testStartDateTime >= startOfQuestionedDate) &&
+                  (testStartDateTime <= endOfQuestionedDate)) {
                 QDEBUG << "[i] (" << _displayName << ") Found match on"
-                       << testDateTime.toString("yyyy-MM-dd HH:mm:ss")
+                       << testStartDateTime.toString("yyyy-MM-dd HH:mm:ss")
                        << weekday;
 
                 CalendarEvent *event = new CalendarEvent(this);
                 event->copyFrom(evt);
-                event->setStartDateTime(testDateTime);
+                event->setStartDateTime(testStartDateTime);
+                event->setEndDateTime(testEndDateTime);
                 event->setIsCanceled(false);
 
                 QDEBUG << "[i] (" << _displayName << ") Appended"
@@ -306,14 +312,15 @@ QList<QObject *> ClientCalDAV::eventsInRange(const QDate &startDate,
 
               // abortire se si applica la regola UNTIL
               if (!strUNTIL.isEmpty()) {
-                if (testDateTime > dtUntil) {
+                if (testStartDateTime > dtUntil) {
                   QDEBUG << "[i] (" << _displayName
                          << ") Monthly, until reached";
                   break;
                 }
               }
 
-              testDateTime = testDateTime.addDays(7 * iInterval);
+              testStartDateTime = testStartDateTime.addDays(7 * iInterval);
+              testEndDateTime = testEndDateTime.addDays(7 * iInterval);
             }
           }
         }
@@ -322,18 +329,19 @@ QList<QObject *> ClientCalDAV::eventsInRange(const QDate &startDate,
           // ripete ogni ennesimo mese dalla data d'inizio
 
           int occurrences = 0;
-          while (testDateTime <= endOfQuestionedDate) {
+          while (testStartDateTime <= endOfQuestionedDate) {
             occurrences++;
 
             // verifica se la data corrisponde al intervallo delle date
-            if ((testDateTime >= startOfQuestionedDate) &&
-                (testDateTime <= endOfQuestionedDate)) {
+            if ((testStartDateTime >= startOfQuestionedDate) &&
+                (testStartDateTime <= endOfQuestionedDate)) {
               QDEBUG << "[i] (" << _displayName << ") Found match on"
-                     << testDateTime.toString("yyyy-MM-dd HH:mm:ss");
+                     << testStartDateTime.toString("yyyy-MM-dd HH:mm:ss");
 
               CalendarEvent *event = new CalendarEvent(this);
               event->copyFrom(evt);
-              event->setStartDateTime(testDateTime);
+              event->setStartDateTime(testStartDateTime);
+              event->setEndDateTime(testEndDateTime);
               event->setIsCanceled(false);
 
               QDEBUG << "[i] (" << _displayName << ") Appended"
@@ -353,13 +361,14 @@ QList<QObject *> ClientCalDAV::eventsInRange(const QDate &startDate,
 
             // abortire se si applica la regola UNTIL
             if (!strUNTIL.isEmpty()) {
-              if (testDateTime > dtUntil) {
+              if (testStartDateTime > dtUntil) {
                 QDEBUG << "[i] (" << _displayName << ") Monthly, until reached";
                 break;
               }
             }
 
-            testDateTime = testDateTime.addDays(7 * iInterval);
+            testStartDateTime = testStartDateTime.addDays(7 * iInterval);
+            testEndDateTime = testEndDateTime.addDays(7 * iInterval);
           }
 
         }
@@ -373,7 +382,8 @@ QList<QObject *> ClientCalDAV::eventsInRange(const QDate &startDate,
               strBYDAY.toUpper().trimmed().split(",", Qt::SkipEmptyParts);
 
           foreach (QString weekday, listOfWeekdays) {
-            testDateTime = evt.getStartDateTime();
+            testStartDateTime = evt.getStartDateTime();
+            testEndDateTime = evt.getEndDateTime();
 
             int iWeekday = DateUtils::getWeekdayIndexFromString(weekday);
             if (0 == iWeekday) {
@@ -398,31 +408,34 @@ QList<QObject *> ClientCalDAV::eventsInRange(const QDate &startDate,
 
               // se l'evento non inizia nel giorno feriale in questione,
               // passa alla successiva occorrenza nei giorni feriali
-              if (testDateTime.date().dayOfWeek() != iWeekday) {
-                int weekdayDiff = iWeekday - testDateTime.date().dayOfWeek();
+              if (testStartDateTime.date().dayOfWeek() != iWeekday) {
+                int weekdayDiff =
+                    iWeekday - testStartDateTime.date().dayOfWeek();
                 if (weekdayDiff < 0) {
                   weekdayDiff += 7;
                 }
-                testDateTime = testDateTime.addDays(weekdayDiff);
+                testStartDateTime = testStartDateTime.addDays(weekdayDiff);
+                testEndDateTime = testEndDateTime.addDays(weekdayDiff);
               }
 
               int occurrences = 0;
 
-              while (testDateTime <= endOfQuestionedDate) {
+              while (testStartDateTime <= endOfQuestionedDate) {
                 occurrences++;
 
-                // 2: Se (testDateTime nel periodo in questione),
+                // 2: Se (testStartDateTime nel periodo in questione),
                 // aggiungi l'evento alla lista degli eventi
-                if ((testDateTime >= startOfQuestionedDate) &&
-                    (testDateTime <= endOfQuestionedDate)) {
+                if ((testStartDateTime >= startOfQuestionedDate) &&
+                    (testStartDateTime <= endOfQuestionedDate)) {
                   QDEBUG << "[i] (" << _displayName << ") "
                          << "found match on"
-                         << testDateTime.toString("yyyy-MM-dd HH:mm:ss")
+                         << testStartDateTime.toString("yyyy-MM-dd HH:mm:ss")
                          << weekday;
 
                   CalendarEvent *event = new CalendarEvent(this);
                   event->copyFrom(evt);
-                  event->setStartDateTime(testDateTime);
+                  event->setStartDateTime(testStartDateTime);
+                  event->setEndDateTime(testEndDateTime);
                   event->setIsCanceled(false);
 
                   // QDEBUG << "[i] (" << _displayName << ") " << "appended" <<
@@ -441,40 +454,42 @@ QList<QObject *> ClientCalDAV::eventsInRange(const QDate &startDate,
 
                 // abortire se si applica la regola UNTIL
                 if (!strUNTIL.isEmpty()) {
-                  if (testDateTime > dtUntil) {
+                  if (testStartDateTime > dtUntil) {
                     QDEBUG << "[i] (" << _displayName << ") "
                            << "monthly, until reached";
                     break;
                   }
                 }
 
-                int thisMonth = testDateTime.date().month();
-                int thisYear = testDateTime.date().year();
+                int thisMonth = testStartDateTime.date().month();
+                int thisYear = testStartDateTime.date().year();
 
-                // 3: aggiungere una settimana a testDateTime
-                testDateTime.setDate(testDateTime.date().addDays(7));
+                // 3: aggiungere una settimana a testStartDateTime
+                testStartDateTime.setDate(testStartDateTime.date().addDays(7));
 
                 // 4: se 3. fa uscire il mese in corso, allora
-                if (thisMonth != testDateTime.date().month()) {
+                if (thisMonth != testStartDateTime.date().month()) {
                   // 4.1: torna al primo giorno del mese in corso
-                  testDateTime.setDate(QDate(thisYear, thisMonth, 1));
+                  testStartDateTime.setDate(QDate(thisYear, thisMonth, 1));
 
                   // 4.2: add iInterval times months
-                  testDateTime = testDateTime.addMonths(iInterval);
+                  testStartDateTime = testStartDateTime.addMonths(iInterval);
+                  testEndDateTime = testEndDateTime.addMonths(iInterval);
 
                   // 4.3: if this date is not the strBYDAY-weekday, then seek
                   // forward to the first strBYDAY-weekday
-                  if (testDateTime.date().dayOfWeek() != iWeekday) {
+                  if (testStartDateTime.date().dayOfWeek() != iWeekday) {
                     int weekdayDiff =
-                        iWeekday - testDateTime.date().dayOfWeek();
+                        iWeekday - testStartDateTime.date().dayOfWeek();
                     if (weekdayDiff < 0) {
                       weekdayDiff += 7;
                     }
-                    testDateTime = testDateTime.addDays(weekdayDiff);
+                    testStartDateTime = testStartDateTime.addDays(weekdayDiff);
+                    testEndDateTime = testEndDateTime.addDays(weekdayDiff);
                   }
                 }
 
-              } // END: while (testDateTime <= endOfQuestionedDate)
+              } // END: while (testStartDateTime <= endOfQuestionedDate)
 
             } else {
               // weekday selector is set -> only specific weekdays in a month do
@@ -482,25 +497,26 @@ QList<QObject *> ClientCalDAV::eventsInRange(const QDate &startDate,
 
               int occurrences = 0;
 
-              while (testDateTime <= endOfQuestionedDate) {
+              while (testStartDateTime <= endOfQuestionedDate) {
                 QDate weekDayDate = DateUtils::getWeekdayOfMonth(
-                    iWeekday, iWeekdaySelector, testDateTime.date());
+                    iWeekday, iWeekdaySelector, testStartDateTime.date());
                 if (weekDayDate.isValid()) {
                   occurrences++;
 
-                  testDateTime.setDate(weekDayDate);
+                  testStartDateTime.setDate(weekDayDate);
 
                   // check if date matches questioned date range
-                  if ((testDateTime >= startOfQuestionedDate) &&
-                      (testDateTime <= endOfQuestionedDate)) {
+                  if ((testStartDateTime >= startOfQuestionedDate) &&
+                      (testStartDateTime <= endOfQuestionedDate)) {
                     QDEBUG << "[i] (" << _displayName << ") "
                            << "found match" << occurrences << "on"
-                           << testDateTime.toString("yyyy-MM-dd HH:mm:ss")
+                           << testStartDateTime.toString("yyyy-MM-dd HH:mm:ss")
                            << weekday;
 
                     CalendarEvent *event = new CalendarEvent(this);
                     event->copyFrom(evt);
-                    event->setStartDateTime(testDateTime);
+                    event->setStartDateTime(testStartDateTime);
+                    event->setEndDateTime(testEndDateTime);
                     event->setIsCanceled(false);
 
                     QDEBUG << "[i] (" << _displayName << ") "
@@ -509,11 +525,11 @@ QList<QObject *> ClientCalDAV::eventsInRange(const QDate &startDate,
                   }
 
                 }
-                // abort if testDateTime exceeds end of questioned date
-                else if (testDateTime > endOfQuestionedDate) {
+                // abort if testStartDateTime exceeds end of questioned date
+                else if (testStartDateTime > endOfQuestionedDate) {
                   QDEBUG << "[i] (" << _displayName << ") "
                          << "end of questioned range reached"
-                         << testDateTime.toString("yyyy-MM-dd HH:mm:ss");
+                         << testStartDateTime.toString("yyyy-MM-dd HH:mm:ss");
                   break;
                 }
 
@@ -528,25 +544,29 @@ QList<QObject *> ClientCalDAV::eventsInRange(const QDate &startDate,
 
                 // abort if UNTIL rule applies
                 if (!strUNTIL.isEmpty()) {
-                  if (testDateTime > dtUntil) {
+                  if (testStartDateTime > dtUntil) {
                     QDEBUG << "[i] (" << _displayName << ") "
                            << "monthly, until reached"
-                           << testDateTime.toString("yyyy-MM-dd HH:mm:ss");
+                           << testStartDateTime.toString("yyyy-MM-dd HH:mm:ss");
                     break;
                   }
                 }
 
-                testDateTime = testDateTime.addMonths(iInterval);
-                testDateTime.setDate(QDate(testDateTime.date().year(),
-                                           testDateTime.date().month(), 1));
+                testStartDateTime = testStartDateTime.addMonths(iInterval);
+                testEndDateTime = testEndDateTime.addMonths(iInterval);
+                testStartDateTime.setDate(
+                    QDate(testStartDateTime.date().year(),
+                          testStartDateTime.date().month(), 1));
                 // if the event doesn't start on the questioned weekday, jump
                 // forward to the next weekday occurrence
-                if (testDateTime.date().dayOfWeek() != iWeekday) {
-                  int weekdayDiff = iWeekday - testDateTime.date().dayOfWeek();
+                if (testStartDateTime.date().dayOfWeek() != iWeekday) {
+                  int weekdayDiff =
+                      iWeekday - testStartDateTime.date().dayOfWeek();
                   if (weekdayDiff < 0) {
                     weekdayDiff += 7;
                   }
-                  testDateTime = testDateTime.addDays(weekdayDiff);
+                  testStartDateTime = testStartDateTime.addDays(weekdayDiff);
+                  testEndDateTime = testEndDateTime.addDays(weekdayDiff);
                 }
               }
             }
@@ -557,19 +577,20 @@ QList<QObject *> ClientCalDAV::eventsInRange(const QDate &startDate,
       } else if (strFREQ == "YEARLY") {
         int occurrences = 1; // start date counts as first occurrence
 
-        while (testDateTime <= endOfQuestionedDate) {
+        while (testStartDateTime <= endOfQuestionedDate) {
           occurrences++;
 
           // check if date matches questioned date range
-          if ((testDateTime >= startOfQuestionedDate) &&
-              (testDateTime <= endOfQuestionedDate)) {
+          if ((testStartDateTime >= startOfQuestionedDate) &&
+              (testStartDateTime <= endOfQuestionedDate)) {
             QDEBUG << "[i] (" << _displayName << ") "
                    << "found yearly match" << occurrences << "on"
-                   << testDateTime.toString("yyyy-MM-dd HH:mm:ss");
+                   << testStartDateTime.toString("yyyy-MM-dd HH:mm:ss");
 
             CalendarEvent *event = new CalendarEvent(this);
             event->copyFrom(evt);
-            event->setStartDateTime(testDateTime);
+            event->setStartDateTime(testStartDateTime);
+            event->setEndDateTime(testEndDateTime);
             event->setIsCanceled(false);
 
             QDEBUG << "[i] (" << _displayName << ") "
@@ -577,13 +598,14 @@ QList<QObject *> ClientCalDAV::eventsInRange(const QDate &startDate,
             events.append(event);
           }
 
-          testDateTime = testDateTime.addYears(iInterval);
+          testStartDateTime = testStartDateTime.addYears(iInterval);
+          testEndDateTime = testEndDateTime.addYears(iInterval);
 
-          // abort if testDateTime exceeds end of questioned date
-          if (testDateTime > endOfQuestionedDate) {
+          // abort if testStartDateTime exceeds end of questioned date
+          if (testStartDateTime > endOfQuestionedDate) {
             QDEBUG << "[i] (" << _displayName << ") "
                    << "end of questioned range reached"
-                   << testDateTime.toString("yyyy-MM-dd HH:mm:ss");
+                   << testStartDateTime.toString("yyyy-MM-dd HH:mm:ss");
             break;
           }
 
@@ -598,10 +620,10 @@ QList<QObject *> ClientCalDAV::eventsInRange(const QDate &startDate,
 
           // abort if UNTIL rule applies
           if (!strUNTIL.isEmpty()) {
-            if (testDateTime > dtUntil) {
+            if (testStartDateTime > dtUntil) {
               QDEBUG << "[i] (" << _displayName << ") "
                      << "yearly, until reached"
-                     << testDateTime.toString("yyyy-MM-dd HH:mm:ss");
+                     << testStartDateTime.toString("yyyy-MM-dd HH:mm:ss");
               break;
             }
           }

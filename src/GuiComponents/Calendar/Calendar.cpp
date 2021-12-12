@@ -12,8 +12,8 @@
 
 #include "Calendar.h"
 
-#define DEBUG_OAUTH 1
-#if DEBUG_OAUTH
+#define DEBUG_MAINCAL 1
+#if DEBUG_MAINCAL
 #define QDEBUG qDebug()
 #else
 #define QDEBUG                                                                 \
@@ -101,16 +101,7 @@ MainCalendar::MainCalendar(QWidget *parent) : QWidget(parent) {
   // grid_layout->setMargin(5);
   this->layout->addLayout(grid_layout);
 
-  // Set layout in QWidget
-  /*QWidgetExtended *window = new QWidgetExtended;
-  window->setObjectName("mainwindow");
-  window->setStyleSheet(MAINWINDOW_STYLE);
-  window->setLayout(this->layout);
-  window->setMinimumHeight(600);
-  window->setMinimumWidth(1100);*/
-  // Fill the grid with the days of the default month (i.e. the current month)
   display_days(current_date);
-  // display_events(current_date);
   setLayout(this->layout);
 
   // Set QWidget as the central layout of the main window
@@ -125,10 +116,10 @@ MainCalendar::MainCalendar(QWidget *parent) : QWidget(parent) {
    setWindowTitle(tr("Calendar Widget"));*/
 }
 
-void MainCalendar::setCalendarList(QList<QString> t) {
+void MainCalendar::setCalendarList(QList<QObject *> t) {
   _checkList = new QList<QCheckBox>;
-  for (QString x : t) {
-    QCheckBox *box1 = new QCheckBox(x);
+  for (QObject *x : t) {
+    QCheckBox *box1 = new QCheckBox(x->property("displayName").toString());
     _calList->addWidget(box1);
   }
 }
@@ -175,16 +166,6 @@ void MainCalendar::updateListOfEvents(QList<QObject *> eventList) {
           event->property("endDateTime")
               .toDateTime()
               .toMSecsSinceEpoch())); // FIXME
-
-      /*std::cout << "Start: " <<
-event->property("startDateTime").toDateTime().toMSecsSinceEpoch() << " End: " <<
-event->property("endDateTime")
-    .toDateTime()
-    .toMSecsSinceEpoch();*/
-      QDEBUG << "[i] Inserisco LabelEvent: "
-             << event->property("name").toString()
-             << "Start: " << event->property("startDateTime").toDateTime()
-             << "End: " << event->property("endDateTime").toDateTime();
 
       // serve se ho tanti eventi sulla stessa cella
       if (this->frames[i]->children().size() == 3) {
@@ -567,8 +548,8 @@ QFrameExtended *MainCalendar::createQFrameExtended(Date *date) {
   vl->setSpacing(1);
   vl->addWidget(new QLabel); // qui scrivo in cella
   frame->setMinimumWidth(120);
-  frame->setMinimumHeight(80);
-  frame->setMaximumWidth(140);
+  frame->setMinimumHeight(100);
+  frame->setMaximumWidth(120);
   frame->setMaximumHeight(100);
   frame->setLayout(vl);
   frame->setStyleSheet(_colorStyle.getCellStyle());
