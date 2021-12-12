@@ -73,7 +73,7 @@ ClientCalDAV::ClientCalDAV(const QString &filepath, const QString &hostURL,
   _pReply = nullptr;
   _accessToken = "";
 
-  _au = new (std::nothrow) OAuth(
+  _au = new OAuth(
       filepath,
       "https://www.googleapis.com/auth/calendar"); // FIXME IN CASO DI ERROR PER
                                                    // IL TODO FIX LO SCOPE

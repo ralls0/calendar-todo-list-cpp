@@ -69,7 +69,7 @@ public:
 
 protected:
   /**
-   * @brief Erases the list of CalendarClients (_calendarList)
+   * @brief Elimina la lista di ClientsCalDAV (_calendarList)
    */
   void clearCalendarList(void);
 
@@ -99,7 +99,7 @@ protected:
 signals:
   void dateChanged(void);
   void listOfCalendarsChanged(
-      QList<QString> t); // emitted when _calendarList has changed
+      QList<QObject *> t); // emitted when _calendarList has changed
 
   void
   listOfEventsChanged(QList<QObject *> t); // emitted during handleEventUpdate()
@@ -111,20 +111,18 @@ public slots:
   void setDate(const QDate &newDate);
 
   QList<QObject *> getListOfCalendars(void);
-  QList<ClientCalDAV *> getListOfCalendarsClient(void);
-  QList<QString> getListOfCalendarsName(void);
   QList<QObject *> getListOfEvents(void);
 
-  void addCalDAV_Calendar(QString color, QString calendarName, QUrl url,
-                          QString username, QString password = "",
-                          ClientCalDAV::E_CalendarAuth type =
-                              ClientCalDAV::E_CalendarAuth::E_AUTH_UPWD);
+  void addCalendarCalDAVUP(QString calendarName, QString url, QString username,
+                           QString password);
+
+  void addCalendarCalDAVOA(QString calendarName, QString url, QString filepath);
 
   /**
    * @brief Returns a pointer to a specific calendar instance in the list of
    * calendars
    */
-  ClientCalDAV *getListItemAt(int index);
+  ClientCalDAV *getListItemAt(int index); // FIXME: quando viene usata
 
   /**
    * @brief Removes a CalendarClient instance from list of calendars

@@ -230,9 +230,9 @@ protected:
    * @note    Evento singolo = evento senza valore RRULE.
    * @note    Gli eventi con un valore RRULE sono gestiti con parseVEVENT()
    */
-  QList<QObject *> handleSingleEvent(CalendarEvent &evt,
-                                     const QDateTime &startOfQuestionedDate,
-                                     const QDateTime &endOfQuestionedDate);
+  CalendarEvent *handleSingleEvent(CalendarEvent &evt,
+                                   const QDateTime &startOfQuestionedDate,
+                                   const QDateTime &endOfQuestionedDate);
 
 signals:
 

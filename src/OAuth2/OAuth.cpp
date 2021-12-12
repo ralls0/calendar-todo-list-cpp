@@ -84,6 +84,7 @@ OAuth::OAuth(const QString &filepath, const QString &scope) : _scope(scope) {
    * Create and assign a QOAuthHttpServerReplyHandler as the reply handler
    * of the QOAuth2AuthorizationCodeFlow object
    */
+  QDEBUG << "[i] QOAuthHttpServerReplyHandler port: " << _port;
   auto replyHandler = new QOAuthHttpServerReplyHandler(_port);
   _google->setReplyHandler(replyHandler);
 
@@ -161,6 +162,7 @@ void OAuth::parseJson(const QString &filepath) {
 
   _redirectUri = redirectUris[0].toString();         // Get the first URI
   _port = static_cast<quint16>(_redirectUri.port()); // Get the port
+  QDEBUG << "[i] Port: " << _port;
 }
 
 void OAuth::startAuth() {

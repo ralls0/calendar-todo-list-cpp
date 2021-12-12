@@ -48,7 +48,7 @@ QString WindowStyle::getCellStyle() {
                  "QLabel { border: none; font-size: 16px; padding: 5px; "
                  "background-color:rgba(0,0,0,0); }"
                  "QLabel#today { background-color: %4; color: %1;  border: 1px "
-                 "solid %4; border-radius: 15px;}"
+                 "solid %4; border-radius: 10px;}"
                  "QFrame#selected { background-color: #EEEEFF;  }"
                  "QLabel#header { font-weight: bold; margin-right: 0; }"
                  "QFrame#header { background-color: %1; border: 0; }"

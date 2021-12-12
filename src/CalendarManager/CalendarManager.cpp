@@ -68,7 +68,6 @@ void CalendarManager::saveSettings(void) {
     settings.beginGroup("Calendar" + QString::number(index));
     settings.setValue("DisplayName", _calendarList.at(index)->getDisplayName());
     settings.setValue("URL", _calendarList.at(index)->getHostURL());
-    settings.setValue("Color", _calendarList.at(index)->getColor());
     const ClientCalDAV *pCalDAVClient =
         (const ClientCalDAV *)_calendarList[index];
     if (pCalDAVClient->getClientAuth() ==
@@ -79,13 +78,11 @@ void CalendarManager::saveSettings(void) {
                         crypto.encryptToString(pCalDAVClient->getPassword()));
     } else {
       settings.setValue("Type", ClientCalDAV::E_CalendarAuth::E_AUTH_TOKEN);
-      settings.setValue("AccessToken", crypto.encryptToString(
-                                           pCalDAVClient->getAccessToken()));
       settings.setValue("FilePath", pCalDAVClient->getFilePath());
     }
-    QDEBUG << "[i] Store Calendar: "
-           << _calendarList.at(index)->getDisplayName();
     settings.endGroup();
+    QDEBUG << "[i] Stored calendar: "
+           << _calendarList.at(index)->getDisplayName();
   }
 }
 
@@ -114,10 +111,6 @@ void CalendarManager::loadSettings(void) {
     QString displayName = settings.value(key, "").toString();
 
     key = group;
-    key.append("Color");
-    QString color = settings.value(key, "").toString();
-
-    key = group;
     key.append("Type");
     int type = settings.value(key, -1).toInt();
 
@@ -134,25 +127,16 @@ void CalendarManager::loadSettings(void) {
           password = crypto.decryptToString(password);
         }
 
-        addCalDAV_Calendar(color, displayName, QUrl(url), username, password,
-                           ClientCalDAV::E_CalendarAuth::E_AUTH_UPWD);
+        addCalendarCalDAVUP(displayName, url, username, password);
       } else {
-        key = group;
-        key.append("AccessToken");
-        QString accessToken = settings.value(key, "").toString();
-        if (!accessToken.isEmpty()) {
-          accessToken = crypto.decryptToString(accessToken);
-        }
-
         key = group;
         key.append("FilePath");
         QString filepath = settings.value(key, "").toString();
 
-        addCalDAV_Calendar(color, displayName, QUrl(url), filepath, accessToken,
-                           ClientCalDAV::E_CalendarAuth::E_AUTH_TOKEN);
+        addCalendarCalDAVOA(displayName, url, filepath);
       }
 
-      QDEBUG << "[i] Load Calendar: " << displayName;
+      QDEBUG << "[i] Loaded calendar: " << displayName;
     } else {
       bAbort = true;
     }
@@ -183,50 +167,36 @@ QList<QObject *> CalendarManager::getListOfCalendars(void) {
   }
   return returnList;
 }
-QList<ClientCalDAV *> CalendarManager::getListOfCalendarsClient(void) {
-  QList<ClientCalDAV *> returnList;
-  foreach (ClientCalDAV *pListItem, _calendarList) {
-    returnList.append(pListItem);
-  }
-  return returnList;
-}
-
-QList<QString> CalendarManager::getListOfCalendarsName(void) {
-  QList<QString> returnList;
-  foreach (ClientCalDAV *pListItem, _calendarList) {
-    returnList.push_back(pListItem->getDisplayName());
-  }
-  return returnList;
-}
 
 QList<QObject *> CalendarManager::getListOfEvents(void) {
   QList<QObject *> returnList;
   foreach (ClientCalDAV *pListItem, _calendarList) {
-    returnList.append(pListItem->allEvents());
+    returnList.append(pListItem->eventsInRange(
+        QDate(_date.year(), _date.month(), 1),
+        QDate(_date.year(), _date.month(), 1).addMonths(1).addDays(-1)));
   }
 
   return returnList;
 }
 
-void CalendarManager::addCalDAV_Calendar(QString color, QString calendarName,
-                                         QUrl url, QString username,
-                                         QString password,
-                                         ClientCalDAV::E_CalendarAuth type) {
-  ClientCalDAV *pCalendar;
-  if (type == ClientCalDAV::E_CalendarAuth::E_AUTH_UPWD) {
-    pCalendar = new ClientCalDAV(username, password, url.toString(),
-                                 calendarName, this);
-  } else {
-    pCalendar = new ClientCalDAV(username, url.toString(), calendarName, this);
-  }
-
-  pCalendar->setColor(color);
-
+void CalendarManager::addCalendarCalDAVUP(QString calendarName, QString url,
+                                          QString username, QString password) {
+  ClientCalDAV *pCalendar =
+      new ClientCalDAV(username, password, url, calendarName, this);
   _calendarList.append(pCalendar);
-
   connect(pCalendar, SIGNAL(eventsUpdated()), this, SLOT(handleEventUpdate()));
 
-  emit listOfCalendarsChanged(this->getListOfCalendarsName());
+  emit listOfCalendarsChanged(this->getListOfCalendars());
+  emit listOfEventsChanged(this->getListOfEvents());
+}
+
+void CalendarManager::addCalendarCalDAVOA(QString calendarName, QString url,
+                                          QString filepath) {
+  ClientCalDAV *pCalendar = new ClientCalDAV(filepath, url, calendarName, this);
+  _calendarList.append(pCalendar);
+  connect(pCalendar, SIGNAL(eventsUpdated()), this, SLOT(handleEventUpdate()));
+
+  emit listOfCalendarsChanged(this->getListOfCalendars());
   emit listOfEventsChanged(this->getListOfEvents());
 }
 
@@ -243,13 +213,13 @@ ClientCalDAV *CalendarManager::getListItemAt(int index) {
 bool CalendarManager::removeListItemAt(int index) {
   if ((-1 == index) && (_calendarList.count() > 0)) {
     _calendarList.removeLast();
-    emit listOfCalendarsChanged(this->getListOfCalendarsName());
+    emit listOfCalendarsChanged(this->getListOfCalendars());
     return true;
   }
 
   if ((index >= 0) && (index < _calendarList.count())) {
     _calendarList.removeAt(index);
-    emit listOfCalendarsChanged(this->getListOfCalendarsName());
+    emit listOfCalendarsChanged(this->getListOfCalendars());
     return true;
   }
 

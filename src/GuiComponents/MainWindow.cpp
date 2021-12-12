@@ -21,9 +21,10 @@
 MainWindow::MainWindow(QWidget *parent) : QWidget(parent) {
   _newCalendarDialog = nullptr;
   _newEventDialog = nullptr;
-  _calendar = new MainCalendar;
+  _calendar = new MainCalendar(this);
 
-  _cals = new CalendarManager(QString(QDir::currentPath() + "/initCals.ini"));
+  _cals =
+      new CalendarManager(QString(QDir::currentPath() + "/initCals.ini"), this);
   connect(_cals, &CalendarManager::listOfCalendarsChanged, _calendar,
           &MainCalendar::setCalendarList);
   connect(_cals, &CalendarManager::listOfEventsChanged, _calendar,
@@ -33,7 +34,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent) {
 
   createPreviewGroupBox();
 
-  QGridLayout *layout = new QGridLayout;
+  QGridLayout *layout = new QGridLayout(this);
   layout->addWidget(_previewGroupBox, 0, 0);
   layout->setSizeConstraint(QLayout::SetFixedSize);
   setLayout(layout);
@@ -41,25 +42,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent) {
   setWindowTitle(tr("Calendar Widget"));
 }
 
-/*MainWindow::~MainWindow() {
-  if(_previewGroupBox)
-    delete _previewGroupBox;
-
-  if(_previewLayout)
-    delete _previewLayout;
-
-  if(_newCalendarDialog)
-    delete _newCalendarDialog;
-
-  if(_newEventDialog)
-    delete _newEventDialog;
-
-  if(_calendar)
-    delete _calendar;
-
-  if(_cals)
-    delete _cals;
-}*/
+MainWindow::~MainWindow() {}
 
 void MainWindow::createNewCalendar(const QString &displayName,
                                    const QString &hostURL, bool isBasicAuth,
@@ -70,18 +53,12 @@ void MainWindow::createNewCalendar(const QString &displayName,
   QDEBUG << "[i] Creating new calendar\n";
 
   QString newDisplayName =
-      this->checkDisplayName(_cals->getListOfCalendarsClient(), displayName);
+      this->checkDisplayName(_cals->getListOfCalendars(), displayName);
 
   if (isBasicAuth) {
-    _cals->addCalDAV_Calendar(
-        QColor(rand() & 0xFF, rand() & 0xFF, rand() & 0xFF).name(),
-        newDisplayName, hostURL, username, password,
-        ClientCalDAV::E_CalendarAuth::E_AUTH_UPWD);
+    _cals->addCalendarCalDAVUP(newDisplayName, hostURL, username, password);
   } else {
-    _cals->addCalDAV_Calendar(
-        QColor(rand() & 0xFF, rand() & 0xFF, rand() & 0xFF).name(),
-        newDisplayName, hostURL, clientSecret, "",
-        ClientCalDAV::E_CalendarAuth::E_AUTH_TOKEN);
+    _cals->addCalendarCalDAVOA(newDisplayName, hostURL, clientSecret);
   }
 }
 
@@ -89,47 +66,54 @@ void MainWindow::createNewEvent(QString uid, QString filename, QString summary,
                                 QString location, QString description,
                                 QString rrule, QDateTime startDateTime,
                                 QDateTime endDateTime, QString calendar) {
-  foreach (ClientCalDAV *pListItem, _cals->getListOfCalendarsClient()) {
-    if (calendar == pListItem->getDisplayName()) {
-      pListItem->saveEvent(uid, filename, summary, location, description, rrule,
-                           startDateTime, endDateTime);
+  int i = 0;
+  foreach (QObject *pListItem, _cals->getListOfCalendars()) {
+    if (calendar == pListItem->property("displayName").toString()) {
+      ClientCalDAV *cal = _cals->getListItemAt(i);
+      cal->saveEvent(uid, filename, summary, location, description, rrule,
+                     startDateTime, endDateTime);
       emit _cals->eventsUpdated();
       emit _cals->listOfEventsChanged(_cals->getListOfEvents());
       break;
     }
+    i++;
   }
 }
 
 void MainWindow::createNewCalendarDialog() {
-  _newCalendarDialog = new NewCalendarDialog;
+  _newCalendarDialog = new NewCalendarDialog(this);
   connect(_newCalendarDialog, &NewCalendarDialog::newCalendar, this,
           &MainWindow::createNewCalendar);
   _newCalendarDialog->show();
 }
 void MainWindow::createNewEventDialog() {
-  _newEventDialog = new NewEventDialog(_cals->getListOfCalendarsName());
+  QList<QString> calsName;
+  foreach (QObject *c, _cals->getListOfCalendars()) {
+    calsName.append(c->property("displayName").toString());
+  }
+  _newEventDialog = new NewEventDialog(calsName, this);
   connect(_newEventDialog, &NewEventDialog::newEvent, this,
           &MainWindow::createNewEvent);
   _newEventDialog->show();
 }
 
 void MainWindow::createPreviewGroupBox() {
-  _previewGroupBox = new QGroupBox;
+  _previewGroupBox = new QGroupBox(this);
   _previewGroupBox->setFlat(true);
   _previewGroupBox->setStyleSheet("QGroupBox {  border:0; }");
 
-  QPushButton *btn_addCalendar = new QPushButton("Add Calendar +", nullptr);
+  QPushButton *btn_addCalendar = new QPushButton("Add Calendar +", this);
   connect(btn_addCalendar, &QPushButton::clicked, this,
           &MainWindow::createNewCalendarDialog);
 
-  QPushButton *btn_addEvent = new QPushButton("Create +", nullptr);
+  QPushButton *btn_addEvent = new QPushButton("Create +", this);
   connect(btn_addEvent, &QPushButton::clicked, this,
           &MainWindow::createNewEventDialog);
 
-  QWidget *_todo = new QWidget;
-  _todo->setMinimumSize(450, 320);
+  QWidget *_todo = new QWidget(this);
+  _todo->setMinimumSize(450, 0);
 
-  _previewLayout = new QGridLayout;
+  _previewLayout = new QGridLayout(this);
   _previewLayout->addWidget(_calendar, 0, 0);
   _previewLayout->addWidget(_todo, 0, 1);
   _previewLayout->addWidget(btn_addCalendar, 1, 0, Qt::AlignRight);
@@ -137,11 +121,11 @@ void MainWindow::createPreviewGroupBox() {
   _previewGroupBox->setLayout(_previewLayout);
 }
 
-QString MainWindow::checkDisplayName(QList<ClientCalDAV *> cals,
+QString MainWindow::checkDisplayName(QList<QObject *> cals,
                                      QString displayName) {
   QString ndn = displayName;
-  foreach (ClientCalDAV *pListItem, cals) {
-    if (displayName == pListItem->getDisplayName()) {
+  foreach (QObject *pListItem, cals) {
+    if (displayName == pListItem->property("displayName").toString()) {
       ndn.append("-");
       break;
     }

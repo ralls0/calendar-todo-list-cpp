@@ -57,7 +57,7 @@ public slots:
   void on_back_button_click();
   void on_next_button_click();
   void on_event_click(QLabelEvent *label_event, Qt::MouseButton button);
-  void setCalendarList(QList<QString> t);
+  void setCalendarList(QList<QObject *> t);
   void updateListOfEvents(QList<QObject *> t);
 
 private:
