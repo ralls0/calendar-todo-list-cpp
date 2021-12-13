@@ -26,14 +26,14 @@ void QLabelEvent::mousePressEvent(QMouseEvent *e) {
 
 void QLabelEvent::keyPressEvent(QKeyEvent *e) { emit keyPressed(e->key()); }
 
-void QLabelEvent::setEvent(Event *event) {
+void QLabelEvent::setEvent(CalendarEvent *event) {
   if (this->event != NULL)
     delete this->event;
   this->event = event;
   this->drawUI();
 }
 
-Event *QLabelEvent::getEvent() { return this->event; }
+CalendarEvent *QLabelEvent::getEvent() { return this->event; }
 
 bool QLabelEvent::markSelection(bool selected) {
   if (this->event == NULL)
@@ -50,7 +50,7 @@ bool QLabelEvent::markSelection(bool selected) {
 bool QLabelEvent::drawInvalidEvent() {
   if (this->event == NULL)
     return false;
-  this->setText(QString("<s>") + QString(this->event->getName().c_str()) +
+  this->setText(QString("<s>") + QString(this->event->name()) +
                 QString("</s>"));
   this->setStyleSheet(QString("QLabel { font-size: 14px; background-color : "
                               "#AAAAAA; color: #000000; };"));
@@ -63,39 +63,39 @@ bool QLabelEvent::drawInvalidEvent() {
 bool QLabelEvent::drawUI() {
   if (this->event == NULL)
     return false;
-  if (this->event->isInvalid())
-    return drawInvalidEvent();
+  /*if (this->event->isInvalid())
+    return drawInvalidEvent();*/
 
-  this->setText(this->event->getName().c_str());
+  this->setText(this->event->name());
   QString textColor("#000000");
-  if (is_color_dark(this->event->getCategory()->getColor()))
+  if (is_color_dark(this->event->getColor()))
     textColor = "#FFFFFF";
   this->setStyleSheet(
       QString("QLabel#selected {border-top: 1px solid #FF0000; border-bottom: "
               "1px solid #FF0000; font-weight: bold; font-size: 13px;} QLabel "
               "{ font-size: 14px; border-radius: 2px; background-color : ") +
-      QString(this->event->getCategory()->getColor().c_str()) +
+      QString(this->event->getColor()) +
       QString("; color: ") + textColor + QString("};"));
   this->setFixedHeight(26);
   this->setMargin(0);
   QString tooltip_text;
-  if (this->event->getName().length() > 20)
-    tooltip_text = QString("<b>Name: </b>") + this->event->getName().c_str() +
+  if (this->event->name().length() > 20)
+    tooltip_text = QString("<b>Name: </b>") + this->event->name() +
                    QString("\n");
-  if (this->event->getPlace() != "")
+  if (this->event->location() != "")
     tooltip_text = tooltip_text + QString("<b>PlaceGialo: </b>") +
-                   this->event->getPlace().c_str() + QString("\n");
-  if (this->event->getDescription() != "")
+                   this->event->location() + QString("\n");
+  if (this->event->description() != "")
     tooltip_text = tooltip_text + QString("<b>Description: </b>") +
-                   this->event->getDescription().c_str();
+                   this->event->description();
   this->setToolTip(tooltip_text);
   return true;
 }
 
 /* This is an utility function and should be moved in another class, but for the
  * moment no one else is using it. */
-bool QLabelEvent::is_color_dark(std::string colorName) {
-  QColor color(colorName.c_str());
+bool QLabelEvent::is_color_dark(QString colorName) {
+  QColor color(colorName);
   // Formula to calculate luminance from ITU-R BT.709
   int l = 0.2126 * color.red() + 0.7152 * color.green() + 0.0722 * color.blue();
   if (l < 50)

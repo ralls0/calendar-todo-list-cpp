@@ -11,7 +11,7 @@
 #define CALENDAR_TODO_LIST_CPP_NEWEVENTDIALOG_H
 
 #include "../../Utils/ColorUtils.h"
-#include "../Calendar/Event.h"
+#include "../../CalendarEvent/CalendarEvent.h"
 #include <QComboBox>
 #include <QDateTimeEdit>
 #include <QDebug>
@@ -32,7 +32,7 @@ class NewEventDialog : public QDialog {
 
 public:
   NewEventDialog(QList<QString> cals, QWidget *parent = nullptr);
-  NewEventDialog(Event *event, QWidget *parent = nullptr);
+  NewEventDialog(CalendarEvent *event, QWidget *parent = nullptr);
   ~NewEventDialog();
 
 public slots:
@@ -46,10 +46,10 @@ signals:
   void newAction(); // FIXME
 
 private:
-  void createBaseInfoLayout(QList<QString> cals, Event *event = nullptr);
-  void createEventLayout(QList<QString> cals, Event *event = nullptr);
-  void createActivityLayout(QList<QString> cals, Event *event = nullptr);
-  void createButtonGroupBox(Event *event = nullptr);
+  void createBaseInfoLayout(QList<QString> cals, CalendarEvent *event = nullptr);
+  void createEventLayout(QList<QString> cals, CalendarEvent *event = nullptr);
+  void createActivityLayout(QList<QString> cals, CalendarEvent *event = nullptr);
+  void createButtonGroupBox(CalendarEvent *event = nullptr);
 
   QGridLayout *_baseInfoLayout;
   QGridLayout *_eventLayout;

@@ -10,23 +10,23 @@
 #ifndef CALENDAR_TODO_LIST_CPP_QLABELEVENT_H
 #define CALENDAR_TODO_LIST_CPP_QLABELEVENT_H
 
-#include "Event.h"
+#include "../../CalendarEvent/CalendarEvent.h"
 #include <QLabel>
 #include <QMouseEvent>
 
 class QLabelEvent : public QLabel {
   Q_OBJECT
 private:
-  Event *event;
+    CalendarEvent *event;
 
 public:
   explicit QLabelEvent(QWidget *parent = 0);
   ~QLabelEvent();
   bool markSelection(bool selected);
-  void setEvent(Event *event);
-  Event *getEvent();
+  void setEvent(CalendarEvent *event);
+  CalendarEvent *getEvent();
   bool drawUI();
-  bool is_color_dark(std::string colorName);
+  bool is_color_dark(QString colorName);
 
 private:
   bool drawInvalidEvent();
