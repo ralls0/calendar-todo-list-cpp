@@ -76,11 +76,7 @@ private:
   QFrameExtended *createQFrameExtended(Date *date);
   QFrameExtended *frames[42]; // I have a 7x7 grid, but without consider the
                               // first row I've a total of 6x7 cells
-  void createPreviewGroupBox();
-
-  QGroupBox *previewGroupBox;
   QHBoxLayout *_calList;
-  QGridLayout *previewLayout;
   QVBoxLayout *layout;
   QCalendarWidget *calendar;
   QLabel *label_date; // la label centrale

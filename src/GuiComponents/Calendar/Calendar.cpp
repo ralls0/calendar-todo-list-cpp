@@ -22,9 +22,6 @@
 #endif
 
 MainCalendar::MainCalendar(QWidget *parent) : QWidget(parent) {
-
-  /* connect(_newCalendarDialog, &NewCalendarDialog::newCalendar, this,
-           &WindowNewCalendar::createNewCalendar);*/
   Date current_date = DateUtil::get_current_date();
   this->API = new APImain;
   this->label_date = new QLabel;
@@ -40,24 +37,18 @@ MainCalendar::MainCalendar(QWidget *parent) : QWidget(parent) {
   back->setShortcut(QKeySequence(Qt::Key_Left));
   next->setShortcut(QKeySequence(Qt::Key_Right));
   next->setToolTip("Go to the next month, press ctrl to move to the next year");
-  back->setToolTip(
-      "Go to the previous month, press ctrl to move to the previous year");
-  connect(back, &QPushButton::clicked, this,
-          &MainCalendar::on_back_button_click);
-  connect(next, &QPushButton::clicked, this,
-          &MainCalendar::on_next_button_click);
-  QHBoxLayout *hl =
-      new QHBoxLayout; //è un layout orizzontale dove vanno i bottoni
-  QHBoxLayout *hlbutton =
-      new QHBoxLayout; //è un layout orizzontale dove vanno i bottoni
+  back->setToolTip( "Go to the previous month, press ctrl to move to the previous year");
+  connect(back, &QPushButton::clicked, this, &MainCalendar::on_back_button_click);
+  connect(next, &QPushButton::clicked, this, &MainCalendar::on_next_button_click);
+  QHBoxLayout *hl = new QHBoxLayout; //è un layout orizzontale dove vanno i bottoni
+  QHBoxLayout *hlbutton = new QHBoxLayout; //è un layout orizzontale dove vanno i bottoni
   QWidget *wbutton = new QWidget;
   hlbutton->addWidget(back, 1, Qt::AlignRight);
   hlbutton->addWidget(next, 1, Qt::AlignLeft);
   wbutton->setLayout(hlbutton);
   hl->addWidget(label_date, 1);
   hl->addWidget(wbutton, 1, Qt::AlignRight);
-  this->layout =
-      new QVBoxLayout; // layout verticale dove sopra bottoni sotto calendario
+  this->layout = new QVBoxLayout; // layout verticale dove sopra bottoni sotto calendario
   this->layout->addLayout(hl);
   // setCalendarList();
   _calList = new QHBoxLayout;
@@ -74,12 +65,10 @@ MainCalendar::MainCalendar(QWidget *parent) : QWidget(parent) {
     QHBoxLayout *hl = new QHBoxLayout;
     hl->setAlignment(Qt::AlignRight);
     frame->setFixedHeight(50);
-    QLabel *wday_name =
-        new QLabel(DateUtil::numeric2literal_day_of_week(j + 1).c_str());
+    QLabel *wday_name = new QLabel(DateUtil::numeric2literal_day_of_week(j + 1).c_str());
     wday_name->setObjectName("header");
     frame->setObjectName("header");
     hl->addWidget(wday_name);
-    // hl->setMargin(0);
     frame->setLayout(hl);
     frame->setStyleSheet(_colorStyle.getCellStyle());
     grid_layout->addWidget(frame, 0, j);
@@ -96,24 +85,11 @@ MainCalendar::MainCalendar(QWidget *parent) : QWidget(parent) {
   grid_layout->setHorizontalSpacing(0);
   grid_layout->setVerticalSpacing(0);
 
-  // altra roba
-
-  // grid_layout->setMargin(5);
   this->layout->addLayout(grid_layout);
 
   display_days(current_date);
   setLayout(this->layout);
 
-  // Set QWidget as the central layout of the main window
-
-  /*createPreviewGroupBox();
-   QGridLayout *layout = new QGridLayout;
-   layout->addWidget(previewGroupBox, 0, 0);
-   //layout->setSizeConstraint(QLayout::SetFixedSize);
-   setLayout(layout);
-   previewLayout->setRowMinimumHeight(0, calendar->sizeHint().height());
-   previewLayout->setColumnMinimumWidth(0, calendar->sizeHint().width());
-   setWindowTitle(tr("Calendar Widget"));*/
 }
 
 void MainCalendar::setCalendarList(QList<QObject *> t) {
@@ -240,30 +216,10 @@ void MainCalendar::display_events(Date date) {
   birthday->tm_year = 2021 - 1900;
 
   bday = mktime(birthday);
-  std::list<Event *> event_list =
-      this->API->getEventByMonth(date.getMonth(), date.getYear());
+  std::list<Event *> event_list = this->API->getEventByMonth(date.getMonth(), date.getYear());
 
-  // Event *b = new Event(3, "Festune2","" ,"casaMia", new
-  // Category(3,"enigma","green"), time(0), time(0));
-  /* Event *c = new Event(4, "Festune3","" ,"casaMia", new
-   Category(3,"enigma","green"), time(0), time(0)); Event *d = new Event(5,
-   "Festune4","" ,"casaMia", new Category(3,"enigma","green"), time(0),
-   time(0)); Event *e = new Event(6, "Festune5","" ,"casaMia", new
-   Category(3,"enigma","green"), time(0), time(0)); Event *f = new Event(7,
-   "Festune6","" ,"casaMia", new Category(3,"enigma","green"), time(0),
-   time(0));*/
-
-  // event_list.push_front(b);
-  /* event_list.push_front(c);
-   event_list.push_front(d);
-   event_list.push_front(e);
-   event_list.push_front(f);*/
   int start_offset;
   Event *selected_event = NULL;
-  // Check if there was a selected event
-  /* if (this->selected_event != NULL) {
-       selected_event = this->selected_event->getEvent();
-   }*/
 
   // Remove all displayed events
   remove_events_from_all_frames();
@@ -295,10 +251,6 @@ void MainCalendar::display_events(Date date) {
          i < (start_offset + end.getMonthDay()); i++) {
       QLabelEvent *label_event = createLabelEvent(event);
 
-      /*if ((selected_event != NULL) && (selected_event->equals(*event))) {
-          label_event->markSelection(true);
-          this->selected_event = label_event;
-      }*/
       // serve se ho tanti eventi sulla stessa cella
       if (this->frames[i]->children().size() == 3) {
         QPushButtonExtended *button_show_all =
@@ -317,8 +269,7 @@ void MainCalendar::display_events(Date date) {
     }
     delete event;
   }
-  /*if (this->selected_event != NULL)
-      this->selected_event->setFocus();*/
+
 }
 
 void MainCalendar::remove_events_from_all_frames() {
@@ -376,16 +327,12 @@ void MainCalendar::on_button_extended_click(int index) {
   // QLabel *label_day = static_cast<QLabel*> (frame->children().at(1));
   QLabel *label_day = new QLabel(text);
   label_day->setStyleSheet(
-      "background:linear-gradient(to " // box-shadow: 0px 1px 0px 0px #fff6af;
-      "bottom, #ffec64 5%, #ffab23 100%);"
-      " background-color:#ffec64; border-radius:6px; border:1px solid #ffaa22; "
-      //"display:inline-block;cursor:pointer;"
-      " color:#333333; font-family:Arial; font-size:15px; "
+      "background:linear-gradient(to bottom, #ffec64 5%, #ffab23 100%);"
+      "background-color:#ffec64; border-radius:6px; border:1px solid #ffaa22; "
+      "color:#333333; font-family:Arial; font-size:15px; "
       "font-weight:bold;padding:6px 24px;text-decoration:none;"
-      "  text-align: center;"); // text-shadow:0px 1px 0px #ffee66;
-  // label_day->setText(text);
-  // label_day->setStyleSheet("QLabel { width: 100%; background-color: #ffffb3;
-  // border-bottom: 1px solid #000000; margin-bottom: 2px; }");
+      "text-align: center;");
+
   char stime[14];
   int z = 0;
   QTableWidget *table =
@@ -400,45 +347,29 @@ void MainCalendar::on_button_extended_click(int index) {
       "QHeaderView::section {background-color: #646464;"
       "padding: 4px;font-size: 10pt; "
       "border-style: none;  border-bottom: 1px solid #fffff8; "
-      " border-right: 1px solid #fffff8;  }"
-      " QHeaderView::section:horizontal{ border-top: 1px solid #fffff8;  }"
+      "border-right: 1px solid #fffff8;  }"
+      "QHeaderView::section:horizontal{ border-top: 1px solid #fffff8;  }"
       "QHeaderView::section:vertical  { border-left: 1px solid #fffff8;   }");
-  // QPushButton *edit = new QPushButton("EDIT");
-  //  connect(edit, &QPushButton::clicked, this, &MainCalendar::on_event_click);
+
   for (QLabelEvent *label_event :
-       this->frames[index]->findChildren<QLabelEvent *>()) {
+    this->frames[index]->findChildren<QLabelEvent *>()) {
     Event *event = new Event(*label_event->getEvent());
-    // QTime start = QDateTime::fromTime_t(event->getStart()).time();
     QTime start = timeToQTime(event->getStart());
     QTime end = timeToQTime(event->getEnd());
-    // QString descr = QString::fromStdString(event->getDescription());
-    // QLabel *des = new QLabel(descr);
-    snprintf(stime, 14, "%02d:%02d - %02d:%02d", start.hour(), start.minute(),
-             end.hour(), end.minute());
+    snprintf(stime, 14, "%02d:%02d - %02d:%02d", start.hour(), start.minute(), end.hour(), end.minute());
     QLabel *time = new QLabel(stime);
     table->setCellWidget(z, 0, createLabelEvent(event));
-    table->setItem(
-        z, 1,
-        new QTableWidgetItem(QString::fromStdString(event->getDescription())));
+    table->setItem( z, 1, new QTableWidgetItem(QString::fromStdString(event->getDescription())));
     table->setItem(z, 2, new QTableWidgetItem(stime));
     QPushButtonExtended *edit = new QPushButtonExtended();
     edit->setText("EDIT");
     edit->setEvent(label_event->getEvent());
     table->setCellWidget(z, 3, edit);
-    // CONNECTDASISTEMARE
-    connect(edit, &QPushButtonExtended::on_click_edit, this,
-            &MainCalendar::on_button_edit_click);
+    connect(edit, &QPushButtonExtended::on_click_edit, this, &MainCalendar::on_button_edit_click);
     table->setCellWidget(z, 4, new QPushButton("DELETE"));
-
-    // hl->addWidget(createLabelEvent(event));
-    // hl->addWidget(des);
-
     z++;
   }
-  // QHBoxLayout *hl = new QHBoxLayout;
-  // hl->addWidget(table);
-  //(static_cast <QVBoxLayout*> (frame->layout()))->addLayout(hl); //TODO: add
-  // the entries ordered by timestamp
+
   QVBoxLayout *main_layout = new QVBoxLayout;
   main_layout->addWidget(label_day);
   main_layout->addWidget(table);
@@ -454,10 +385,7 @@ QLabelEvent *MainCalendar::createLabelEvent(Event *event) {
   QLabelEvent *label_event = new QLabelEvent;
   label_event->setEvent(newEvent);
   label_event->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-  connect(label_event, &QLabelEvent::clicked, this,
-          &MainCalendar::on_event_click);
-  // connect(label_event, &QLabelEvent::keyPressed, this,
-  // &MainCalendar::on_event_key_press);
+  connect(label_event, &QLabelEvent::clicked, this, &MainCalendar::on_event_click);
   return label_event;
 }
 
@@ -564,46 +492,3 @@ MainCalendar::~MainCalendar() {
    * they will free their dates.
    */
 }
-
-void MainCalendar::createPreviewGroupBox() {
-  previewGroupBox = new QGroupBox(tr("Preview"));
-
-  calendar = new QCalendarWidget;
-  calendar->setMinimumDate(QDate(1900, 1, 1));
-  calendar->setMaximumDate(QDate(3000, 1, 1));
-  calendar->setGridVisible(true);
-  calendar->setVerticalHeaderFormat(QCalendarWidget::NoVerticalHeader);
-  /*connect(calendar, &QCalendarWidget::currentPageChanged,
-          this, &Window::reformatCalendarPage);*/
-  calendar->adjustSize();
-  previewLayout = new QGridLayout;
-  previewLayout->addWidget(calendar, 0, 0, Qt::AlignCenter);
-  previewGroupBox->setLayout(previewLayout);
-}
-
-/*void WindowNewCalendar::createNewCalendar(const QString &displayName,
-                                          const QString &hostURL,
-                                          bool isBasicAuth,
-                                          const QString &username,
-                                          const QString &password,
-                                          const QString &clientSecret) {
-  QDEBUG << "[i] Creating new calendar\n";
-  if (isBasicAuth) {
-    _cals = new CalendarClient_CalDAV(username, password, hostURL, displayName,
-                                      nullptr);
-  } else {
-    _cals = new CalendarClient_CalDAV(
-        clientSecret, hostURL, displayName,
-        "https://www.googleapis.com/auth/calendar", "Rallso", nullptr);
-  }
-}*/
-/*
-void WindowNewCalendar::createPreviewGroupBox() {
-  _previewGroupBox = new QGroupBox(tr("Main"));
-  QPushButton *btn_addCalendar = new QPushButton("Add Calendar", nullptr);
-  connect(btn_addCalendar, &QPushButton::clicked, _newCalendarDialog,
-          &QWidget::show);
-  _previewLayout = new QGridLayout;
-  _previewLayout->addWidget(btn_addCalendar, 0, 0, Qt::AlignCenter);
-  _previewGroupBox->setLayout(_previewLayout);
-}*/
