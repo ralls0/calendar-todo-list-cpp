@@ -187,3 +187,20 @@ void CalendarEvent::setExdates(const QString &exdates) {
     emit exdatesChanged(_exdates);
   }
 }
+
+CalendarEvent::CalendarEvent(const QString &color, const QString &calendarName, const QString &name,
+                             const QString &location, const QString &description, const QDateTime &startDateTime,
+                             const QDateTime &endDateTime, const QString &rRule, const QString &categories,
+                             const QString &uid, const QString &href, const QString &exdates) : _color(color),  _calendarName( calendarName),
+                                                                                                _name(name),
+                                                                                                _location(location),
+                                                                                                _description(
+                                                                                                        description),
+                                                                                                _startDateTime(
+                                                                                                        startDateTime),
+                                                                                                _endDateTime(
+                                                                                                        endDateTime),
+                                                                                                _rRULE(rRule),
+                                                                                                _categories(categories),
+                                                                                                _UID(uid), _HREF(href),
+                                                                                                _exdates(exdates) {}

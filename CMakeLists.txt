@@ -56,12 +56,8 @@ add_executable(calendar_todo_list_cpp
         src/GuiComponents/Calendar/QPushButtonExtended.h
         src/GuiComponents/Calendar/QWidgetExtended.cpp
         src/GuiComponents/Calendar/QWidgetExtended.h
-        src/GuiComponents/Calendar/APImain.cpp
-        src/GuiComponents/Calendar/APImain.h
         src/GuiComponents/Calendar/Date.cpp
         src/GuiComponents/Calendar/Date.h
-        src/GuiComponents/Calendar/Event.cpp
-        src/GuiComponents/Calendar/Event.h
         src/GuiComponents/Calendar/Category.cpp
         src/GuiComponents/Calendar/Category.h
         src/GuiComponents/Calendar/DateUtil.cpp

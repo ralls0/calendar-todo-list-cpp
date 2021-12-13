@@ -20,7 +20,7 @@
 
 // LOUSO SIA PER CREARE CHE PER MODIFICARE
 
-NewEventDialog::NewEventDialog(Event *event, QWidget *parent)
+NewEventDialog::NewEventDialog(CalendarEvent *event, QWidget *parent)
     : QDialog(parent) {
 
   createBaseInfoLayout(QList<QString>(), event);
@@ -57,7 +57,7 @@ NewEventDialog::~NewEventDialog() {
   delete _activityLayout;
 }
 
-void NewEventDialog::createBaseInfoLayout(QList<QString> cals, Event *event) {
+void NewEventDialog::createBaseInfoLayout(QList<QString> cals, CalendarEvent *event) {
   gb_baseInfo = new QGroupBox;
   gb_baseInfo->setFlat(true);
   gb_baseInfo->setStyleSheet("border:0;");
@@ -66,7 +66,7 @@ void NewEventDialog::createBaseInfoLayout(QList<QString> cals, Event *event) {
   le_title->setPlaceholderText(tr("Title"));
   le_title->setObjectName("title");
   if (event != nullptr)
-    le_title->setText(event->getName().c_str());
+    le_title->setText(event->name());
   _groupBox = new QGroupBox();
 
   rb_event = new QRadioButton("Event");
@@ -97,16 +97,16 @@ void NewEventDialog::createBaseInfoLayout(QList<QString> cals, Event *event) {
   gb_baseInfo->setLayout(_baseInfoLayout);
 }
 
-void NewEventDialog::createEventLayout(QList<QString> cals, Event *event) {
+void NewEventDialog::createEventLayout(QList<QString> cals, CalendarEvent *event) {
   e_event = new QWidget;
 
-  QDate startD, endD;
+  QDateTime startD, endD;
   if (event == nullptr) {
-    startD = QDate::currentDate();
-    endD = QDate::currentDate();
+    startD = QDateTime::currentDateTime();
+    endD = QDateTime::currentDateTime();
   } else {
-    startD = QDate(event->getYearS(), event->getMonthS(), event->getDayS());
-    endD = QDate(event->getYearE(), event->getMonthE(), event->getDayE());
+    startD = event->getStartDateTime();
+    endD = event->getEndDateTime();
   }
   dte_startDateE = new QDateTimeEdit(startD);
   dte_startDateE->setMinimumDate(QDate::currentDate().addDays(-365));
@@ -128,7 +128,7 @@ void NewEventDialog::createEventLayout(QList<QString> cals, Event *event) {
   le_location = new QLineEdit;
   le_location->setPlaceholderText("Location");
   if (event != nullptr)
-    le_location->setText(event->getPlace().c_str());
+    le_location->setText(event->location());
   _pixmap = QPixmap("../img/place.png");
   _pixmap = _pixmap.scaled(QSize(18, 18), Qt::KeepAspectRatio);
   lbl_location = new QLabel;
@@ -139,14 +139,14 @@ void NewEventDialog::createEventLayout(QList<QString> cals, Event *event) {
   te_descriptionE->setMaximumHeight(100);
   te_descriptionE->setPlaceholderText("Description");
   if (event != nullptr)
-    te_descriptionE->setText(event->getDescription().c_str());
+    te_descriptionE->setText(event->description());
 
   cb_calendar = new QComboBox;
   if (!cals.isEmpty()) {
     cb_calendar->addItems(cals);
   } else {
     if (event != nullptr) {
-      cb_calendar->addItem(QString(event->getCategory()->getName().c_str()));
+      cb_calendar->addItem(QString(event->calendarName()));
     } else {
       cb_calendar->addItem(QString("Nessun Calendario"));
     }
@@ -164,7 +164,7 @@ void NewEventDialog::createEventLayout(QList<QString> cals, Event *event) {
   e_event->show();
 }
 
-void NewEventDialog::createActivityLayout(QList<QString> cals, Event *event) {
+void NewEventDialog::createActivityLayout(QList<QString> cals, CalendarEvent *event) {
   e_activity = new QWidget;
 
   dte_startDateA = new QDateTimeEdit(QDate::currentDate());
@@ -185,7 +185,7 @@ void NewEventDialog::createActivityLayout(QList<QString> cals, Event *event) {
     cb_activity->addItems(cals);
   } else {
     if (event != nullptr) {
-      cb_activity->addItem(QString(event->getCategory()->getName().c_str()));
+      cb_activity->addItem(QString(event->getCategories()));
     } else {
       cb_activity->addItem(QString("Nessun Calendario"));
     }
@@ -200,7 +200,7 @@ void NewEventDialog::createActivityLayout(QList<QString> cals, Event *event) {
   e_activity->hide();
 }
 
-void NewEventDialog::createButtonGroupBox(Event *event) {
+void NewEventDialog::createButtonGroupBox(CalendarEvent *event) {
   btn_cancel = new QPushButton(tr("Cancel"));
   btn_cancel->setCheckable(true);
   btn_save = new QPushButton(!event ? tr("Add") : tr("Modify"));

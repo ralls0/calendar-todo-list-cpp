@@ -23,7 +23,6 @@
 
 MainCalendar::MainCalendar(QWidget *parent) : QWidget(parent) {
   Date current_date = DateUtil::get_current_date();
-  this->API = new APImain;
   this->label_date = new QLabel;
   this->label_date->setMaximumHeight(40);
   this->label_date->setFixedWidth(400);
@@ -132,16 +131,21 @@ void MainCalendar::updateListOfEvents(QList<QObject *> eventList) {
     // c'è controllo annoframe==annoevento && meseframe==meseevento
     for (int i = start_offset + start.day() - 1; i < (start_offset + end.day());
          i++) {
-      QLabelEvent *label_event = createLabelEvent(new Event(
-          i, event->property("name").toString().toStdString(),
-          event->property("description").toString().toStdString(),
-          event->property("location").toString().toStdString(),
-          new Category(i, "Prova",
-                       event->property("color").toString().toStdString()),
-          event->property("startDateTime").toDateTime().toMSecsSinceEpoch(),
-          event->property("endDateTime")
-              .toDateTime()
-              .toMSecsSinceEpoch())); // FIXME
+
+        QLabelEvent *label_event = createLabelEvent(new CalendarEvent(
+                event->property("color").toString(),
+                event->property("name").toString(),
+                event->property("name").toString(),
+                event->property("location").toString(),
+                event->property("description").toString(),
+                event->property("startDateTime").toDateTime(),
+                event->property("endDateTime").toDateTime(),
+                event->property("rRule").toString(), //RRULE
+                event->property("color").toString(), //CATEGORY
+                event->property("UID").toString(),   //UID
+                event->property("HREF").toString(),    //HREF
+                event->property("exdates").toString()     //EXDATE
+                ));
 
       // serve se ho tanti eventi sulla stessa cella
       if (this->frames[i]->children().size() == 3) {
@@ -189,88 +193,8 @@ void MainCalendar::on_next_button_click() {
   emit calendarDateChanged(QDate(newDate.getYear(), newDate.getMonth(), 1));
 }
 
-void MainCalendar::display_events(Date date) {
-  // list<Event*> event_list = this->pm->get_events_of_month(date.getMonth(),
-  // date.getYear());
-  /*struct tm *tinfo;
-  time_t rawtime;
-  time ( &rawtime );
-  tinfo = localtime ( &rawtime );
-  tinfo->tm_year=2021;
-  tinfo->tm_mon=12;
-  tinfo->tm_mday=3;
-  time_t endd = mktime(tinfo);
-  struct tm *tinfo2;
-  time ( &rawtime );
-  tinfo2 = localtime ( &rawtime );
-  tinfo->tm_year=2021;
-  tinfo->tm_mon=12;
-  tinfo->tm_mday=2;
-  time_t starta = mktime(tinfo2);*/
-  time_t today, bday;
-  struct tm *birthday;
-  time(&today);
-  birthday = localtime(&today);
-  birthday->tm_mon = 12 - 1;
-  birthday->tm_mday = 3;
-  birthday->tm_year = 2021 - 1900;
 
-  bday = mktime(birthday);
-  std::list<Event *> event_list = this->API->getEventByMonth(date.getMonth(), date.getYear());
 
-  int start_offset;
-  Event *selected_event = NULL;
-
-  // Remove all displayed events
-  remove_events_from_all_frames();
-
-  // Find at which cell the month starts
-  for (start_offset = 0; start_offset < 42; start_offset++) {
-    // Looks where is the first day of the month
-    if (this->frames[start_offset]->getDate() != NULL)
-      break;
-  }
-  // Add events to the gui
-  for (Event *event : event_list) {
-
-    // if ((category != NULL) && (!event->getCategory()->equals(*category)))
-    // continue; //Don't add this event to the view
-    Date start = DateUtil::date_from_timestamp(event->getStart());
-    Date end = DateUtil::date_from_timestamp(event->getEnd());
-    if (((start.getMonth() < date.getMonth()) &&
-         (start.getYear() == date.getYear())) ||
-        (start.getYear() < date.getYear()))
-      start = DateUtil::get_first_day_of_month(date);
-    if (((end.getMonth() > start.getMonth()) &&
-         (end.getYear() == start.getYear())) ||
-        (end.getYear() > start.getYear()))
-      end = DateUtil::get_last_day_of_month(start);
-    // sovrascrive tutto xk gli eventi vanno presi mese mese non c'è controllo
-    // annoframe==annoevento && meseframe==meseevento
-    for (int i = start_offset + start.getMonthDay() - 1;
-         i < (start_offset + end.getMonthDay()); i++) {
-      QLabelEvent *label_event = createLabelEvent(event);
-
-      // serve se ho tanti eventi sulla stessa cella
-      if (this->frames[i]->children().size() == 3) {
-        QPushButtonExtended *button_show_all =
-            new QPushButtonExtended("Show All");
-        button_show_all->setIndex(i);
-        connect(button_show_all, &QPushButtonExtended::on_click, this,
-                &MainCalendar::on_button_extended_click);
-        this->frames[i]->layout()->addWidget(button_show_all);
-        label_event->setHidden(true);
-      } else if (this->frames[i]->children().size() > 4)
-        label_event->setHidden(true);
-      // Events will be copied and wrapped inside the QLabelEvent widgets
-      // if(this->frames[i]->getDate()->compareTo(event->get))
-      (static_cast<QVBoxLayout *>(this->frames[i]->layout()))
-          ->insertWidget(1, label_event);
-    }
-    delete event;
-  }
-
-}
 
 void MainCalendar::remove_events_from_all_frames() {
   int i;
@@ -353,13 +277,13 @@ void MainCalendar::on_button_extended_click(int index) {
 
   for (QLabelEvent *label_event :
     this->frames[index]->findChildren<QLabelEvent *>()) {
-    Event *event = new Event(*label_event->getEvent());
-    QTime start = timeToQTime(event->getStart());
-    QTime end = timeToQTime(event->getEnd());
+    CalendarEvent *event = new CalendarEvent(*label_event->getEvent());
+    QTime start =  (event->getStartDateTime()).time() ;
+    QTime end =  (event->getEndDateTime()).time();
     snprintf(stime, 14, "%02d:%02d - %02d:%02d", start.hour(), start.minute(), end.hour(), end.minute());
     QLabel *time = new QLabel(stime);
     table->setCellWidget(z, 0, createLabelEvent(event));
-    table->setItem( z, 1, new QTableWidgetItem(QString::fromStdString(event->getDescription())));
+    table->setItem( z, 1, new QTableWidgetItem(QString(event->description())));
     table->setItem(z, 2, new QTableWidgetItem(stime));
     QPushButtonExtended *edit = new QPushButtonExtended();
     edit->setText("EDIT");
@@ -379,9 +303,9 @@ void MainCalendar::on_button_extended_click(int index) {
   custom_dialog->show();
 }
 
-QLabelEvent *MainCalendar::createLabelEvent(Event *event) {
+QLabelEvent *MainCalendar::createLabelEvent(CalendarEvent *event) {
   // Make a copy
-  Event *newEvent = new Event(*event);
+  CalendarEvent *newEvent = new CalendarEvent(*event);
   QLabelEvent *label_event = new QLabelEvent;
   label_event->setEvent(newEvent);
   label_event->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
@@ -390,7 +314,7 @@ QLabelEvent *MainCalendar::createLabelEvent(Event *event) {
 }
 
 void MainCalendar::on_button_edit_click(QPushButtonExtended *d) {
-  Event *e = nullptr;
+  CalendarEvent *e = nullptr;
   if (d != nullptr)
     e = d->getEvent();
   NewEventDialog *eventDialog = new NewEventDialog(e);
@@ -399,7 +323,7 @@ void MainCalendar::on_button_edit_click(QPushButtonExtended *d) {
 
 void MainCalendar::on_event_click(QLabelEvent *label_event,
                                   Qt::MouseButton button) {
-  Event *e = nullptr;
+  CalendarEvent *e = nullptr;
   if (label_event != nullptr)
     e = label_event->getEvent();
   NewEventDialog *eventDialog = new NewEventDialog(e);
