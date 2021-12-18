@@ -49,11 +49,12 @@ MainCalendar::MainCalendar(QWidget *parent) : QWidget(parent) {
   hl->addWidget(wbutton, 1, Qt::AlignRight);
   this->layout = new QVBoxLayout; // layout verticale dove sopra bottoni sotto calendario
   this->layout->addLayout(hl);
+  _listCalendar= new QList<QString>;
   // setCalendarList();
   _calList = new QHBoxLayout;
   QLabel *ql = new QLabel("I tuoi calendari:");
   _calList->addWidget(ql);
-  _checkList = new QList<QCheckBox>;
+  _checkList = new QList<QCheckBox*>;
   this->layout->addLayout(_calList);
   // Create 6x7 grid
   QGridLayout *grid_layout = new QGridLayout;
@@ -92,11 +93,39 @@ MainCalendar::MainCalendar(QWidget *parent) : QWidget(parent) {
 }
 
 void MainCalendar::setCalendarList(QList<QObject *> t) {
-  _checkList = new QList<QCheckBox>;
-  for (QObject *x : t) {
-    QCheckBox *box1 = new QCheckBox(x->property("displayName").toString());
-    _calList->addWidget(box1);
-  }
+    bool found= false;
+    for (QObject *x : t) {
+        for(int i=0; i<_checkList->size();i++){
+          if((_checkList->at(i))->text().toStdString().compare(x->property("displayName").toString().toStdString())==0){
+              found=true;
+              break;}
+        }
+        if(!found){
+            QCheckBox *box1 = new QCheckBox(x->property("displayName").toString());
+            connect(box1, &QCheckBox::stateChanged, this, &MainCalendar::filterCalendar);
+            box1->setCheckState(Qt::Checked);
+            _checkList->push_front(box1);
+            //APPENA CREO UN CALENDARIO LO VOGLIO FARE VEDERE
+            _listCalendar->push_front(x->property("displayName").toString());
+            _calList->addWidget(box1);}
+        found= false;
+    }
+}
+
+void MainCalendar::filterCalendar(){
+    _listCalendar->clear();
+    for(int i=0; i<_checkList->size();i++){
+        if((_checkList->at(i))->isChecked()){
+            if(!_listCalendar->contains((_checkList->at(i))->text()))
+                _listCalendar->push_front(_checkList->at(i)->text());
+        }else{
+            if(_listCalendar->contains((_checkList->at(i))->text()))
+                _listCalendar->removeOne(_checkList->at(i)->text());
+        }
+
+
+    }
+    //mancaun emit che è emit listOfEventsChanged(this->getListOfEvents()); che è in calendarManager
 }
 
 void MainCalendar::updateListOfEvents(QList<QObject *> eventList) {
@@ -115,8 +144,15 @@ void MainCalendar::updateListOfEvents(QList<QObject *> eventList) {
       break;
   }
 
-  for (QObject *event : eventList) {
+  /*QUI AGGIORNO LA LISTA
 
+  for (QObject *event : eventList){
+      if(!_listCalendar->contains(event->property("calendarName").toString()))
+          eventList.removeOne(event);
+  }*/
+
+  for (QObject *event : eventList) {
+    std::cout<<event->property("calendarName").toString().toStdString();
     QDate start = event->property("startDateTime").toDate();
     QDate end = event->property("endDateTime").toDate();
 

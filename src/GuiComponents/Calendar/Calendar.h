@@ -60,11 +60,12 @@ public slots:
   void updateListOfEvents(QList<QObject *> t);
 
 private:
-  CalendarManager *_calM;
-  QList<QCheckBox> *_checkList;
+  QList<QString> *_listCalendar;
+  QList<QCheckBox* > *_checkList;
   WindowStyle _colorStyle;
   void on_button_edit_click(QPushButtonExtended *d);
   QTime timeToQTime(time_t datax);
+  void filterCalendar();
   void on_button_extended_click(int index);
   void display_days(Date date);
   void remove_events_from_all_frames();
