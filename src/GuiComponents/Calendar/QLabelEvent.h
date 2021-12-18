@@ -17,7 +17,7 @@
 class QLabelEvent : public QLabel {
   Q_OBJECT
 private:
-    CalendarEvent *event;
+  CalendarEvent *event;
 
 public:
   explicit QLabelEvent(QWidget *parent = 0);

@@ -36,26 +36,31 @@ MainCalendar::MainCalendar(QWidget *parent) : QWidget(parent) {
   back->setShortcut(QKeySequence(Qt::Key_Left));
   next->setShortcut(QKeySequence(Qt::Key_Right));
   next->setToolTip("Go to the next month, press ctrl to move to the next year");
-  back->setToolTip( "Go to the previous month, press ctrl to move to the previous year");
-  connect(back, &QPushButton::clicked, this, &MainCalendar::on_back_button_click);
-  connect(next, &QPushButton::clicked, this, &MainCalendar::on_next_button_click);
-  QHBoxLayout *hl = new QHBoxLayout; //è un layout orizzontale dove vanno i bottoni
-  QHBoxLayout *hlbutton = new QHBoxLayout; //è un layout orizzontale dove vanno i bottoni
+  back->setToolTip(
+      "Go to the previous month, press ctrl to move to the previous year");
+  connect(back, &QPushButton::clicked, this,
+          &MainCalendar::on_back_button_click);
+  connect(next, &QPushButton::clicked, this,
+          &MainCalendar::on_next_button_click);
+  QHBoxLayout *hl =
+      new QHBoxLayout; //è un layout orizzontale dove vanno i bottoni
+  QHBoxLayout *hlbutton =
+      new QHBoxLayout; //è un layout orizzontale dove vanno i bottoni
   QWidget *wbutton = new QWidget;
   hlbutton->addWidget(back, 1, Qt::AlignRight);
   hlbutton->addWidget(next, 1, Qt::AlignLeft);
   wbutton->setLayout(hlbutton);
   hl->addWidget(label_date, 1);
   hl->addWidget(wbutton, 1, Qt::AlignRight);
-  this->layout = new QVBoxLayout; // layout verticale dove sopra bottoni sotto calendario
+  this->layout =
+      new QVBoxLayout; // layout verticale dove sopra bottoni sotto calendario
   this->layout->addLayout(hl);
-  _listCalendar= new QList<QString>;
-  // setCalendarList();
-  _calList = new QHBoxLayout;
+  _listCalendar = new QList<QString>;
+  _calListLayout = new QHBoxLayout;
   QLabel *ql = new QLabel("I tuoi calendari:");
-  _calList->addWidget(ql);
-  _checkList = new QList<QCheckBox*>;
-  this->layout->addLayout(_calList);
+  _calListLayout->addWidget(ql);
+  _checkList = new QList<QCheckBox *>;
+  this->layout->addLayout(_calListLayout);
   // Create 6x7 grid
   QGridLayout *grid_layout = new QGridLayout;
   int i = 0, j = 0;
@@ -65,7 +70,8 @@ MainCalendar::MainCalendar(QWidget *parent) : QWidget(parent) {
     QHBoxLayout *hl = new QHBoxLayout;
     hl->setAlignment(Qt::AlignRight);
     frame->setFixedHeight(50);
-    QLabel *wday_name = new QLabel(DateUtil::numeric2literal_day_of_week(j + 1).c_str());
+    QLabel *wday_name =
+        new QLabel(DateUtil::numeric2literal_day_of_week(j + 1).c_str());
     wday_name->setObjectName("header");
     frame->setObjectName("header");
     hl->addWidget(wday_name);
@@ -89,48 +95,56 @@ MainCalendar::MainCalendar(QWidget *parent) : QWidget(parent) {
 
   display_days(current_date);
   setLayout(this->layout);
-
+  connect(this, &MainCalendar::shownCalendarChanged, this,
+          &MainCalendar::updateListOfEvents);
 }
 
 void MainCalendar::setCalendarList(QList<QObject *> t) {
-    bool found= false;
-    for (QObject *x : t) {
-        for(int i=0; i<_checkList->size();i++){
-          if((_checkList->at(i))->text().toStdString().compare(x->property("displayName").toString().toStdString())==0){
-              found=true;
-              break;}
-        }
-        if(!found){
-            QCheckBox *box1 = new QCheckBox(x->property("displayName").toString());
-            connect(box1, &QCheckBox::stateChanged, this, &MainCalendar::filterCalendar);
-            box1->setCheckState(Qt::Checked);
-            _checkList->push_front(box1);
-            //APPENA CREO UN CALENDARIO LO VOGLIO FARE VEDERE
-            _listCalendar->push_front(x->property("displayName").toString());
-            _calList->addWidget(box1);}
-        found= false;
+  if (_calList) {
+    for (int i = 0; i < _checkList->count(); i++) {
+      _checkList->at(i)->hide();
     }
+    delete _calList;
+  }
+  _calList = new QHBoxLayout;
+  _checkList->clear();
+  _listCalendar->clear();
+
+  int i = 0;
+  for (QObject *x : t) {
+    QDEBUG << "[i] Add item: " << x->property("displayName").toString();
+    QCheckBox *box1 = new QCheckBox(x->property("displayName").toString());
+    connect(box1, &QCheckBox::stateChanged, this,
+            &MainCalendar::filterCalendar);
+    box1->setCheckState(Qt::Checked);
+    _checkList->push_front(box1);
+    // APPENA CREO UN CALENDARIO LO VOGLIO FARE VEDERE
+    _listCalendar->push_front(x->property("displayName").toString());
+    _calList->addWidget(_checkList->at(i));
+    i++;
+  }
+  _calListLayout->addLayout(_calList);
 }
 
-void MainCalendar::filterCalendar(){
-    _listCalendar->clear();
-    for(int i=0; i<_checkList->size();i++){
-        if((_checkList->at(i))->isChecked()){
-            if(!_listCalendar->contains((_checkList->at(i))->text()))
-                _listCalendar->push_front(_checkList->at(i)->text());
-        }else{
-            if(_listCalendar->contains((_checkList->at(i))->text()))
-                _listCalendar->removeOne(_checkList->at(i)->text());
-        }
-
-
+void MainCalendar::filterCalendar() {
+  _listCalendar->clear();
+  for (int i = 0; i < _checkList->size(); i++) {
+    if ((_checkList->at(i))->isChecked()) {
+      if (!_listCalendar->contains((_checkList->at(i))->text()))
+        _listCalendar->push_front(_checkList->at(i)->text());
+    } else {
+      if (_listCalendar->contains((_checkList->at(i))->text()))
+        _listCalendar->removeOne(_checkList->at(i)->text());
     }
-    //mancaun emit che è emit listOfEventsChanged(this->getListOfEvents()); che è in calendarManager
+  }
+
+  emit shownCalendarChanged(_eventList);
 }
 
-void MainCalendar::updateListOfEvents(QList<QObject *> eventList) {
+void MainCalendar::updateListOfEvents(const QList<QObject *> &eventList) {
   if (eventList.isEmpty())
     return;
+  _eventList = eventList;
   QDate date = QDateTime::currentDateTime().date();
 
   // Remove all displayed events
@@ -144,60 +158,54 @@ void MainCalendar::updateListOfEvents(QList<QObject *> eventList) {
       break;
   }
 
-  /*QUI AGGIORNO LA LISTA
+  for (QObject *event : _eventList) {
+    if (_listCalendar->contains(event->property("calendarName").toString())) {
+      QDate start = event->property("startDateTime").toDate();
+      QDate end = event->property("endDateTime").toDate();
 
-  for (QObject *event : eventList){
-      if(!_listCalendar->contains(event->property("calendarName").toString()))
-          eventList.removeOne(event);
-  }*/
+      if (((start.month() < date.month()) && (start.year() == date.year())) ||
+          (start.year() < date.year()))
+        start = QDate(date.year(), date.month(), 1);
 
-  for (QObject *event : eventList) {
-    std::cout<<event->property("calendarName").toString().toStdString();
-    QDate start = event->property("startDateTime").toDate();
-    QDate end = event->property("endDateTime").toDate();
+      if (((end.month() > start.month()) && (end.year() == start.year())) ||
+          (end.year() > start.year()))
+        end = start.addMonths(1).addDays(-1);
+      // sovrascrive tutto perche' gli eventi vanno presi un mese alla volta,
+      // non c'è controllo annoframe==annoevento && meseframe==meseevento
+      for (int i = start_offset + start.day() - 1;
+           i < (start_offset + end.day()); i++) {
 
-    if (((start.month() < date.month()) && (start.year() == date.year())) ||
-        (start.year() < date.year()))
-      start = QDate(date.year(), date.month(), 1);
+        QLabelEvent *label_event = createLabelEvent(
+            new CalendarEvent(event->property("color").toString(),
+                              event->property("calendarName").toString(),
+                              event->property("name").toString(),
+                              event->property("location").toString(),
+                              event->property("description").toString(),
+                              event->property("startDateTime").toDateTime(),
+                              event->property("endDateTime").toDateTime(),
+                              event->property("rRule").toString(),  // RRULE
+                              event->property("color").toString(),  // CATEGORY
+                              event->property("UID").toString(),    // UID
+                              event->property("HREF").toString(),   // HREF
+                              event->property("exdates").toString() // EXDATE
+                              ));
 
-    if (((end.month() > start.month()) && (end.year() == start.year())) ||
-        (end.year() > start.year()))
-      end = start.addMonths(1).addDays(-1);
-    // sovrascrive tutto perche' gli eventi vanno presi un mese alla volta, non
-    // c'è controllo annoframe==annoevento && meseframe==meseevento
-    for (int i = start_offset + start.day() - 1; i < (start_offset + end.day());
-         i++) {
+        // serve se ho tanti eventi sulla stessa cella
+        if (this->frames[i]->children().size() == 3) {
+          QPushButtonExtended *button_show_all =
+              new QPushButtonExtended("Show All");
+          button_show_all->setIndex(i);
+          connect(button_show_all, &QPushButtonExtended::on_click, this,
+                  &MainCalendar::on_button_extended_click);
+          this->frames[i]->layout()->addWidget(button_show_all);
+          label_event->setHidden(true);
+        } else if (this->frames[i]->children().size() > 4)
+          label_event->setHidden(true);
 
-        QLabelEvent *label_event = createLabelEvent(new CalendarEvent(
-                event->property("color").toString(),
-                event->property("name").toString(),
-                event->property("name").toString(),
-                event->property("location").toString(),
-                event->property("description").toString(),
-                event->property("startDateTime").toDateTime(),
-                event->property("endDateTime").toDateTime(),
-                event->property("rRule").toString(), //RRULE
-                event->property("color").toString(), //CATEGORY
-                event->property("UID").toString(),   //UID
-                event->property("HREF").toString(),    //HREF
-                event->property("exdates").toString()     //EXDATE
-                ));
-
-      // serve se ho tanti eventi sulla stessa cella
-      if (this->frames[i]->children().size() == 3) {
-        QPushButtonExtended *button_show_all =
-            new QPushButtonExtended("Show All");
-        button_show_all->setIndex(i);
-        connect(button_show_all, &QPushButtonExtended::on_click, this,
-                &MainCalendar::on_button_extended_click);
-        this->frames[i]->layout()->addWidget(button_show_all);
-        label_event->setHidden(true);
-      } else if (this->frames[i]->children().size() > 4)
-        label_event->setHidden(true);
-
-      // Events will be copied and wrapped inside the QLabelEvent widgets
-      (static_cast<QVBoxLayout *>(this->frames[i]->layout()))
-          ->insertWidget(1, label_event);
+        // Events will be copied and wrapped inside the QLabelEvent widgets
+        (static_cast<QVBoxLayout *>(this->frames[i]->layout()))
+            ->insertWidget(1, label_event);
+      }
     }
   }
 }
@@ -229,9 +237,6 @@ void MainCalendar::on_next_button_click() {
   emit calendarDateChanged(QDate(newDate.getYear(), newDate.getMonth(), 1));
 }
 
-
-
-
 void MainCalendar::remove_events_from_all_frames() {
   int i;
   for (i = 0; i < 42; i++) {
@@ -258,14 +263,6 @@ void MainCalendar::remove_events_from_frame(int i) {
     } else if (o->metaObject()->className() == button.metaObject()->className())
       delete o;
   }
-}
-
-QTime MainCalendar::timeToQTime(time_t datax) {
-  int m = (datax / 60) % 60;
-  int s = datax % 60;
-  int h = (datax / 3600) % 24;
-  QTime *dat = new QTime(h, m, s);
-  return *dat;
 }
 
 void MainCalendar::on_button_extended_click(int index) {
@@ -312,20 +309,22 @@ void MainCalendar::on_button_extended_click(int index) {
       "QHeaderView::section:vertical  { border-left: 1px solid #fffff8;   }");
 
   for (QLabelEvent *label_event :
-    this->frames[index]->findChildren<QLabelEvent *>()) {
+       this->frames[index]->findChildren<QLabelEvent *>()) {
     CalendarEvent *event = new CalendarEvent(*label_event->getEvent());
-    QTime start =  (event->getStartDateTime()).time() ;
-    QTime end =  (event->getEndDateTime()).time();
-    snprintf(stime, 14, "%02d:%02d - %02d:%02d", start.hour(), start.minute(), end.hour(), end.minute());
+    QTime start = (event->getStartDateTime()).time();
+    QTime end = (event->getEndDateTime()).time();
+    snprintf(stime, 14, "%02d:%02d - %02d:%02d", start.hour(), start.minute(),
+             end.hour(), end.minute());
     QLabel *time = new QLabel(stime);
     table->setCellWidget(z, 0, createLabelEvent(event));
-    table->setItem( z, 1, new QTableWidgetItem(QString(event->description())));
+    table->setItem(z, 1, new QTableWidgetItem(QString(event->description())));
     table->setItem(z, 2, new QTableWidgetItem(stime));
     QPushButtonExtended *edit = new QPushButtonExtended();
     edit->setText("EDIT");
     edit->setEvent(label_event->getEvent());
     table->setCellWidget(z, 3, edit);
-    connect(edit, &QPushButtonExtended::on_click_edit, this, &MainCalendar::on_button_edit_click);
+    connect(edit, &QPushButtonExtended::on_click_edit, this,
+            &MainCalendar::on_button_edit_click);
     table->setCellWidget(z, 4, new QPushButton("DELETE"));
     z++;
   }
@@ -345,7 +344,8 @@ QLabelEvent *MainCalendar::createLabelEvent(CalendarEvent *event) {
   QLabelEvent *label_event = new QLabelEvent;
   label_event->setEvent(newEvent);
   label_event->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-  connect(label_event, &QLabelEvent::clicked, this, &MainCalendar::on_event_click);
+  connect(label_event, &QLabelEvent::clicked, this,
+          &MainCalendar::on_event_click);
   return label_event;
 }
 

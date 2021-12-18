@@ -74,14 +74,14 @@ bool QLabelEvent::drawUI() {
       QString("QLabel#selected {border-top: 1px solid #FF0000; border-bottom: "
               "1px solid #FF0000; font-weight: bold; font-size: 13px;} QLabel "
               "{ font-size: 14px; border-radius: 2px; background-color : ") +
-      QString(this->event->getColor()) +
-      QString("; color: ") + textColor + QString("};"));
+      QString(this->event->getColor()) + QString("; color: ") + textColor +
+      QString("};"));
   this->setFixedHeight(26);
   this->setMargin(0);
   QString tooltip_text;
   if (this->event->name().length() > 20)
-    tooltip_text = QString("<b>Name: </b>") + this->event->name() +
-                   QString("\n");
+    tooltip_text =
+        QString("<b>Name: </b>") + this->event->name() + QString("\n");
   if (this->event->location() != "")
     tooltip_text = tooltip_text + QString("<b>PlaceGialo: </b>") +
                    this->event->location() + QString("\n");

@@ -193,16 +193,20 @@ void CalendarManager::addCalendarCalDAVUP(QString calendarName, QString url,
 void CalendarManager::addCalendarCalDAVOA(QString calendarName, QString url,
                                           QString filepath) {
   ClientCalDAV *pCalendar = new ClientCalDAV(filepath, url, calendarName, this);
+  connect(pCalendar, &ClientCalDAV::accessTokenError, this,
+          &CalendarManager::handleErrorOAuthCalendar);
   _calendarList.append(pCalendar);
   connect(pCalendar, SIGNAL(eventsUpdated()), this, SLOT(handleEventUpdate()));
 
+  QDEBUG << "[i] New calendar added, emit listOfCalendarsChanged and "
+            "listOfEventsChanged";
   emit listOfCalendarsChanged(this->getListOfCalendars());
   emit listOfEventsChanged(this->getListOfEvents());
 }
 
 ClientCalDAV *CalendarManager::getListItemAt(int index) {
   if ((index < 0) || (index >= _calendarList.count())) {
-    QDEBUG << "ERROR: index" << index << "is invalid in _calendarList("
+    QDEBUG << "[e] ERROR: index" << index << "is invalid in _calendarList("
            << _calendarList.count() << ")";
     return NULL;
   }
@@ -210,31 +214,21 @@ ClientCalDAV *CalendarManager::getListItemAt(int index) {
   return _calendarList[index];
 }
 
-bool CalendarManager::removeListItemAt(int index) {
-  if ((-1 == index) && (_calendarList.count() > 0)) {
-    _calendarList.removeLast();
-    emit listOfCalendarsChanged(this->getListOfCalendars());
-    return true;
-  }
-
-  if ((index >= 0) && (index < _calendarList.count())) {
-    _calendarList.removeAt(index);
-    emit listOfCalendarsChanged(this->getListOfCalendars());
-    return true;
-  }
-
-  QDEBUG << "ERROR: index" << index << "is invalid in _calendarList("
-         << _calendarList.count() << ")";
-  return false;
-}
-
-int CalendarManager::getCalendarCount(void) const {
-  return _calendarList.count();
-}
-
 void CalendarManager::handleEventUpdate(void) {
   emit eventsUpdated();
   if (this->getListOfEvents().isEmpty())
     return;
   emit listOfEventsChanged(this->getListOfEvents());
+}
+
+void CalendarManager::handleErrorOAuthCalendar(QString displayName) {
+  int i = 0;
+  foreach (ClientCalDAV *pListItem, _calendarList) {
+    if (pListItem->getDisplayName() == displayName) {
+      QDEBUG << "[e] (CalendarManager) Error remove calendar: " << displayName;
+      _calendarList.removeAt(i);
+      emit listOfCalendarsChanged(this->getListOfCalendars());
+    }
+    i++;
+  }
 }
