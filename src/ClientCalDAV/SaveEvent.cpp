@@ -9,21 +9,11 @@
 
 #include "ClientCalDAV.h"
 
-#define DEBUG_CALENDARCLIENT_CALDAV 1
-#if DEBUG_CALENDARCLIENT_CALDAV
-#define QDEBUG qDebug()
-#else
-#define QDEBUG                                                                 \
-  if (0)                                                                       \
-  qDebug()
-#endif
-
 void ClientCalDAV::saveEvent(QString uid, QString filename, QString summary,
                              QString location, QString description,
                              QString rrule, QDateTime startDateTime,
                              QDateTime endDateTime) {
-  QDEBUG << "[i] (" << _displayName << ") "
-         << "saving event" << summary;
+  QDEBUG << "[i] (" << _displayName << ") Saving event" << summary;
 
   if (NULL != _pUploadReply) {
     QDEBUG << "[i] (" << _displayName << ") "

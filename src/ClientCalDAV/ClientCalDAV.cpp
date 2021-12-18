@@ -78,6 +78,7 @@ ClientCalDAV::ClientCalDAV(const QString &filepath, const QString &hostURL,
       "https://www.googleapis.com/auth/calendar"); // FIXME IN CASO DI ERROR PER
                                                    // IL TODO FIX LO SCOPE
   connect(_au, &OAuth::accessTokenChanged, this, &ClientCalDAV::setAccessToken);
+  connect(_au, &OAuth::accessTokenTimeout, this, &ClientCalDAV::notifyError);
 
   _username = "";
   _password = "";
@@ -164,6 +165,10 @@ int ClientCalDAV::getMonth() const { return _month; }
 void ClientCalDAV::setAccessToken(QString accessToken) {
   _accessToken = accessToken;
   emit accessTokenChanged(_accessToken);
+}
+void ClientCalDAV::notifyError(void) {
+  QDEBUG << "[e] (" << _displayName << ") Error accessTokenError";
+  emit accessTokenError(_displayName);
 }
 
 void ClientCalDAV::setFilePath(QString filepath) {

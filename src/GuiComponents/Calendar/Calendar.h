@@ -10,8 +10,8 @@
 #ifndef CALENDAR_TODO_LIST_CPP_CALENDAR_H
 #define CALENDAR_TODO_LIST_CPP_CALENDAR_H
 
-#include "../../CalendarManager/CalendarManager.h"
 #include "../../CalendarEvent/CalendarEvent.h"
+#include "../../CalendarManager/CalendarManager.h"
 #include "../../Utils/ColorUtils.h"
 #include "../NewEvent/NewEventDialog.h"
 #include "./CustomDialog.h"
@@ -51,31 +51,33 @@ public:
 
 signals:
   void calendarDateChanged(QDate newDate);
+  void shownCalendarChanged(const QList<QObject *> &eventList);
 
 public slots:
   void on_back_button_click();
   void on_next_button_click();
   void on_event_click(QLabelEvent *label_event, Qt::MouseButton button);
   void setCalendarList(QList<QObject *> t);
-  void updateListOfEvents(QList<QObject *> t);
+  void updateListOfEvents(const QList<QObject *> &eventList);
 
 private:
-  CalendarManager *_calM;
-  QList<QCheckBox> *_checkList;
+  QList<QString> *_listCalendar;
+  QList<QCheckBox *> *_checkList;
   WindowStyle _colorStyle;
   void on_button_edit_click(QPushButtonExtended *d);
-  QTime timeToQTime(time_t datax);
+  void filterCalendar();
   void on_button_extended_click(int index);
   void display_days(Date date);
   void remove_events_from_all_frames();
   void remove_events_from_frame(int i);
-  QLabelEvent *selected_event;
-  //QLabelEvent *createLabelEvent(Event *event);
+  // QLabelEvent *createLabelEvent(Event *event);
   QLabelEvent *createLabelEvent(CalendarEvent *event);
   QFrameExtended *createQFrameExtended(Date *date);
   QFrameExtended *frames[42]; // I have a 7x7 grid, but without consider the
                               // first row I've a total of 6x7 cells
   QHBoxLayout *_calList;
+  QHBoxLayout *_calListLayout;
+  QList<QObject *> _eventList;
   QVBoxLayout *layout;
   QCalendarWidget *calendar;
   QLabel *label_date; // la label centrale

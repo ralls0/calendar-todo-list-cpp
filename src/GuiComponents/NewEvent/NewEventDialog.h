@@ -10,8 +10,8 @@
 #ifndef CALENDAR_TODO_LIST_CPP_NEWEVENTDIALOG_H
 #define CALENDAR_TODO_LIST_CPP_NEWEVENTDIALOG_H
 
-#include "../../Utils/ColorUtils.h"
 #include "../../CalendarEvent/CalendarEvent.h"
+#include "../../Utils/ColorUtils.h"
 #include <QComboBox>
 #include <QDateTimeEdit>
 #include <QDebug>
@@ -46,9 +46,11 @@ signals:
   void newAction(); // FIXME
 
 private:
-  void createBaseInfoLayout(QList<QString> cals, CalendarEvent *event = nullptr);
+  void createBaseInfoLayout(QList<QString> cals,
+                            CalendarEvent *event = nullptr);
   void createEventLayout(QList<QString> cals, CalendarEvent *event = nullptr);
-  void createActivityLayout(QList<QString> cals, CalendarEvent *event = nullptr);
+  void createActivityLayout(const QList<QString> &cals,
+                            CalendarEvent *event = nullptr);
   void createButtonGroupBox(CalendarEvent *event = nullptr);
 
   QGridLayout *_baseInfoLayout;

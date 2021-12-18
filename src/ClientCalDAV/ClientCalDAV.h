@@ -242,6 +242,7 @@ protected:
 
 signals:
 
+  void accessTokenError(QString displayName);
   void colorChanged(QString color);
   // emesso quando il calendario è entrato in un nuovo stato di sincronizzazione
   void syncStateChanged(E_CalendarState syncState);
@@ -312,6 +313,8 @@ public slots:
 
   void setAccessToken(QString accessToken);
   QString getAccessToken(void) const;
+
+  void notifyError(void);
 
   void setFilePath(QString filepath);
   QString getFilePath(void) const;

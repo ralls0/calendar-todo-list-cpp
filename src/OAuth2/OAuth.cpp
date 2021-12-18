@@ -18,49 +18,16 @@
   qDebug()
 #endif
 
-OAuth::OAuth() { _google = new QOAuth2AuthorizationCodeFlow; }
-
-OAuth::OAuth(const QString &authUri, const QString &clientId,
-             const QUrl &tokenUri, const QString &clientSecret,
-             const quint16 _port, const QString &scope) {
-  _google = new (std::nothrow) QOAuth2AuthorizationCodeFlow();
-  _google->setScope(_scope);
-  _google->setAuthorizationUrl(_authUri);
-  _google->setClientIdentifier(_clientId);
-  _google->setAccessTokenUrl(_tokenUri);
-  _google->setClientIdentifierSharedKey(_clientSecret);
-
-  _google->setModifyParametersFunction(
-      [](QAbstractOAuth::Stage stage,
-         QMultiMap<QString, QVariant> *parameters) {
-        // Percent-decode the "code" parameter so Google can match it
-        if (stage == QAbstractOAuth::Stage::RequestingAccessToken) {
-          QByteArray code = parameters->value("code").toByteArray();
-          (*parameters).replace("code", QUrl::fromPercentEncoding(code));
-        }
-      });
-
-  /*
-   * Create and assign a QOAuthHttpServerReplyHandler as the reply handler
-   * of the QOAuth2AuthorizationCodeFlow object
-   */
-  auto replyHandler = new QOAuthHttpServerReplyHandler(_port);
-  _google->setReplyHandler(replyHandler);
-
-  /*
-   * Connect the authorizeWithBrowser signal to the QDesktopServices::openUrl
-   * function to open an external browser to complete the authorization.
-   */
-  connect(_google, &QOAuth2AuthorizationCodeFlow::authorizeWithBrowser,
-          &QDesktopServices::openUrl);
-  connect(_google, &QOAuth2AuthorizationCodeFlow::granted, this,
-          &OAuth::onGoogleGranted);
-  connect(this, &OAuth::dataParsed, this, &OAuth::startAuth);
-  emit dataParsed();
+OAuth::OAuth() {
+  _google = new QOAuth2AuthorizationCodeFlow;
+  _requestTimeoutTimer.setSingleShot(true);
 }
 
 OAuth::OAuth(const QString &filepath, const QString &scope) : _scope(scope) {
   _google = new QOAuth2AuthorizationCodeFlow;
+
+  _requestTimeoutTimer.setSingleShot(true);
+
   _google->setScope(_scope);
 
   parseJson(filepath);
@@ -102,41 +69,6 @@ OAuth::OAuth(const QString &filepath, const QString &scope) : _scope(scope) {
 
 OAuth::~OAuth() { delete _google; }
 
-QString OAuth::getScope() const { return _scope; }
-
-void OAuth::setScope(const QString &scope) { _scope = scope; }
-
-QUrl OAuth::getAuthUri() const { return _authUri; }
-
-void OAuth::setAuthUri(const QUrl &authUri) { _authUri = authUri; }
-
-QString OAuth::getClientId() const { return _clientId; }
-
-void OAuth::setClientId(const QString &clientId) { _clientId = clientId; }
-
-QUrl OAuth::getTokenUri() const { return _tokenUri; }
-
-void OAuth::setTokenUri(const QUrl &tokenUri) { _tokenUri = tokenUri; }
-
-QString OAuth::getClientSecret() const { return _clientSecret; }
-
-void OAuth::setClientSecret(const QString &clientSecret) {
-  _clientSecret = clientSecret;
-}
-
-QUrl OAuth::getRedirectUri() const { return _redirectUri; }
-
-void OAuth::setRedirectUri(const QUrl &redirectUri) {
-  _redirectUri = redirectUri;
-  _port = static_cast<quint16>(_redirectUri.port());
-}
-
-int OAuth::getPort() const { return _port; }
-
-void OAuth::setPort(const int port) { _port = port; }
-
-QString OAuth::getAccessToken() const { return _accessToken; }
-
 void OAuth::parseJson(const QString &filepath) {
 
   QDEBUG << "[i] Opening file: " << filepath << "\n";
@@ -171,13 +103,23 @@ void OAuth::startAuth() {
         << "[e] Error: _google variable was null when startAuth was called\n";
     exit(-1);
   }
+  QDEBUG << "[i] Grant...\n";
+  connect(&_requestTimeoutTimer, &QTimer::timeout, this, &OAuth::onGoogleError);
+  _requestTimeoutTimer.setInterval(16000);
+  _requestTimeoutTimer.start();
   _google->grant();
 }
 
 void OAuth::onGoogleGranted() {
+  _requestTimeoutTimer.stop();
   _accessToken = _google->token();
   QDEBUG << "[i] Token: " << _accessToken << "\n";
   emit accessTokenChanged(_accessToken);
+}
+
+void OAuth::onGoogleError() {
+  QDEBUG << "[e] Error access token timeout";
+  emit accessTokenTimeout();
 }
 
 QString OAuth::toString() {

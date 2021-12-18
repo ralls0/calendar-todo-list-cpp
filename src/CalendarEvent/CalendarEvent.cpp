@@ -10,7 +10,7 @@
 #include "CalendarEvent.h"
 
 CalendarEvent::CalendarEvent(QObject *parent) : QObject(parent) {
-  _calendarName = "unnamed";
+  _calendarName = "";
   _name = "";
   _location = "";
   _description = "";
@@ -23,7 +23,7 @@ CalendarEvent::CalendarEvent(QObject *parent) : QObject(parent) {
   _isCalendar = true;
   _UID = "";
   _HREF = "";
-  _calendarPointer = NULL;
+  _calendarPointer = nullptr;
 }
 
 CalendarEvent::CalendarEvent(const CalendarEvent &other) : QObject() {
@@ -188,19 +188,14 @@ void CalendarEvent::setExdates(const QString &exdates) {
   }
 }
 
-CalendarEvent::CalendarEvent(const QString &color, const QString &calendarName, const QString &name,
-                             const QString &location, const QString &description, const QDateTime &startDateTime,
-                             const QDateTime &endDateTime, const QString &rRule, const QString &categories,
-                             const QString &uid, const QString &href, const QString &exdates) : _color(color),  _calendarName( calendarName),
-                                                                                                _name(name),
-                                                                                                _location(location),
-                                                                                                _description(
-                                                                                                        description),
-                                                                                                _startDateTime(
-                                                                                                        startDateTime),
-                                                                                                _endDateTime(
-                                                                                                        endDateTime),
-                                                                                                _rRULE(rRule),
-                                                                                                _categories(categories),
-                                                                                                _UID(uid), _HREF(href),
-                                                                                                _exdates(exdates) {}
+CalendarEvent::CalendarEvent(const QString &color, const QString &calendarName,
+                             const QString &name, const QString &location,
+                             const QString &description,
+                             const QDateTime &startDateTime,
+                             const QDateTime &endDateTime, const QString &rRule,
+                             const QString &categories, const QString &uid,
+                             const QString &href, const QString &exdates)
+    : _color(color), _calendarName(calendarName), _name(name),
+      _location(location), _description(description),
+      _startDateTime(startDateTime), _endDateTime(endDateTime), _rRULE(rRule),
+      _categories(categories), _UID(uid), _HREF(href), _exdates(exdates) {}

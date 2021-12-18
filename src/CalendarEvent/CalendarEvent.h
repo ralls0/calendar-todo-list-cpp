@@ -16,14 +16,13 @@
 #ifndef CALENDAR_TODO_LIST_CPP_CALENDAREVENT_H
 #define CALENDAR_TODO_LIST_CPP_CALENDAREVENT_H
 
+#include "../OAuth2/OAuth.h"
+#include "CalendarEvent.h"
 #include <QColor>
 #include <QDateTime>
 #include <QDebug>
 #include <QObject>
 #include <QString>
-#include "../../../../../../../../../../../../../Qt/6.2.1/msvc2019_64/include/QtCore/QString"
-#include "../OAuth2/OAuth.h"
-#include "CalendarEvent.h"
 
 class CalendarEvent : public QObject {
   Q_OBJECT
@@ -81,14 +80,15 @@ public:
       QString exdates READ getExdates WRITE setExdates NOTIFY exdatesChanged)
 
 public:
-    CalendarEvent(const QString &color, const QString &calendarName, const QString &name, const QString &location,
-                  const QString &description, const QDateTime &startDateTime, const QDateTime &endDateTime,
-                  const QString &rRule, const QString &categories, const QString &uid, const QString &href,
-                  const QString &exdates);
+  CalendarEvent(const QString &color, const QString &calendarName,
+                const QString &name, const QString &location,
+                const QString &description, const QDateTime &startDateTime,
+                const QDateTime &endDateTime, const QString &rRule,
+                const QString &categories, const QString &uid,
+                const QString &href, const QString &exdates);
 
-    explicit CalendarEvent(QObject *parent);
+  explicit CalendarEvent(QObject *parent);
   CalendarEvent(const CalendarEvent &other);
-
 
 public:
   CalendarEvent &operator=(const CalendarEvent &other);

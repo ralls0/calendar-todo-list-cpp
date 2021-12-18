@@ -18,8 +18,6 @@
   qDebug()
 #endif
 
-// LOUSO SIA PER CREARE CHE PER MODIFICARE
-
 NewEventDialog::NewEventDialog(CalendarEvent *event, QWidget *parent)
     : QDialog(parent) {
 
@@ -32,7 +30,7 @@ NewEventDialog::NewEventDialog(CalendarEvent *event, QWidget *parent)
   layout->setSizeConstraint(QLayout::SetFixedSize);
   setLayout(layout);
 
-  setWindowTitle((!event) ? tr("Modify Event") : tr("Modify Event"));
+  setWindowTitle(tr("Modify Event"));
   this->setStyleSheet(_colorStyle.getDialogStyle());
 }
 
@@ -57,7 +55,8 @@ NewEventDialog::~NewEventDialog() {
   delete _activityLayout;
 }
 
-void NewEventDialog::createBaseInfoLayout(QList<QString> cals, CalendarEvent *event) {
+void NewEventDialog::createBaseInfoLayout(QList<QString> cals,
+                                          CalendarEvent *event) {
   gb_baseInfo = new QGroupBox;
   gb_baseInfo->setFlat(true);
   gb_baseInfo->setStyleSheet("border:0;");
@@ -97,7 +96,8 @@ void NewEventDialog::createBaseInfoLayout(QList<QString> cals, CalendarEvent *ev
   gb_baseInfo->setLayout(_baseInfoLayout);
 }
 
-void NewEventDialog::createEventLayout(QList<QString> cals, CalendarEvent *event) {
+void NewEventDialog::createEventLayout(QList<QString> cals,
+                                       CalendarEvent *event) {
   e_event = new QWidget;
 
   QDateTime startD, endD;
@@ -164,7 +164,8 @@ void NewEventDialog::createEventLayout(QList<QString> cals, CalendarEvent *event
   e_event->show();
 }
 
-void NewEventDialog::createActivityLayout(QList<QString> cals, CalendarEvent *event) {
+void NewEventDialog::createActivityLayout(const QList<QString> &cals,
+                                          CalendarEvent *event) {
   e_activity = new QWidget;
 
   dte_startDateA = new QDateTimeEdit(QDate::currentDate());
@@ -185,7 +186,7 @@ void NewEventDialog::createActivityLayout(QList<QString> cals, CalendarEvent *ev
     cb_activity->addItems(cals);
   } else {
     if (event != nullptr) {
-      cb_activity->addItem(QString(event->getCategories()));
+      cb_activity->addItem(QString(event->calendarName()));
     } else {
       cb_activity->addItem(QString("Nessun Calendario"));
     }
@@ -225,7 +226,6 @@ void NewEventDialog::onSaveClick(void) {
            << "description:" << te_descriptionE->toPlainText() << "\n";
     QString uid = "";
     QString filename = "";
-    QString exdate = "";
     QString summary = le_title->text();
     QString location = le_location->text();
     QString description = te_descriptionE->toPlainText();

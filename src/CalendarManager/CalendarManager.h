@@ -124,17 +124,6 @@ public slots:
    */
   ClientCalDAV *getListItemAt(int index); // FIXME: quando viene usata
 
-  /**
-   * @brief Removes a CalendarClient instance from list of calendars
-   *
-   * @retval Returns false if the requested index does not exist
-   * @note If called without parameter, the last calendar in the list will be
-   * removed
-   */
-  bool removeListItemAt(int index = -1);
-
-  int getCalendarCount(void) const;
-
 protected slots:
 
   /**
@@ -142,6 +131,7 @@ protected slots:
    * update
    */
   void handleEventUpdate(void);
+  void handleErrorOAuthCalendar(QString displayName);
 };
 
 #endif // CALENDAR_TODO_LIST_CPP_CALENDARMANAGER_H
