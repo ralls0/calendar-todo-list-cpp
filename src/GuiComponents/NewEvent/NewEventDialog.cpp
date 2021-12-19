@@ -21,6 +21,9 @@
 NewEventDialog::NewEventDialog(CalendarEvent *event, QWidget *parent)
     : QDialog(parent) {
 
+  if (event)
+    _event = event;
+
   createBaseInfoLayout(QList<QString>(), event);
   createButtonGroupBox(event);
 
@@ -224,7 +227,13 @@ void NewEventDialog::onSaveClick(void) {
            << "rrule:" << cb_rrule->currentText()
            << "location:" << le_location->text()
            << "description:" << te_descriptionE->toPlainText() << "\n";
-    QString uid = "";
+    QString uid;
+    if (_event) {
+      uid = _event->getUID();
+    }
+    else {
+      uid = "";
+    }
     QString filename = "";
     QString summary = le_title->text();
     QString location = le_location->text();
