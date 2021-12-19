@@ -40,7 +40,7 @@ void ClientCalDAV::parseCalendarVEVENT(QString href) {
   event.setHREF(href);
   QString line;
   QDateTime utcTime;
-  while (!(line = _dataStream->readLine()).contains(QByteArray("END:VEVENT"))) {
+  while (!(line = _dataStream->readLine()).contains(QByteArray("END:VEVENT")) && !line.contains(QByteArray("BEGIN:VALARM"))) {
     const int deliminatorPosition = line.indexOf(QLatin1Char(':'));
     const QString key = line.mid(0, deliminatorPosition);
     QString value = (line.mid(deliminatorPosition + 1, -1)
@@ -75,7 +75,7 @@ void ClientCalDAV::parseCalendarVEVENT(QString href) {
         QDEBUG << "[i] (" << _displayName << ") "
                << "could not parse" << line;
 
-      event.setEndDateTime(utcTime.toLocalTime());
+      event.setEndDateTime(utcTime.toLocalTime().addSecs(1));
     } else if (key == QLatin1String("RRULE")) {
       event.setRRULE(value);
     } else if (key == QLatin1String("EXDATE")) {
@@ -141,7 +141,7 @@ void ClientCalDAV::parseTodoVEVENT(QString href) {
         QDEBUG << "[i] (" << _displayName << ") "
                << "could not parse" << line;
 
-      event.setEndDateTime(utcTime.toLocalTime());
+      event.setEndDateTime(utcTime.toLocalTime().addSecs(1));
     } else if (key == QLatin1String("SUMMARY")) {
       event.setName(value);
     } else if (key == QLatin1String("UID")) {
