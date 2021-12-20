@@ -40,7 +40,7 @@ bool CalendarEvent::operator<(const CalendarEvent &other) const {
 }
 
 void CalendarEvent::copyFrom(const CalendarEvent &other) {
-  setColor(other._color);
+  /*setColor(other._color);
   setCalendarName(other._calendarName);
   setName(other._name);
   setLocation(other._location);
@@ -53,7 +53,20 @@ void CalendarEvent::copyFrom(const CalendarEvent &other) {
   setUID(other._UID);
   setHREF(other._HREF);
   setCalendarPointer(other._calendarPointer);
-  setParent(other.parent());
+  setParent(other.parent());*/
+  this->_color=other._color;
+  this->_calendarName=other._calendarName;
+  this->_name= other._name;
+  this-> _location = other._location;
+  this->_description = other._description;
+  this->_startDateTime = other._startDateTime;
+  this->_endDateTime = other._endDateTime;
+  this->_categories = other._categories;
+  this->_rRULE= other._rRULE;
+  this->_isCanceled=other._isCanceled;
+  this->_UID=other._UID;
+  this->_HREF= other._HREF;
+  this->_calendarPointer=other._calendarPointer;
 }
 
 QString CalendarEvent::getColor(void) const { return _color; }
