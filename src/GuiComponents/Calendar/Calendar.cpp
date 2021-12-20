@@ -197,6 +197,7 @@ void MainCalendar::updateListOfEvents(const QList<QObject *> &eventList) {
          * SE IO LO COSTRUISCO COSI, FUNZIONA MA ALCUNE PROPERTY VANNO A NULL ED È PER QUESTO CHE POI GLI PASSO
          * UN HREF A NULL, ED è PER LO STESSO MOTIVO SECONDO ME CHE NON TI CREA UN EVENTO
          * LASCIO TITTI PER FARTELO VEDERE IN DEBUG
+         * mi ricordo di aver commentato la detele bastarda
          */
         QString titti = event->property("HREF").toString();
         // serve se ho tanti eventi sulla stessa cella
