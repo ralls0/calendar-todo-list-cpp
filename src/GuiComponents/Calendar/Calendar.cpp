@@ -183,14 +183,14 @@ void MainCalendar::updateListOfEvents(const QList<QObject *> &eventList) {
                               event->property("description").toString(),
                               event->property("startDateTime").toDateTime(),
                               event->property("endDateTime").toDateTime(),
-                              event->property("rRule").toString(),  // RRULE
+                              event->property("rrule").toString(),  // RRULE
                               event->property("color").toString(),  // CATEGORY
-                              event->property("UID").toString(),    // UID
-                              event->property("HREF").toString(),   // HREF
-                              event->property("exdates").toString() // EXDATE*/
-           //new CalendarEvent(event)
-           )
-           );
+                              event->property("uid").toString(),    // UID
+                              event->property("href").toString(),   // HREF
+                              event->property("exdates").toString() // EXDATE
+
+
+           ));
 
         /*COSE DA DIRE: SE IO CREO CON COSTRUTT DI COPIA FAI VEDERE CHE SUCCEDE (DEVO PASSARE DA QOBJECT->cALENDAREVENT, COME?
          *
@@ -200,6 +200,7 @@ void MainCalendar::updateListOfEvents(const QList<QObject *> &eventList) {
          * mi ricordo di aver commentato la detele bastarda
          */
         QString titti = event->property("HREF").toString();
+        QString titti2 = event->property("_HREF").toString();
         // serve se ho tanti eventi sulla stessa cella
         if (this->frames[i]->children().size() == 3) {
           QPushButtonExtended *button_show_all =
