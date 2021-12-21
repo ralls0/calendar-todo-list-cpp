@@ -174,7 +174,6 @@ void MainCalendar::updateListOfEvents(const QList<QObject *> &eventList) {
       // non c'è controllo annoframe==annoevento && meseframe==meseevento
       for (int i = start_offset + start.day() - 1;
            i < (start_offset + end.day()); i++) {
-
         QLabelEvent *label_event = createLabelEvent(
            new CalendarEvent(event->property("color").toString(),
                               event->property("calendarName").toString(),
