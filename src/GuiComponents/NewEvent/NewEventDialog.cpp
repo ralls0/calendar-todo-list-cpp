@@ -220,22 +220,24 @@ void NewEventDialog::createButtonGroupBox(CalendarEvent *event) {
 
 void NewEventDialog::onSaveClick(void) {
   if (rb_event->isChecked()) {
-    QDEBUG << "[i] Adding new event"
-           << " with title:" << le_title->text()
+    QString uid;
+    if (_event) {
+      QDEBUG << "[i] Modify event with UID: " << _event->getUID();
+      uid = _event->getUID();
+    } else {
+      QDEBUG << "[i] Adding new event";
+      uid = "";
+    }
+    QDEBUG << "in: " << cb_calendar->currentText()
+           << "with title:" << le_title->text()
            << "start date:" << dte_startDateE->dateTime().toString()
            << "end date:" << dte_endDateE->dateTime().toString()
            << "rrule:" << cb_rrule->currentText()
            << "location:" << le_location->text()
            << "description:" << te_descriptionE->toPlainText() << "\n";
-    QString uid;
-    if (_event) {
-      uid = _event->getUID();
-    }
-    else {
-      uid = "";
-    }
+
     QString filename = "";
-    QString summary = le_title->text();
+    QString title = le_title->text();
     QString location = le_location->text();
     QString description = te_descriptionE->toPlainText();
     QString rrule = "";
@@ -253,7 +255,7 @@ void NewEventDialog::onSaveClick(void) {
     QDateTime startDateTime = dte_startDateE->dateTime();
     QDateTime endDateTime = dte_endDateE->dateTime();
     QString calendar = cb_calendar->currentText();
-    emit newEvent(uid, filename, summary, location, description, rrule,
+    emit newEvent(uid, filename, title, location, description, rrule,
                   startDateTime, endDateTime, calendar);
   } else {
     // FIXME

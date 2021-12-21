@@ -104,7 +104,7 @@ void MainCalendar::setCalendarList(QList<QObject *> t) {
     for (int i = 0; i < _checkList->count(); i++) {
       _checkList->at(i)->hide();
     }
-    //delete _calList; //FIXME
+    // delete _calList; //FIXME
   }
   _calList = new QHBoxLayout;
   _checkList->clear();
@@ -175,7 +175,7 @@ void MainCalendar::updateListOfEvents(const QList<QObject *> &eventList) {
       for (int i = start_offset + start.day() - 1;
            i < (start_offset + end.day()); i++) {
         QLabelEvent *label_event = createLabelEvent(
-           new CalendarEvent(event->property("color").toString(),
+            new CalendarEvent(event->property("color").toString(),
                               event->property("calendarName").toString(),
                               event->property("name").toString(),
                               event->property("location").toString(),
@@ -188,15 +188,15 @@ void MainCalendar::updateListOfEvents(const QList<QObject *> &eventList) {
                               event->property("href").toString(),   // HREF
                               event->property("exdates").toString() // EXDATE
 
+                              ));
 
-           ));
-
-        /*COSE DA DIRE: SE IO CREO CON COSTRUTT DI COPIA FAI VEDERE CHE SUCCEDE (DEVO PASSARE DA QOBJECT->cALENDAREVENT, COME?
+        /*COSE DA DIRE: SE IO CREO CON COSTRUTT DI COPIA FAI VEDERE CHE SUCCEDE
+         * (DEVO PASSARE DA QOBJECT->cALENDAREVENT, COME?
          *
-         * SE IO LO COSTRUISCO COSI, FUNZIONA MA ALCUNE PROPERTY VANNO A NULL ED È PER QUESTO CHE POI GLI PASSO
-         * UN HREF A NULL, ED è PER LO STESSO MOTIVO SECONDO ME CHE NON TI CREA UN EVENTO
-         * LASCIO TITTI PER FARTELO VEDERE IN DEBUG
-         * mi ricordo di aver commentato la detele bastarda
+         * SE IO LO COSTRUISCO COSI, FUNZIONA MA ALCUNE PROPERTY VANNO A NULL ED
+         * È PER QUESTO CHE POI GLI PASSO UN HREF A NULL, ED è PER LO STESSO
+         * MOTIVO SECONDO ME CHE NON TI CREA UN EVENTO LASCIO TITTI PER FARTELO
+         * VEDERE IN DEBUG mi ricordo di aver commentato la detele bastarda
          */
         QString titti = event->property("HREF").toString();
         QString titti2 = event->property("_HREF").toString();
@@ -338,7 +338,7 @@ void MainCalendar::on_button_extended_click(int index) {
     QPushButtonExtended *deleteButton = new QPushButtonExtended("DELETE");
     deleteButton->setText("DELETE");
     connect(deleteButton, &QPushButtonExtended::on_click_delete, this,
-              &MainCalendar::on_button_delete_click);
+            &MainCalendar::on_button_delete_click);
     deleteButton->setEvent(label_event->getEvent());
     table->setCellWidget(z, 4, deleteButton);
     z++;
@@ -364,36 +364,35 @@ QLabelEvent *MainCalendar::createLabelEvent(CalendarEvent *event) {
   return label_event;
 }
 
-void MainCalendar::on_button_delete_click(QPushButtonExtended *d){
-    CalendarEvent *e = nullptr;
-    if (d != nullptr)
-        e = d->getEvent();
-    QMessageBox::StandardButton reply;
-    reply = QMessageBox::question(this, "Delete Event", "Are you sure to delete event?",
-                                  QMessageBox::Yes|QMessageBox::No);
-    if (reply == QMessageBox::Yes) {
-        //QApplication::quit();
-        emit delete_event(e);
-
-    }
+void MainCalendar::on_button_delete_click(QPushButtonExtended *d) {
+  CalendarEvent *e = nullptr;
+  if (d != nullptr)
+    e = d->getEvent();
+  QMessageBox::StandardButton reply;
+  reply = QMessageBox::question(this, "Delete Event",
+                                "Are you sure to delete event?",
+                                QMessageBox::Yes | QMessageBox::No);
+  if (reply == QMessageBox::Yes) {
+    // QApplication::quit();
+    emit delete_event(e);
+  }
 }
 
 void MainCalendar::on_button_edit_click(QPushButtonExtended *d) {
-    CalendarEvent *e = nullptr;
-    if (d != nullptr)
-        e = d->getEvent();
-    NewEventDialog *eventDialog = new NewEventDialog(e);
-    eventDialog->show();
+  CalendarEvent *e = nullptr;
+  if (d != nullptr) {
+    e = d->getEvent();
+    emit modifyEvent(e);
+  }
 }
 
 void MainCalendar::on_event_click(QLabelEvent *label_event,
                                   Qt::MouseButton button) {
   CalendarEvent *e = nullptr;
-  if (label_event != nullptr)
+  if (label_event != nullptr) {
     e = label_event->getEvent();
-  NewEventDialog *eventDialog = new NewEventDialog(e);
-  // eventDialog->setEvent(label_event->getEvent());
-  eventDialog->show();
+    emit modifyEvent(e);
+  }
 }
 
 void MainCalendar::display_days(Date date) {

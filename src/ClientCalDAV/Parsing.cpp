@@ -40,7 +40,8 @@ void ClientCalDAV::parseCalendarVEVENT(QString href) {
   event.setHREF(href);
   QString line;
   QDateTime utcTime;
-  while (!(line = _dataStream->readLine()).contains(QByteArray("END:VEVENT")) && !line.contains(QByteArray("BEGIN:VALARM"))) {
+  while (!(line = _dataStream->readLine()).contains(QByteArray("END:VEVENT")) &&
+         !line.contains(QByteArray("BEGIN:VALARM"))) {
     const int deliminatorPosition = line.indexOf(QLatin1Char(':'));
     const QString key = line.mid(0, deliminatorPosition);
     QString value = (line.mid(deliminatorPosition + 1, -1)
