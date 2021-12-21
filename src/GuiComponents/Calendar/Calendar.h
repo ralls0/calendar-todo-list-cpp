@@ -31,12 +31,12 @@
 #include <QLabel>
 #include <QLocale>
 #include <QMainWindow>
+#include <QMessageBox>
 #include <QPushButton>
 #include <QTableWidget>
 #include <QTextCharFormat>
 #include <QWidget>
 #include <iostream>
-#include <QMessageBox>
 /* Gets the current month displayed using an hack. Infact, the cell in the
  * middle will have always a value setted. This should be used when you don't
  * care about the day */

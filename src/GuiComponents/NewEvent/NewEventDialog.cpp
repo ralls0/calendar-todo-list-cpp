@@ -222,10 +222,9 @@ void NewEventDialog::onSaveClick(void) {
   if (rb_event->isChecked()) {
     QString uid;
     if (_event) {
-      QDEBUG << "[i] Modify event with UID: " << _event->getUID() ;
+      QDEBUG << "[i] Modify event with UID: " << _event->getUID();
       uid = _event->getUID();
-    }
-    else {
+    } else {
       QDEBUG << "[i] Adding new event";
       uid = "";
     }
