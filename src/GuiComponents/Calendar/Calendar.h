@@ -53,6 +53,8 @@ signals:
   void calendarDateChanged(QDate newDate);
   void shownCalendarChanged(const QList<QObject *> &eventList);
   void delete_event(CalendarEvent *t);
+  void modifyEvent(CalendarEvent *event);
+
 public slots:
   void on_back_button_click();
   void on_next_button_click();

@@ -31,7 +31,8 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent) {
           &MainCalendar::updateListOfEvents);
   connect(_calendar, &MainCalendar::calendarDateChanged, _cals,
           &CalendarManager::setDate);
-  connect(_calendar,&MainCalendar::delete_event,this, MainWindow::deleteEvent);
+  connect(_calendar,&MainCalendar::delete_event,this, &MainWindow::deleteEvent);
+  connect(_calendar, &MainCalendar::modifyEvent, this, &MainWindow::createNewEventDialogM);
 
   createPreviewGroupBox();
 
@@ -67,6 +68,7 @@ void MainWindow::createNewEvent(QString uid, QString filename, QString summary,
                                 QString location, QString description,
                                 QString rrule, QDateTime startDateTime,
                                 QDateTime endDateTime, QString calendar) {
+  QDEBUG << "[i] Calendar" << calendar << " invoke saveEvent";
   int i = 0;
   foreach (QObject *pListItem, _cals->getListOfCalendars()) {
     if (calendar == pListItem->property("displayName").toString()) {
@@ -102,14 +104,24 @@ void MainWindow::createNewCalendarDialog() {
   _newCalendarDialog->show();
 }
 void MainWindow::createNewEventDialog() {
-  QList<QString> calsName;
-  foreach (QObject *c, _cals->getListOfCalendars()) {
-    calsName.append(c->property("displayName").toString());
-  }
-  _newEventDialog = new NewEventDialog(calsName, this);
-  connect(_newEventDialog, &NewEventDialog::newEvent, this,
-          &MainWindow::createNewEvent);
-  _newEventDialog->show();
+    QList<QString> calsName;
+    foreach (QObject *c, _cals->getListOfCalendars()) {
+      calsName.append(c->property("displayName").toString());
+    }
+    _newEventDialog = new NewEventDialog(calsName, this);
+    connect(_newEventDialog, &NewEventDialog::newEvent, this,
+            &MainWindow::createNewEvent);
+    _newEventDialog->show();
+
+}
+
+void MainWindow::createNewEventDialogM(CalendarEvent *event) {
+
+    _newEventDialog = new NewEventDialog(event);
+    connect(_newEventDialog, &NewEventDialog::newEvent, this,
+            &MainWindow::createNewEvent);
+    _newEventDialog->show();
+
 }
 
 void MainWindow::createPreviewGroupBox() {

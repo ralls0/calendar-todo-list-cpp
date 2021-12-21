@@ -47,6 +47,7 @@ public slots:
                       QString calendar);
   void deleteEvent(CalendarEvent *t);
   void createNewCalendarDialog();
+  void createNewEventDialogM(CalendarEvent *event = nullptr);
   void createNewEventDialog();
 
 private:

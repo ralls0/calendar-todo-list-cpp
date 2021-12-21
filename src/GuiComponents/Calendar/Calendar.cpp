@@ -380,20 +380,19 @@ void MainCalendar::on_button_delete_click(QPushButtonExtended *d){
 
 void MainCalendar::on_button_edit_click(QPushButtonExtended *d) {
     CalendarEvent *e = nullptr;
-    if (d != nullptr)
-        e = d->getEvent();
-    NewEventDialog *eventDialog = new NewEventDialog(e);
-    eventDialog->show();
+    if (d != nullptr) {
+      e = d->getEvent();
+      emit modifyEvent(e);
+    }
 }
 
 void MainCalendar::on_event_click(QLabelEvent *label_event,
                                   Qt::MouseButton button) {
   CalendarEvent *e = nullptr;
-  if (label_event != nullptr)
+  if (label_event != nullptr) {
     e = label_event->getEvent();
-  NewEventDialog *eventDialog = new NewEventDialog(e);
-  // eventDialog->setEvent(label_event->getEvent());
-  eventDialog->show();
+    emit modifyEvent(e);
+  }
 }
 
 void MainCalendar::display_days(Date date) {
