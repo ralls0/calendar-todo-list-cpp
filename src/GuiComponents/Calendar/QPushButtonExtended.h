@@ -25,12 +25,13 @@ public:
   void setIndex(int index);
   void button_clicked();
   void button_edit_clicked();
+  void button_clicked_delete();
   void setEvent(CalendarEvent *event) { ev = event; };
   CalendarEvent *getEvent() { return ev; };
 
 signals:
   void on_click(int index);
-  ;
+  void on_click_delete(QPushButtonExtended *d);
   void on_click_edit(QPushButtonExtended *d);
 public slots:
 };

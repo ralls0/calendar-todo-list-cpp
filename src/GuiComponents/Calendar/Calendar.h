@@ -36,7 +36,7 @@
 #include <QTextCharFormat>
 #include <QWidget>
 #include <iostream>
-
+#include <QMessageBox>
 /* Gets the current month displayed using an hack. Infact, the cell in the
  * middle will have always a value setted. This should be used when you don't
  * care about the day */
@@ -52,7 +52,7 @@ public:
 signals:
   void calendarDateChanged(QDate newDate);
   void shownCalendarChanged(const QList<QObject *> &eventList);
-
+  void delete_event(CalendarEvent *t);
 public slots:
   void on_back_button_click();
   void on_next_button_click();
@@ -65,6 +65,7 @@ private:
   QList<QCheckBox *> *_checkList;
   WindowStyle _colorStyle;
   void on_button_edit_click(QPushButtonExtended *d);
+  void on_button_delete_click(QPushButtonExtended *d);
   void filterCalendar();
   void on_button_extended_click(int index);
   void display_days(Date date);

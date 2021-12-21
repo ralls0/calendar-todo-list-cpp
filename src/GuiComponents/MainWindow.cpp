@@ -31,6 +31,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent) {
           &MainCalendar::updateListOfEvents);
   connect(_calendar, &MainCalendar::calendarDateChanged, _cals,
           &CalendarManager::setDate);
+  connect(_calendar,&MainCalendar::delete_event,this, MainWindow::deleteEvent);
 
   createPreviewGroupBox();
 
@@ -78,6 +79,20 @@ void MainWindow::createNewEvent(QString uid, QString filename, QString summary,
     }
     i++;
   }
+}
+
+void  MainWindow::deleteEvent(CalendarEvent *ev){
+    int i = 0;
+    foreach (QObject *pListItem, _cals->getListOfCalendars()) {
+        if (ev->calendarName() == pListItem->property("displayName").toString()) {
+            ClientCalDAV *cal = _cals->getListItemAt(i);
+            cal->deleteEvent(ev->getHREF());
+            emit _cals->eventsUpdated();
+            emit _cals->listOfEventsChanged(_cals->getListOfEvents());
+            break;
+        }
+        i++;
+    }
 }
 
 void MainWindow::createNewCalendarDialog() {

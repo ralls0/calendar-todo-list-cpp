@@ -41,7 +41,8 @@ add_executable(calendar_todo_list_cpp
         src/GuiComponents/NewCalendar/NewCalendarDialog.cpp
         src/GuiComponents/NewEvent/NewEventDialog.cpp
         src/GuiComponents/NewEvent/NewEventDialog.h
-        src/ClientCalDAV/RetrieveCTag.cpp src/ClientCalDAV/Parsing.cpp
+        src/ClientCalDAV/RetrieveCTag.cpp
+        src/ClientCalDAV/Parsing.cpp
         src/ClientCalDAV/RetrieveChangedActivity.cpp
         src/ClientCalDAV/SaveTask.cpp
         src/GuiComponents/Calendar/Calendar.cpp
@@ -63,7 +64,10 @@ add_executable(calendar_todo_list_cpp
         src/GuiComponents/Calendar/DateUtil.cpp
         src/GuiComponents/Calendar/DateUtil.h
         src/GuiComponents/MainWindow.cpp
-        src/GuiComponents/MainWindow.h src/ClientCalDAV/GetEvents.cpp src/ClientCalDAV/Handles.cpp src/ClientCalDAV/MachineState.cpp)
+        src/GuiComponents/MainWindow.h
+        src/ClientCalDAV/GetEvents.cpp
+        src/ClientCalDAV/Handles.cpp
+        src/ClientCalDAV/MachineState.cpp)
 target_link_libraries(calendar_todo_list_cpp
         Qt::Core
         Qt::Core5Compat
