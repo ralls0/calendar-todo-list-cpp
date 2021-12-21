@@ -52,6 +52,10 @@ MainCalendar::MainCalendar(QWidget *parent) : QWidget(parent) {
   wbutton->setLayout(hlbutton);
   hl->addWidget(label_date, 1);
   hl->addWidget(wbutton, 1, Qt::AlignRight);
+
+
+
+
   this->layout =
       new QVBoxLayout; // layout verticale dove sopra bottoni sotto calendario
   this->layout->addLayout(hl);

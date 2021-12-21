@@ -29,7 +29,7 @@
 #include "./Calendar/Calendar.h"
 #include "./NewCalendar/NewCalendarDialog.h"
 #include "./NewEvent/NewEventDialog.h"
-
+#include "../GuiComponents/ToDoList/ToDoList.h"
 class MainWindow : public QWidget {
   Q_OBJECT
 
@@ -59,7 +59,7 @@ private:
   NewCalendarDialog *_newCalendarDialog;
   NewEventDialog *_newEventDialog;
   MainCalendar *_calendar;
-
+  ToDoList *_todo;
   CalendarManager *_cals;
 };
 
