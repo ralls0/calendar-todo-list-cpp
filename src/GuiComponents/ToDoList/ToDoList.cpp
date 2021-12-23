@@ -12,6 +12,10 @@ ToDoList::ToDoList(QWidget *parent) : QWidget(parent) {
     todoTitle->setStyleSheet(STYLE_TODO_TITLE);
     todoTitle->setMaximumHeight(40);
     todoTitle->setFixedWidth(400);
+    QSizePolicy sp = todoTitle->sizePolicy();
+    sp.setVerticalPolicy(QSizePolicy::Maximum);
+    todoTitle->setSizePolicy(sp);
+    xTitolo->setAlignment(Qt::AlignTop);
     xTitolo->addWidget(todoTitle);
     this->layout->addLayout(xTitolo);
 
@@ -19,32 +23,37 @@ ToDoList::ToDoList(QWidget *parent) : QWidget(parent) {
     QHBoxLayout *nascondi = new QHBoxLayout;
     QCheckBox *switched = new QCheckBox("Nascondi Completate");
     switched->setStyleSheet(STYLE_TODO_COMPLETE);
+
     nascondi->addWidget(switched);
+
     this->layout->addLayout(nascondi);
 
-    QHBoxLayout *hl = new QHBoxLayout;
-    QCheckBox *do1 = new QCheckBox;
-    do1->setText("To-Do List1");
-    QLabel *datatodo = new QLabel("21/12/1998");
-    QPushButton *buttonEdit = new QPushButton("EDIT");
-    QPixmap pixmap(EDIT_PATH);
-    QIcon EditIcon(pixmap);
-    buttonEdit->setIcon(EditIcon);
-    buttonEdit->setIconSize(pixmap.rect().size());
-    QPushButton *buttonDelete = new QPushButton("DELETE");
-    QPixmap pixmapD(DELETE_PATH);
-    pixmapD = pixmapD.scaled(QSize(18, 18), Qt::KeepAspectRatio);
-    QIcon DeleteIcon(pixmapD);
-    buttonDelete->setIcon(DeleteIcon);
-    buttonDelete->setMask(pixmapD.mask());
-    //buttonDelete->setIcon(DeleteIcon);
-    buttonDelete->setIconSize(pixmapD.rect().size());
+
+    QVBoxLayout *lista = new QVBoxLayout;
 
 
-    hl->addWidget(do1);
-    hl->addWidget(datatodo);
-    hl->addWidget(buttonEdit);
-    hl->addWidget(buttonDelete);
-    this->layout->addLayout(hl);
+    for(int i=0;i<4;i++){
+        QCheckBox *do1 = new QCheckBox;
+        do1->setText("To-Do List1");
+        QLabel *datatodo = new QLabel("21/12/1998");
+        QPushButton *buttonEdit = new QPushButton("EDIT");
+        QPixmap pixmapE(EDIT_PATH);
+        QIcon EditIcon(pixmapE);
+        buttonEdit->setIconSize(pixmapE.rect().size());
+        QPushButton *buttonDelete = new QPushButton("DELETE");
+        QPixmap pixmapD(DELETE_PATH);
+        QIcon DeleteIcon(pixmapD);
+        buttonDelete->setIcon(DeleteIcon);
+        buttonEdit->setIconSize(pixmapD.rect().size());
+
+        QHBoxLayout *hl = new QHBoxLayout;
+        hl->addWidget(do1);
+        hl->addWidget(datatodo);
+        hl->addWidget(buttonEdit);
+        hl->addWidget(buttonDelete);
+        lista->addLayout(hl);
+    }
+
+    this->layout->addLayout(lista);
     setLayout(this->layout);
 }

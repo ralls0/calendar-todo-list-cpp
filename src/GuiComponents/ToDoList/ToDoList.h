@@ -11,11 +11,13 @@
 #include <QLabel>
 #include <QCheckBox>
 #include <QPushButton>
+#include <QListWidget>
+#include <QGroupBox>
 
 
-#define EDIT_PATH "../../../img/edit.png"
-#define DELETE_PATH "../../../img/delete.png"
-#define STYLE_TODO_TITLE "font-size: 24px; font-weight:bold;"
+#define EDIT_PATH "../img/edit.png"
+#define DELETE_PATH "../img/delete.png"
+#define STYLE_TODO_TITLE "font-size: 24px; font-weight:bold;margin-top:13px;background-color:yellow;"
 #define STYLE_TODO_COMPLETE "font-size: 12px; font-weight:bold;"
 
 class ToDoList : public QWidget {
