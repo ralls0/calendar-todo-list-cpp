@@ -22,7 +22,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent) {
   _newCalendarDialog = nullptr;
   _newEventDialog = nullptr;
   _calendar = new MainCalendar(this);
-
+  _todo = new ToDoList(this);
   _cals =
       new CalendarManager(QString(QDir::currentPath() + "/initCals.ini"), this);
   connect(_cals, &CalendarManager::listOfCalendarsChanged, _calendar,
@@ -137,7 +137,7 @@ void MainWindow::createPreviewGroupBox() {
   connect(btn_addEvent, &QPushButton::clicked, this,
           &MainWindow::createNewEventDialog);
 
-  QWidget *_todo = new QWidget(this);
+  //QWidget *_todo = new QWidget(this);
   _todo->setMinimumSize(450, 0);
 
   _previewLayout = new QGridLayout(this);
