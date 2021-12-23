@@ -35,6 +35,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent) {
           &MainWindow::deleteEvent);
   connect(_calendar, &MainCalendar::modifyEvent, this,
           &MainWindow::createNewEventDialogM);
+  connect(_cals,&CalendarManager::setToDoList,this,&MainWindow::createToDo);
 
   createPreviewGroupBox();
 
@@ -124,6 +125,11 @@ void MainWindow::createNewEventDialogM(CalendarEvent *event) {
   connect(_newEventDialog, &NewEventDialog::deleteEvent, this,
             &MainWindow::deleteEvent);
   _newEventDialog->show();
+}
+
+void MainWindow::createToDo(QString acc){
+    _taskm = new TasksManager(acc);
+    _taskm->getMyTaskLists(_taskm->getAccT());
 }
 
 void MainWindow::createPreviewGroupBox() {

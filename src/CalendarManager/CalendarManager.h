@@ -104,7 +104,7 @@ signals:
   void
   listOfEventsChanged(QList<QObject *> t); // emitted during handleEventUpdate()
   void eventsUpdated(void);                // emitted during handleEventUpdate()
-
+  void setToDoList(QString acc);
 public slots:
 
   QDate getDate() const;
@@ -123,7 +123,7 @@ public slots:
    * calendars
    */
   ClientCalDAV *getListItemAt(int index); // FIXME: quando viene usata
-
+  void setToDo(QString accT);
 protected slots:
 
   /**

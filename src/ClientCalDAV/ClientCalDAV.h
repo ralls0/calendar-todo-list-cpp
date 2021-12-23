@@ -357,7 +357,7 @@ public slots:
    * @brief Elimina uno specifico evento dal CalDAV Server.
    */
   void deleteEvent(QString href);
-
+  
 protected slots:
   void handleHTTPError(void);
 

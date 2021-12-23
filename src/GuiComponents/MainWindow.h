@@ -23,7 +23,7 @@
 #include <QTextCharFormat>
 #include <QWidget>
 #include <iostream>
-
+#include "../Task/TasksManager.h"
 #include "../CalendarManager/CalendarManager.h"
 #include "../ClientCalDAV/ClientCalDAV.h"
 #include "./Calendar/Calendar.h"
@@ -49,7 +49,7 @@ public slots:
   void createNewCalendarDialog();
   void createNewEventDialogM(CalendarEvent *event = nullptr);
   void createNewEventDialog();
-
+  void createToDo(QString acc);
 private:
   void createPreviewGroupBox();
   QString checkDisplayName(QList<QObject *> cals, QString displayName);
@@ -61,6 +61,7 @@ private:
   MainCalendar *_calendar;
   ToDoList *_todo;
   CalendarManager *_cals;
+  TasksManager *_taskm;
 };
 
 #endif // CALENDAR_TODO_LIST_CPP_MAINWINDOW_H
