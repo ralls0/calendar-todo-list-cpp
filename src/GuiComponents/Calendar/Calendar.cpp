@@ -23,10 +23,10 @@
 
 MainCalendar::MainCalendar(QWidget *parent) : QWidget(parent) {
   Date current_date = DateUtil::get_current_date();
-  this->label_date = new QLabel;
-  this->label_date->setMaximumHeight(40);
-  this->label_date->setFixedWidth(400);
-  this->label_date->setStyleSheet(_colorStyle.getLabelDateStyle());
+  this->labelDate = new QLabel;
+  this->labelDate->setMaximumHeight(40);
+  this->labelDate->setFixedWidth(400);
+  this->labelDate->setStyleSheet(_colorStyle.getLabelDateStyle());
   QPushButton *back = new QPushButton("<");
   QPushButton *next = new QPushButton(">");
   back->setMaximumWidth(60);
@@ -50,23 +50,18 @@ MainCalendar::MainCalendar(QWidget *parent) : QWidget(parent) {
   hlbutton->addWidget(back, 1, Qt::AlignRight);
   hlbutton->addWidget(next, 1, Qt::AlignLeft);
   wbutton->setLayout(hlbutton);
-  hl->addWidget(label_date, 1);
+  hl->addWidget(labelDate, 1);
   hl->addWidget(wbutton, 1, Qt::AlignRight);
-
-
-
 
   this->layout =
       new QVBoxLayout; // layout verticale dove sopra bottoni sotto calendario
   this->layout->addLayout(hl);
-  _listCalendar = new QList<QString>;
-  _calListLayout = new QHBoxLayout;
-  QLabel *ql = new QLabel(" I tuoi calendari:");
+  _calendarList = new QList<QString>;
+  _calendarListLayout = new QHBoxLayout;
+  QLabel *ql = new QLabel("I tuoi calendari:");
   ql->setStyleSheet("font-size: 18px;");
-  _calListLayout->addWidget(ql);
-  _checkList = new QList<QCheckBox *>;
-  this->layout->addLayout(_calListLayout);
-  // Create 6x7 grid
+  _calendarListLayout->addWidget(ql);
+  this->layout->addLayout(_calendarListLayout);
   QGridLayout *grid_layout = new QGridLayout;
   int i = 0, j = 0;
   // First row contains the names of the days of the week
@@ -105,42 +100,46 @@ MainCalendar::MainCalendar(QWidget *parent) : QWidget(parent) {
 }
 
 void MainCalendar::setCalendarList(QList<QObject *> t) {
-  if (_calList) {
-    for (int i = 0; i < _checkList->count(); i++) {
-      _checkList->at(i)->hide();
-    }
-    // delete _calList; //FIXME
+  QDEBUG << "[i] Starting setCalendarList";
+  QLayoutItem *child;
+  while ((child = _calendarListLayout->takeAt(1)) != nullptr)  {
+    delete child->widget();
+    delete child;
   }
-  _calList = new QHBoxLayout;
-  _checkList->clear();
-  _listCalendar->clear();
 
-  int i = 0;
+  if (!_calendarList->isEmpty()) _calendarList->clear();
+
   for (QObject *x : t) {
-    QDEBUG << "[i] Add item: " << x->property("displayName").toString();
-    QCheckBox *box1 = new QCheckBox(x->property("displayName").toString());
-    box1->setStyleSheet("font-size: 12px;");
-    connect(box1, &QCheckBox::stateChanged, this,
+    QDEBUG << "[i] Add calendar: " << x->property("displayName").toString();
+    QWidget *wget = new QWidget();
+    QHBoxLayout *wly = new QHBoxLayout(wget);
+    QCheckBox *cbox = new QCheckBox(x->property("displayName").toString(), wget);
+    cbox->setStyleSheet("font-size: 12px;");
+    connect(cbox, &QCheckBox::stateChanged, this,
             &MainCalendar::filterCalendar);
-    box1->setCheckState(Qt::Checked);
-    _checkList->push_front(box1);
-    // APPENA CREO UN CALENDARIO LO VOGLIO FARE VEDERE
-    _listCalendar->push_front(x->property("displayName").toString());
-    _calList->addWidget(_checkList->at(i));
-    i++;
+    cbox->setCheckState(Qt::Checked);
+    wly->addWidget(cbox);
+    QLabel *calColor = new QLabel( wget);
+    calColor->setStyleSheet(QString("QLabel {background-color: %1; padding: 16px; border-radius: 10px;}").arg(x->property("color").toString()));
+    wly->addWidget(calColor);
+    wget->setLayout(wly);
+    wget->setVisible(true);
+
+    _calendarListLayout->addWidget(wget);
+    _calendarList->push_front(x->property("displayName").toString());
   }
-  _calListLayout->addLayout(_calList);
 }
 
 void MainCalendar::filterCalendar() {
-  _listCalendar->clear();
-  for (int i = 0; i < _checkList->size(); i++) {
-    if ((_checkList->at(i))->isChecked()) {
-      if (!_listCalendar->contains((_checkList->at(i))->text()))
-        _listCalendar->push_front(_checkList->at(i)->text());
-    } else {
-      if (_listCalendar->contains((_checkList->at(i))->text()))
-        _listCalendar->removeOne(_checkList->at(i)->text());
+  _calendarList->clear();
+
+  QLayoutItem *child;
+  while ((child = _calendarListLayout->takeAt(1)) != nullptr)  {
+    QWidget *wt = child->widget();
+    QLayout *wtl = wt->layout();
+    QCheckBox *cb = qobject_cast<QCheckBox*>(wtl->takeAt(0)->widget());
+    if(cb && cb->isChecked()) {
+      _calendarList->push_back(cb->text());
     }
   }
 
@@ -165,7 +164,7 @@ void MainCalendar::updateListOfEvents(const QList<QObject *> &eventList) {
   }
 
   for (QObject *event : _eventList) {
-    if (_listCalendar->contains(event->property("calendarName").toString())) {
+    if (_calendarList->contains(event->property("calendarName").toString())) {
       QDate start = event->property("startDateTime").toDate();
       QDate end = event->property("endDateTime").toDate();
 
@@ -409,7 +408,7 @@ void MainCalendar::on_event_click(QLabelEvent *label_event,
 
 void MainCalendar::display_days(Date date) {
   // Update the label that contains month and year
-  this->label_date->setText(
+  this->labelDate->setText(
       QString(DateUtil::get_literal_month(date.getMonth()).c_str()) +
       QString("    ") + QString::number(date.getYear()));
   // The current time is needed to highlight the current day

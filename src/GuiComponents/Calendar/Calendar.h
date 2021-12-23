@@ -65,9 +65,6 @@ public slots:
   void updateListOfEvents(const QList<QObject *> &eventList);
 
 private:
-  QList<QString> *_listCalendar;
-  QList<QCheckBox *> *_checkList;
-  WindowStyle _colorStyle;
   void on_button_edit_click(QPushButtonExtended *d);
   void on_button_delete_click(QPushButtonExtended *d);
   void filterCalendar();
@@ -75,17 +72,21 @@ private:
   void display_days(Date date);
   void remove_events_from_all_frames();
   void remove_events_from_frame(int i);
-  // QLabelEvent *createLabelEvent(Event *event);
   QLabelEvent *createLabelEvent(CalendarEvent *event);
   QFrameExtended *createQFrameExtended(Date *date);
+
   QFrameExtended *frames[42]; // I have a 7x7 grid, but without consider the
                               // first row I've a total of 6x7 cells
-  QHBoxLayout *_calList;
-  QHBoxLayout *_calListLayout;
+
+  QList<QString> *_calendarList;
+  QHBoxLayout *_calendarListLayout;
+
+  WindowStyle _colorStyle;
+
   QList<QObject *> _eventList;
   QVBoxLayout *layout;
   QCalendarWidget *calendar;
-  QLabel *label_date; // la label centrale
+  QLabel *labelDate; // la label centrale
 };
 
 #endif // CALENDAR_TODO_LIST_CPP_CALENDAR_H
