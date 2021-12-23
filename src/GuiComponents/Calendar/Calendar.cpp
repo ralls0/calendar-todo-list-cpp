@@ -61,7 +61,8 @@ MainCalendar::MainCalendar(QWidget *parent) : QWidget(parent) {
   this->layout->addLayout(hl);
   _listCalendar = new QList<QString>;
   _calListLayout = new QHBoxLayout;
-  QLabel *ql = new QLabel("I tuoi calendari:");
+  QLabel *ql = new QLabel(" I tuoi calendari:");
+  ql->setStyleSheet("font-size: 18px;");
   _calListLayout->addWidget(ql);
   _checkList = new QList<QCheckBox *>;
   this->layout->addLayout(_calListLayout);
@@ -118,6 +119,7 @@ void MainCalendar::setCalendarList(QList<QObject *> t) {
   for (QObject *x : t) {
     QDEBUG << "[i] Add item: " << x->property("displayName").toString();
     QCheckBox *box1 = new QCheckBox(x->property("displayName").toString());
+    box1->setStyleSheet("font-size: 12px;");
     connect(box1, &QCheckBox::stateChanged, this,
             &MainCalendar::filterCalendar);
     box1->setCheckState(Qt::Checked);
@@ -334,12 +336,18 @@ void MainCalendar::on_button_extended_click(int index) {
     table->setItem(z, 1, new QTableWidgetItem(QString(event->description())));
     table->setItem(z, 2, new QTableWidgetItem(stime));
     QPushButtonExtended *edit = new QPushButtonExtended();
+    QPixmap pixmapE(EDIT_PATH);
+    QIcon EditIcon(pixmapE);
+    edit->setIcon(EditIcon);
     edit->setText("EDIT");
     edit->setEvent(label_event->getEvent());
     table->setCellWidget(z, 3, edit);
     connect(edit, &QPushButtonExtended::on_click_edit, this,
             &MainCalendar::on_button_edit_click);
     QPushButtonExtended *deleteButton = new QPushButtonExtended("DELETE");
+    QPixmap pixmapD(DELETE_PATH);
+    QIcon DeleteIcon(pixmapD);
+    deleteButton->setIcon(DeleteIcon);
     deleteButton->setText("DELETE");
     connect(deleteButton, &QPushButtonExtended::on_click_delete, this,
             &MainCalendar::on_button_delete_click);

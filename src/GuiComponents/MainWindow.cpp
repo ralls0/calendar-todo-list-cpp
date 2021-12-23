@@ -121,6 +121,8 @@ void MainWindow::createNewEventDialogM(CalendarEvent *event) {
   _newEventDialog = new NewEventDialog(event);
   connect(_newEventDialog, &NewEventDialog::newEvent, this,
           &MainWindow::createNewEvent);
+  connect(_newEventDialog, &NewEventDialog::deleteEvent, this,
+            &MainWindow::deleteEvent);
   _newEventDialog->show();
 }
 
