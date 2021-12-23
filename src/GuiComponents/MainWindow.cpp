@@ -21,8 +21,15 @@
 MainWindow::MainWindow(QWidget *parent) : QWidget(parent) {
   _newCalendarDialog = nullptr;
   _newEventDialog = nullptr;
+
   _calendar = new MainCalendar(this);
+  connect(_calendar, &MainCalendar::delete_event, this,
+          &MainWindow::deleteEvent);
+  connect(_calendar, &MainCalendar::modifyEvent, this,
+          &MainWindow::createNewEventDialogM);
+
   _todo = new ToDoList(this);
+
   _cals =
       new CalendarManager(QString(QDir::currentPath() + "/initCals.ini"), this);
   connect(_cals, &CalendarManager::listOfCalendarsChanged, _calendar,
@@ -31,11 +38,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent) {
           &MainCalendar::updateListOfEvents);
   connect(_calendar, &MainCalendar::calendarDateChanged, _cals,
           &CalendarManager::setDate);
-  connect(_calendar, &MainCalendar::delete_event, this,
-          &MainWindow::deleteEvent);
-  connect(_calendar, &MainCalendar::modifyEvent, this,
-          &MainWindow::createNewEventDialogM);
-  connect(_cals,&CalendarManager::setToDoList,this,&MainWindow::createToDo);
+  connect(_cals, &CalendarManager::setToDoList, this, &MainWindow::createToDo);
 
   createPreviewGroupBox();
 
@@ -45,6 +48,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent) {
   setLayout(layout);
 
   setWindowTitle(tr("Calendar Widget"));
+  _cals->handleLoadSetting();
 }
 
 MainWindow::~MainWindow() {}
@@ -123,13 +127,13 @@ void MainWindow::createNewEventDialogM(CalendarEvent *event) {
   connect(_newEventDialog, &NewEventDialog::newEvent, this,
           &MainWindow::createNewEvent);
   connect(_newEventDialog, &NewEventDialog::deleteEvent, this,
-            &MainWindow::deleteEvent);
+          &MainWindow::deleteEvent);
   _newEventDialog->show();
 }
 
-void MainWindow::createToDo(QString acc){
-    _taskm = new TasksManager(acc);
-    _taskm->getMyTaskLists(_taskm->getAccT());
+void MainWindow::createToDo(QString acc) {
+  _taskm = new TasksManager(acc);
+  _taskm->getMyTaskLists(_taskm->getAccT());
 }
 
 void MainWindow::createPreviewGroupBox() {
@@ -145,7 +149,7 @@ void MainWindow::createPreviewGroupBox() {
   connect(btn_addEvent, &QPushButton::clicked, this,
           &MainWindow::createNewEventDialog);
 
-  //QWidget *_todo = new QWidget(this);
+  // QWidget *_todo = new QWidget(this);
   _todo->setMinimumSize(450, 0);
 
   _previewLayout = new QGridLayout(this);

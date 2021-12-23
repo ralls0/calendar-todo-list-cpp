@@ -65,6 +65,7 @@ public slots:
   void updateListOfEvents(const QList<QObject *> &eventList);
 
 private:
+  void resetCalendarList(QList<QObject *> t);
   void on_button_edit_click(QPushButtonExtended *d);
   void on_button_delete_click(QPushButtonExtended *d);
   void filterCalendar();
@@ -79,11 +80,12 @@ private:
                               // first row I've a total of 6x7 cells
 
   QList<QString> *_calendarList;
-  QHBoxLayout *_calendarListLayout;
+  QGridLayout *_calendarListLayout;
 
   WindowStyle _colorStyle;
 
   QList<QObject *> _eventList;
+  QList<QObject *> _calList;
   QVBoxLayout *layout;
   QCalendarWidget *calendar;
   QLabel *labelDate; // la label centrale

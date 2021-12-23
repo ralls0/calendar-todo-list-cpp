@@ -8,31 +8,30 @@
 
 class TaskElement {
 public:
-    TaskElement(const QDateTime &deadline, bool status, const QString &name, int id);
+  TaskElement(const QDateTime &deadline, bool status, const QString &name,
+              int id);
 
-    void setDeadline(const QDateTime &deadline);
+  void setDeadline(const QDateTime &deadline);
 
-    const QDateTime &getDeadline() const;
+  const QDateTime &getDeadline() const;
 
-    bool isStatus() const;
+  bool isStatus() const;
 
-    const QString &getName() const;
+  const QString &getName() const;
 
-    int getId() const;
+  int getId() const;
 
-    void setStatus(bool status);
+  void setStatus(bool status);
 
-    void setName(const QString &name);
+  void setName(const QString &name);
 
-    void setId(int id);
+  void setId(int id);
 
 protected:
-    QDateTime _deadline;
-    bool _status;
-    QString _name;
-    int _id;
-
+  QDateTime _deadline;
+  bool _status;
+  QString _name;
+  int _id;
 };
 
-
-#endif //CALENDAR_TODO_LIST_CPP_TASKELEMENT_H
+#endif // CALENDAR_TODO_LIST_CPP_TASKELEMENT_H

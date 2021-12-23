@@ -105,8 +105,9 @@ signals:
   listOfEventsChanged(QList<QObject *> t); // emitted during handleEventUpdate()
   void eventsUpdated(void);                // emitted during handleEventUpdate()
   void setToDoList(QString acc);
-public slots:
 
+public slots:
+  void handleLoadSetting(void);
   QDate getDate() const;
   void setDate(const QDate &newDate);
 

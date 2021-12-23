@@ -10,6 +10,13 @@
 #ifndef CALENDAR_TODO_LIST_CPP_MAINWINDOW_H
 #define CALENDAR_TODO_LIST_CPP_MAINWINDOW_H
 
+#include "../CalendarManager/CalendarManager.h"
+#include "../ClientCalDAV/ClientCalDAV.h"
+#include "../GuiComponents/ToDoList/ToDoList.h"
+#include "../Task/TasksManager.h"
+#include "./Calendar/Calendar.h"
+#include "./NewCalendar/NewCalendarDialog.h"
+#include "./NewEvent/NewEventDialog.h"
 #include <QCalendarWidget>
 #include <QCheckBox>
 #include <QComboBox>
@@ -23,13 +30,6 @@
 #include <QTextCharFormat>
 #include <QWidget>
 #include <iostream>
-#include "../Task/TasksManager.h"
-#include "../CalendarManager/CalendarManager.h"
-#include "../ClientCalDAV/ClientCalDAV.h"
-#include "./Calendar/Calendar.h"
-#include "./NewCalendar/NewCalendarDialog.h"
-#include "./NewEvent/NewEventDialog.h"
-#include "../GuiComponents/ToDoList/ToDoList.h"
 class MainWindow : public QWidget {
   Q_OBJECT
 
@@ -50,6 +50,7 @@ public slots:
   void createNewEventDialogM(CalendarEvent *event = nullptr);
   void createNewEventDialog();
   void createToDo(QString acc);
+
 private:
   void createPreviewGroupBox();
   QString checkDisplayName(QList<QObject *> cals, QString displayName);
