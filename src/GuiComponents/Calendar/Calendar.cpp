@@ -59,9 +59,9 @@ MainCalendar::MainCalendar(QWidget *parent) : QWidget(parent) {
   _calendarList = new QList<QString>;
   _calendarListLayout = new QHBoxLayout;
   QLabel *ql = new QLabel("I tuoi calendari:");
+  ql->setStyleSheet("font-size: 18px;");
   _calendarListLayout->addWidget(ql);
   this->layout->addLayout(_calendarListLayout);
-  // Create 6x7 grid
   QGridLayout *grid_layout = new QGridLayout;
   int i = 0, j = 0;
   // First row contains the names of the days of the week
@@ -114,6 +114,7 @@ void MainCalendar::setCalendarList(QList<QObject *> t) {
     QWidget *wget = new QWidget();
     QHBoxLayout *wly = new QHBoxLayout(wget);
     QCheckBox *cbox = new QCheckBox(x->property("displayName").toString(), wget);
+    cbox->setStyleSheet("font-size: 12px;");
     connect(cbox, &QCheckBox::stateChanged, this,
             &MainCalendar::filterCalendar);
     cbox->setCheckState(Qt::Checked);
@@ -334,12 +335,18 @@ void MainCalendar::on_button_extended_click(int index) {
     table->setItem(z, 1, new QTableWidgetItem(QString(event->description())));
     table->setItem(z, 2, new QTableWidgetItem(stime));
     QPushButtonExtended *edit = new QPushButtonExtended();
+    QPixmap pixmapE(EDIT_PATH);
+    QIcon EditIcon(pixmapE);
+    edit->setIcon(EditIcon);
     edit->setText("EDIT");
     edit->setEvent(label_event->getEvent());
     table->setCellWidget(z, 3, edit);
     connect(edit, &QPushButtonExtended::on_click_edit, this,
             &MainCalendar::on_button_edit_click);
     QPushButtonExtended *deleteButton = new QPushButtonExtended("DELETE");
+    QPixmap pixmapD(DELETE_PATH);
+    QIcon DeleteIcon(pixmapD);
+    deleteButton->setIcon(DeleteIcon);
     deleteButton->setText("DELETE");
     connect(deleteButton, &QPushButtonExtended::on_click_delete, this,
             &MainCalendar::on_button_delete_click);

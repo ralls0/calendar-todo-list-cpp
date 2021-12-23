@@ -41,6 +41,8 @@
  * middle will have always a value setted. This should be used when you don't
  * care about the day */
 #define CURRENT_MONTH *this->frames[21]->getDate()
+#define EDIT_PATH "../img/edit.png"
+#define DELETE_PATH "../img/delete.png"
 
 class MainCalendar : public QWidget {
   Q_OBJECT

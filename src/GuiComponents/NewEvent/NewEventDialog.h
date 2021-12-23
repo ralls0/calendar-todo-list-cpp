@@ -27,6 +27,11 @@
 #include <QTextEdit>
 #include <QWidget>
 
+#define EDIT_PATH "../img/edit.png"
+#define DELETE_PATH "../img/delete.png"
+#define CLOSE_PATH "../img/close.png"
+#define ADD_PATH "../img/add.png"
+
 class NewEventDialog : public QDialog {
   Q_OBJECT
 
@@ -37,12 +42,14 @@ public:
 
 public slots:
   void onSaveClick(void);
+  void onDeleteClick(void);
 
 signals:
   void newEvent(QString uid, QString filename, QString summary,
                 QString location, QString description, QString rrule,
                 QDateTime startDateTime, QDateTime endDateTime,
                 QString calendar);
+  void deleteEvent(CalendarEvent *t);
   void newAction(); // FIXME
 
 private:
@@ -87,6 +94,7 @@ private:
   QDialogButtonBox *_buttonBox;
   QPushButton *btn_cancel;
   QPushButton *btn_save;
+  QPushButton *btn_delete;
 
   WindowStyle _colorStyle;
 };

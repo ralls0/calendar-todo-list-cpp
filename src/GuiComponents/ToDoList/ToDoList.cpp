@@ -39,12 +39,11 @@ ToDoList::ToDoList(QWidget *parent) : QWidget(parent) {
         QPushButton *buttonEdit = new QPushButton("EDIT");
         QPixmap pixmapE(EDIT_PATH);
         QIcon EditIcon(pixmapE);
-        buttonEdit->setIconSize(pixmapE.rect().size());
+        buttonEdit->setIcon(EditIcon);
         QPushButton *buttonDelete = new QPushButton("DELETE");
         QPixmap pixmapD(DELETE_PATH);
         QIcon DeleteIcon(pixmapD);
         buttonDelete->setIcon(DeleteIcon);
-        buttonEdit->setIconSize(pixmapD.rect().size());
 
         QHBoxLayout *hl = new QHBoxLayout;
         hl->addWidget(do1);
