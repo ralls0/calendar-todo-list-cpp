@@ -186,6 +186,7 @@ void CalendarManager::addCalendarCalDAVUP(QString calendarName, QString url,
   _calendarList.append(pCalendar);
   connect(pCalendar, SIGNAL(eventsUpdated()), this, SLOT(handleEventUpdate()));
 
+  QDEBUG << "[i] Emit listOfCalendarsChanged and listOfEventsChanged";
   emit listOfCalendarsChanged(this->getListOfCalendars());
   emit listOfEventsChanged(this->getListOfEvents());
 
@@ -200,8 +201,8 @@ void CalendarManager::addCalendarCalDAVOA(QString calendarName, QString url,
   _calendarList.append(pCalendar);
   connect(pCalendar, SIGNAL(eventsUpdated()), this, SLOT(handleEventUpdate()));
 
-  QDEBUG << "[i] New calendar added, emit listOfCalendarsChanged and "
-            "listOfEventsChanged";
+  QDEBUG << "[i] New calendar added";
+  QDEBUG << "[i] Emit listOfCalendarsChanged and listOfEventsChanged";
   emit listOfCalendarsChanged(this->getListOfCalendars());
   emit listOfEventsChanged(this->getListOfEvents());
   connect(pCalendar,&ClientCalDAV::accessTokenChanged,this,&CalendarManager::setToDo);
@@ -235,6 +236,7 @@ void CalendarManager::handleErrorOAuthCalendar(QString displayName) {
     if (pListItem->getDisplayName() == displayName) {
       QDEBUG << "[e] (CalendarManager) Error remove calendar: " << displayName;
       _calendarList.removeAt(i);
+      QDEBUG << "[i] Emit listOfCalendarsChanged";
       emit listOfCalendarsChanged(this->getListOfCalendars());
     }
     i++;
