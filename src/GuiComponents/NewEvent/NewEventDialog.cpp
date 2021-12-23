@@ -205,18 +205,46 @@ void NewEventDialog::createActivityLayout(const QList<QString> &cals,
 }
 
 void NewEventDialog::createButtonGroupBox(CalendarEvent *event) {
-  btn_cancel = new QPushButton(tr("Cancel"));
+  btn_cancel = new QPushButton(tr("Close"));
   btn_cancel->setCheckable(true);
+  QPixmap pixmapC(CLOSE_PATH);
+  QIcon CloseIcon(pixmapC);
+  btn_cancel->setIcon(CloseIcon);
   btn_save = new QPushButton(!event ? tr("Add") : tr("Modify"));
   btn_save->setCheckable(true);
+  if(!event){
+      QPixmap pixmapA(ADD_PATH);
+      QIcon AddIcon(pixmapA);
+      btn_save->setIcon(AddIcon);
+  }else{
+      QPixmap pixmapE(EDIT_PATH);
+      QIcon EditIcon(pixmapE);
+      btn_save->setIcon(EditIcon);
+  }
 
+  btn_delete = new QPushButton(tr("Delete"));
+  btn_delete->setCheckable(true);
+  QPixmap pixmapD(DELETE_PATH);
+  QIcon DeleteIcon(pixmapD);
+  btn_delete->setIcon(DeleteIcon);
   connect(btn_save, &QPushButton::clicked, this, &NewEventDialog::onSaveClick);
   connect(btn_cancel, &QPushButton::clicked, this, &QWidget::close);
 
+
   _buttonBox = new QDialogButtonBox(Qt::Horizontal);
-  _buttonBox->addButton(btn_cancel, QDialogButtonBox::RejectRole);
   _buttonBox->addButton(btn_save, QDialogButtonBox::AcceptRole);
+
+  if(event){
+        connect(btn_delete,&QPushButton::clicked, this, &NewEventDialog::onDeleteClick);
+        _buttonBox->addButton(btn_delete,QDialogButtonBox::RejectRole);
+  }
+  _buttonBox->addButton(btn_cancel, QDialogButtonBox::RejectRole);
 }
+
+void NewEventDialog::onDeleteClick(void){
+    emit deleteEvent(_event);
+    this->close();
+};
 
 void NewEventDialog::onSaveClick(void) {
   if (rb_event->isChecked()) {
