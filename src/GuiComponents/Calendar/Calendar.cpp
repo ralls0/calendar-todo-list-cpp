@@ -8,6 +8,7 @@
  */
 
 #include <QPainter>
+#include <QtGui/qpainterpath.h>
 #include <ctime>
 
 #include "Calendar.h"
@@ -57,10 +58,10 @@ MainCalendar::MainCalendar(QWidget *parent) : QWidget(parent) {
       new QVBoxLayout; // layout verticale dove sopra bottoni sotto calendario
   this->layout->addLayout(hl);
   _calendarList = new QList<QString>;
-  _calendarListLayout = new QHBoxLayout;
+  _calendarListLayout = new QGridLayout;
   QLabel *ql = new QLabel("I tuoi calendari:");
   ql->setStyleSheet("font-size: 18px;");
-  _calendarListLayout->addWidget(ql);
+  _calendarListLayout->addWidget(ql, 0, 0, Qt::AlignLeft);
   this->layout->addLayout(_calendarListLayout);
   QGridLayout *grid_layout = new QGridLayout;
   int i = 0, j = 0;
@@ -101,54 +102,93 @@ MainCalendar::MainCalendar(QWidget *parent) : QWidget(parent) {
 
 void MainCalendar::setCalendarList(QList<QObject *> t) {
   QDEBUG << "[i] Starting setCalendarList";
+  _calList = t;
   QLayoutItem *child;
-  while ((child = _calendarListLayout->takeAt(1)) != nullptr)  {
+  while ((child = _calendarListLayout->takeAt(1)) != nullptr) {
     delete child->widget();
     delete child;
   }
 
-  if (!_calendarList->isEmpty()) _calendarList->clear();
+  if (!_calendarList->isEmpty())
+    _calendarList->clear();
 
+  int i = 1;
   for (QObject *x : t) {
     QDEBUG << "[i] Add calendar: " << x->property("displayName").toString();
     QWidget *wget = new QWidget();
-    QHBoxLayout *wly = new QHBoxLayout(wget);
-    QCheckBox *cbox = new QCheckBox(x->property("displayName").toString(), wget);
-    cbox->setStyleSheet("font-size: 12px;");
+    QGridLayout *wly = new QGridLayout(wget);
+    QCheckBox *cbox =
+        new QCheckBox(x->property("displayName").toString(), wget);
+    cbox->setStyleSheet(QString("QCheckBox {background-color: %1; font-size: 12px;}").arg(x->property("color").toString()));
     connect(cbox, &QCheckBox::stateChanged, this,
             &MainCalendar::filterCalendar);
     cbox->setCheckState(Qt::Checked);
-    wly->addWidget(cbox);
-    QLabel *calColor = new QLabel( wget);
-    calColor->setStyleSheet(QString("QLabel {background-color: %1; padding: 16px; border-radius: 10px;}").arg(x->property("color").toString()));
-    wly->addWidget(calColor);
+    wly->addWidget(cbox, 0,0, Qt::AlignLeft);
     wget->setLayout(wly);
     wget->setVisible(true);
 
-    _calendarListLayout->addWidget(wget);
+    _calendarListLayout->addWidget(wget, 0, i++, Qt::AlignLeft);
     _calendarList->push_front(x->property("displayName").toString());
   }
 }
 
 void MainCalendar::filterCalendar() {
+  QDEBUG << "[i] Starting filterCalendar...";
   _calendarList->clear();
-
+  QDEBUG << "[i] _calendarList size: " << _calendarList->size();
   QLayoutItem *child;
-  while ((child = _calendarListLayout->takeAt(1)) != nullptr)  {
+  while ((child = _calendarListLayout->takeAt(1)) != nullptr) {
     QWidget *wt = child->widget();
     QLayout *wtl = wt->layout();
-    QCheckBox *cb = qobject_cast<QCheckBox*>(wtl->takeAt(0)->widget());
-    if(cb && cb->isChecked()) {
+    QCheckBox *cb = qobject_cast<QCheckBox *>(wtl->takeAt(0)->widget());
+    if (cb && cb->isChecked()) {
       _calendarList->push_back(cb->text());
+      delete cb;
     }
+    delete wtl;
+    delete wt;
+    delete child;
   }
 
+  resetCalendarList(_calList);
+}
+
+void MainCalendar::resetCalendarList(QList<QObject *> t) {
+  QDEBUG << "[i] Starting resetCalendarList";
+  QDEBUG << "[i] _calendarList size: " << _calendarList->size();
+  QLayoutItem *child;
+  while ((child = _calendarListLayout->takeAt(1)) != nullptr) {
+    delete child->widget();
+    delete child;
+  }
+
+  int i = 1;
+  for (QObject *x : t) {
+    QDEBUG << "[i] Add calendar: " << x->property("displayName").toString();
+    QWidget *wget = new QWidget();
+    QGridLayout *wly = new QGridLayout(wget);
+    QCheckBox *cbox =
+        new QCheckBox(x->property("displayName").toString(), wget);
+    cbox->setStyleSheet(QString("QCheckBox {background-color: %1; font-size: 12px;}").arg(x->property("color").toString()));
+    cbox->setCheckState(_calendarList->contains(x->property("displayName").toString()) ? Qt::Checked : Qt::Unchecked);
+    connect(cbox, &QCheckBox::stateChanged, this,
+            &MainCalendar::filterCalendar);
+    wly->addWidget(cbox, 0,0, Qt::AlignLeft);
+    wget->setLayout(wly);
+    wget->setVisible(true);
+
+    _calendarListLayout->addWidget(wget, 0, i++, Qt::AlignLeft);
+  }
   emit shownCalendarChanged(_eventList);
 }
 
 void MainCalendar::updateListOfEvents(const QList<QObject *> &eventList) {
-  if (eventList.isEmpty())
+  QDEBUG << "[i] Starting updateListOfEvents..";
+  if (eventList.isEmpty()) {
+    QDEBUG << "[i] Return due to eventList is empty";
     return;
+  }
+
   _eventList = eventList;
   QDate date = QDateTime::currentDateTime().date();
 
@@ -165,6 +205,7 @@ void MainCalendar::updateListOfEvents(const QList<QObject *> &eventList) {
 
   for (QObject *event : _eventList) {
     if (_calendarList->contains(event->property("calendarName").toString())) {
+      QDEBUG << "[i] _calendarList contains " << event->property("calendarName").toString();
       QDate start = event->property("startDateTime").toDate();
       QDate end = event->property("endDateTime").toDate();
 

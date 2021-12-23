@@ -22,7 +22,6 @@ CalendarManager::CalendarManager(QString iniFileName, QObject *parent)
     : QObject(parent) {
   _date = QDate::currentDate();
   _iniFileName = iniFileName;
-  loadSettings();
 }
 
 CalendarManager::~CalendarManager() {
@@ -189,7 +188,6 @@ void CalendarManager::addCalendarCalDAVUP(QString calendarName, QString url,
   QDEBUG << "[i] Emit listOfCalendarsChanged and listOfEventsChanged";
   emit listOfCalendarsChanged(this->getListOfCalendars());
   emit listOfEventsChanged(this->getListOfEvents());
-
   emit setToDoList(pCalendar->getAccessToken());
 }
 
@@ -205,13 +203,11 @@ void CalendarManager::addCalendarCalDAVOA(QString calendarName, QString url,
   QDEBUG << "[i] Emit listOfCalendarsChanged and listOfEventsChanged";
   emit listOfCalendarsChanged(this->getListOfCalendars());
   emit listOfEventsChanged(this->getListOfEvents());
-  connect(pCalendar,&ClientCalDAV::accessTokenChanged,this,&CalendarManager::setToDo);
-
+  connect(pCalendar, &ClientCalDAV::accessTokenChanged, this,
+          &CalendarManager::setToDo);
 }
 
-void CalendarManager::setToDo(QString accT){
-    emit setToDoList(accT);
-}
+void CalendarManager::setToDo(QString accT) { emit setToDoList(accT); }
 
 ClientCalDAV *CalendarManager::getListItemAt(int index) {
   if ((index < 0) || (index >= _calendarList.count())) {
@@ -242,3 +238,5 @@ void CalendarManager::handleErrorOAuthCalendar(QString displayName) {
     i++;
   }
 }
+
+void CalendarManager::handleLoadSetting(void) { loadSettings(); }

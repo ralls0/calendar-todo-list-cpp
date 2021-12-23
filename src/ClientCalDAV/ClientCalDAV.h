@@ -28,7 +28,7 @@
 #include "../OAuth2/OAuth.h"
 #include "../Utils/DateUtils.h"
 
-#define DEBUG_ 1
+#define DEBUG_ 0
 #if DEBUG_
 #define QDEBUG qDebug()
 #else
@@ -357,7 +357,7 @@ public slots:
    * @brief Elimina uno specifico evento dal CalDAV Server.
    */
   void deleteEvent(QString href);
-  
+
 protected slots:
   void handleHTTPError(void);
 
