@@ -82,17 +82,3 @@ void ClientCalDAV::handleUploadFinished(void) {
     emit forceSynchronization();
   }
 }
-
-void ClientCalDAV::handleShareFinished(void) {
-  _uploadRequestTimeoutTimer.stop();
-
-  QDEBUG << _displayName << ": "
-         << "HTTP share finished";
-
-  if (_pUploadReply) {
-    std::cout << _displayName.toStdString() << ": "
-              << "received:\r\n"
-              << _pUploadReply->readAll().toStdString();
-    //emit forceSynchronization();
-  }
-}

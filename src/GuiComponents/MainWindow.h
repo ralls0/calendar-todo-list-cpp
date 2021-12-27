@@ -17,6 +17,7 @@
 #include "./Calendar/Calendar.h"
 #include "./NewCalendar/NewCalendarDialog.h"
 #include "./NewEvent/NewEventDialog.h"
+#include "./ShareCalendar/ShareCalendarDialog.h"
 #include <QCalendarWidget>
 #include <QCheckBox>
 #include <QComboBox>
@@ -41,6 +42,7 @@ public slots:
   void createNewCalendar(const QString &displayName, const QString &hostURL,
                          bool isBasicAuth, const QString &username,
                          const QString &password, const QString &clientSecret);
+  void createShareCalendar(QString displayName, QString email, QString comments);
   void createNewEvent(QString uid, QString filename, QString summary,
                       QString location, QString description, QString rrule,
                       QDateTime startDateTime, QDateTime endDateTime,
@@ -49,6 +51,7 @@ public slots:
   void createNewCalendarDialog();
   void createNewEventDialogM(CalendarEvent *event = nullptr);
   void createNewEventDialog();
+  void createShareCalendarDialog();
   void createToDo(QString acc);
 
 private:
@@ -59,6 +62,7 @@ private:
   QGridLayout *_previewLayout;
   NewCalendarDialog *_newCalendarDialog;
   NewEventDialog *_newEventDialog;
+  ShareCalendarDialog *_shareCalendarDialog;
   MainCalendar *_calendar;
   ToDoList *_todo;
   CalendarManager *_cals;

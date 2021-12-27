@@ -80,3 +80,17 @@ void ClientCalDAV::shareCalendar(QString email, QString comment) {
     emit error("Invalid reply pointer when requesting URL.");
   }
 }
+
+void ClientCalDAV::handleShareFinished(void) {
+  _uploadRequestTimeoutTimer.stop();
+
+  QDEBUG << _displayName << ": "
+         << "HTTP share finished";
+
+  if (_pUploadReply) {
+    std::cout << _displayName.toStdString() << ": "
+              << "received:\r\n"
+              << _pUploadReply->readAll().toStdString();
+    //emit forceSynchronization();
+  }
+}

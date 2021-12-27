@@ -47,14 +47,14 @@ public slots:
   void onShareClick(void);
 
 signals:
-  void shareCalendar(QString displayName, QString email, QString Comments);
+  void shareCalendar(QString displayName, QString email, QString comments);
 
 private:
   void createBaseLayout(QList<QString> cals);
   void createButtonGroupBox(void);
 
-  QGridLayout *_baseInfoLayout;
-  QGroupBox *gb_baseInfo;
+  QGridLayout *_baseLayout;
+  QGroupBox *gb_base;
 
   QLineEdit *le_email;
   QLabel *lbl_email;
