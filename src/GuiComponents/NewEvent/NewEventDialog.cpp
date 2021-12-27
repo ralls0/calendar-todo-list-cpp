@@ -212,12 +212,13 @@ void NewEventDialog::createButtonGroupBox(CalendarEvent *event) {
     QIcon EditIcon(pixmapE);
     btn_save->setIcon(EditIcon);
   }
-
-  btn_delete = new QPushButton(tr("Delete"),this);
-  btn_delete->setCheckable(true);
-  QPixmap pixmapD(DELETE_PATH);
-  QIcon DeleteIcon(pixmapD);
-  btn_delete->setIcon(DeleteIcon);
+  if(event){
+    btn_delete = new QPushButton(tr("Delete"),this);
+    btn_delete->setCheckable(true);
+    QPixmap pixmapD(DELETE_PATH);
+    QIcon DeleteIcon(pixmapD);
+    btn_delete->setIcon(DeleteIcon);
+  }
   connect(btn_save, &QPushButton::clicked, this, &NewEventDialog::onSaveClick);
   connect(btn_cancel, &QPushButton::clicked, this, &QWidget::close);
 
