@@ -9,15 +9,6 @@
 
 #include "NewEventDialog.h"
 
-#define DEBUG_OAUTH 1
-#if DEBUG_OAUTH
-#define QDEBUG qDebug()
-#else
-#define QDEBUG                                                                 \
-  if (0)                                                                       \
-  qDebug()
-#endif
-
 NewEventDialog::NewEventDialog(CalendarEvent *event, QWidget *parent)
     : QDialog(parent) {
 
@@ -27,7 +18,7 @@ NewEventDialog::NewEventDialog(CalendarEvent *event, QWidget *parent)
   createBaseInfoLayout(QList<QString>(), event);
   createButtonGroupBox(event);
 
-  QGridLayout *layout = new QGridLayout;
+  QGridLayout *layout = new QGridLayout(this);
   layout->addWidget(gb_baseInfo, 0, 0);
   layout->addWidget(_buttonBox, 2, 0, Qt::AlignRight);
   layout->setSizeConstraint(QLayout::SetFixedSize);
@@ -42,7 +33,7 @@ NewEventDialog::NewEventDialog(QList<QString> cals, QWidget *parent)
   createBaseInfoLayout(cals);
   createButtonGroupBox();
 
-  QGridLayout *layout = new QGridLayout;
+  QGridLayout *layout = new QGridLayout(this);
   layout->addWidget(gb_baseInfo, 0, 0);
   layout->addWidget(_buttonBox, 2, 0, Qt::AlignRight);
   layout->setSizeConstraint(QLayout::SetFixedSize);
@@ -60,22 +51,22 @@ NewEventDialog::~NewEventDialog() {
 
 void NewEventDialog::createBaseInfoLayout(QList<QString> cals,
                                           CalendarEvent *event) {
-  gb_baseInfo = new QGroupBox;
+  gb_baseInfo = new QGroupBox(this);
   gb_baseInfo->setFlat(true);
   gb_baseInfo->setStyleSheet("border:0;");
 
-  le_title = new QLineEdit;
+  le_title = new QLineEdit(this);
   le_title->setPlaceholderText(tr("Title"));
   le_title->setObjectName("title");
   if (event != nullptr)
     le_title->setText(event->name());
-  _groupBox = new QGroupBox();
+  _groupBox = new QGroupBox(this);
 
-  rb_event = new QRadioButton("Event");
-  rb_activity = new QRadioButton("Activity");
+  rb_event = new QRadioButton("Event", this);
+  rb_activity = new QRadioButton("Activity", this);
   rb_event->setChecked(true);
 
-  _vbox = new QHBoxLayout;
+  _vbox = new QHBoxLayout(this);
   _vbox->addWidget(rb_event);
   _vbox->addWidget(rb_activity);
   _vbox->addStretch(1);
@@ -91,7 +82,7 @@ void NewEventDialog::createBaseInfoLayout(QList<QString> cals,
           &QWidget::setVisible);
   connect(rb_activity, &QRadioButton::toggled, e_event, &QWidget::setHidden);
 
-  _baseInfoLayout = new QGridLayout;
+  _baseInfoLayout = new QGridLayout(this);
   _baseInfoLayout->addWidget(le_title, 0, 0);
   _baseInfoLayout->addWidget(_groupBox, 1, 0);
   _baseInfoLayout->addWidget(e_event, 2, 0);
@@ -101,7 +92,7 @@ void NewEventDialog::createBaseInfoLayout(QList<QString> cals,
 
 void NewEventDialog::createEventLayout(QList<QString> cals,
                                        CalendarEvent *event) {
-  e_event = new QWidget;
+  e_event = new QWidget(this);
 
   QDateTime startD, endD;
   if (event == nullptr) {
@@ -111,40 +102,40 @@ void NewEventDialog::createEventLayout(QList<QString> cals,
     startD = event->getStartDateTime();
     endD = event->getEndDateTime();
   }
-  dte_startDateE = new QDateTimeEdit(startD);
+  dte_startDateE = new QDateTimeEdit(startD, this);
   dte_startDateE->setMinimumDate(QDate::currentDate().addDays(-365));
   dte_startDateE->setMaximumDate(QDate::currentDate().addDays(365));
   dte_startDateE->setDisplayFormat("yyyy/MM/dd hh:mm");
 
-  dte_endDateE = new QDateTimeEdit(endD);
+  dte_endDateE = new QDateTimeEdit(endD, this);
   dte_endDateE->setMinimumDate(QDate::currentDate().addDays(-365));
   dte_endDateE->setMaximumDate(QDate::currentDate().addDays(365));
   dte_endDateE->setDisplayFormat("yyyy/MM/dd hh:mm");
 
-  cb_rrule = new QComboBox;
+  cb_rrule = new QComboBox(this);
   cb_rrule->addItem("Non si ripete");
   cb_rrule->addItem("Ogni giorno");
   cb_rrule->addItem("Ogni settimana");
   cb_rrule->addItem("Ogni mese");
   cb_rrule->addItem("Ogni anno");
 
-  le_location = new QLineEdit;
+  le_location = new QLineEdit(this);
   le_location->setPlaceholderText("Location");
   if (event != nullptr)
     le_location->setText(event->location());
   _pixmap = QPixmap("../img/place.png");
   _pixmap = _pixmap.scaled(QSize(18, 18), Qt::KeepAspectRatio);
-  lbl_location = new QLabel;
+  lbl_location = new QLabel(this);
   lbl_location->setPixmap(_pixmap);
   lbl_location->setMask(_pixmap.mask());
 
-  te_descriptionE = new QTextEdit;
+  te_descriptionE = new QTextEdit(this);
   te_descriptionE->setMaximumHeight(100);
   te_descriptionE->setPlaceholderText("Description");
   if (event != nullptr)
     te_descriptionE->setText(event->description());
 
-  cb_calendar = new QComboBox;
+  cb_calendar = new QComboBox(this);
   if (!cals.isEmpty()) {
     cb_calendar->addItems(cals);
   } else {
@@ -155,7 +146,7 @@ void NewEventDialog::createEventLayout(QList<QString> cals,
     }
   }
 
-  _eventLayout = new QGridLayout;
+  _eventLayout = new QGridLayout(this);
   _eventLayout->addWidget(dte_startDateE, 0, 0);
   _eventLayout->addWidget(dte_endDateE, 0, 1);
   _eventLayout->addWidget(cb_rrule, 1, 0);
@@ -169,22 +160,22 @@ void NewEventDialog::createEventLayout(QList<QString> cals,
 
 void NewEventDialog::createActivityLayout(const QList<QString> &cals,
                                           CalendarEvent *event) {
-  e_activity = new QWidget;
+  e_activity = new QWidget(this);
 
-  dte_startDateA = new QDateTimeEdit(QDate::currentDate());
+  dte_startDateA = new QDateTimeEdit(QDate::currentDate(), this);
   dte_startDateA->setMinimumDate(QDate::currentDate().addDays(-365));
   dte_startDateA->setMaximumDate(QDate::currentDate().addDays(365));
   dte_startDateA->setDisplayFormat("yyyy.MM.dd");
 
-  dte_endDateA = new QDateTimeEdit(QDate::currentDate());
+  dte_endDateA = new QDateTimeEdit(QDate::currentDate(),this);
   dte_endDateA->setMinimumDate(QDate::currentDate().addDays(-365));
   dte_endDateA->setMaximumDate(QDate::currentDate().addDays(365));
   dte_endDateA->setDisplayFormat("yyyy.MM.dd");
 
-  te_descriptionA = new QTextEdit;
+  te_descriptionA = new QTextEdit(this);
   te_descriptionA->setPlaceholderText("Description");
 
-  cb_activity = new QComboBox;
+  cb_activity = new QComboBox(this);
   if (!cals.isEmpty()) {
     cb_activity->addItems(cals);
   } else {
@@ -195,7 +186,7 @@ void NewEventDialog::createActivityLayout(const QList<QString> &cals,
     }
   }
 
-  _eventLayout = new QGridLayout;
+  _eventLayout = new QGridLayout(this);
   _eventLayout->addWidget(dte_startDateA, 0, 0);
   _eventLayout->addWidget(dte_endDateA, 0, 1);
   _eventLayout->addWidget(cb_activity, 1, 0, 1, 2);
@@ -205,12 +196,12 @@ void NewEventDialog::createActivityLayout(const QList<QString> &cals,
 }
 
 void NewEventDialog::createButtonGroupBox(CalendarEvent *event) {
-  btn_cancel = new QPushButton(tr("Close"));
+  btn_cancel = new QPushButton(tr("Close"),this);
   btn_cancel->setCheckable(true);
   QPixmap pixmapC(CLOSE_PATH);
   QIcon CloseIcon(pixmapC);
   btn_cancel->setIcon(CloseIcon);
-  btn_save = new QPushButton(!event ? tr("Add") : tr("Modify"));
+  btn_save = new QPushButton(!event ? tr("Add") : tr("Modify"), this);
   btn_save->setCheckable(true);
   if (!event) {
     QPixmap pixmapA(ADD_PATH);
@@ -222,7 +213,7 @@ void NewEventDialog::createButtonGroupBox(CalendarEvent *event) {
     btn_save->setIcon(EditIcon);
   }
 
-  btn_delete = new QPushButton(tr("Delete"));
+  btn_delete = new QPushButton(tr("Delete"),this);
   btn_delete->setCheckable(true);
   QPixmap pixmapD(DELETE_PATH);
   QIcon DeleteIcon(pixmapD);
@@ -230,7 +221,7 @@ void NewEventDialog::createButtonGroupBox(CalendarEvent *event) {
   connect(btn_save, &QPushButton::clicked, this, &NewEventDialog::onSaveClick);
   connect(btn_cancel, &QPushButton::clicked, this, &QWidget::close);
 
-  _buttonBox = new QDialogButtonBox(Qt::Horizontal);
+  _buttonBox = new QDialogButtonBox(Qt::Horizontal,this);
   _buttonBox->addButton(btn_save, QDialogButtonBox::AcceptRole);
 
   if (event) {

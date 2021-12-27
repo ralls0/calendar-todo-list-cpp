@@ -336,6 +336,11 @@ public slots:
   void recover(void);
 
   /**
+   * @brief Condivide un calendario.
+   */
+  void shareCalendar(QString email, QString comment);
+
+  /**
    * @brief Salva un evento nel CalDAV Server.
    *
    * Se l'uid e' vuoto, un nuovo evento viene creato.
@@ -383,6 +388,7 @@ protected slots:
 
   void handleUploadHTTPError(void);
   void handleUploadFinished(void);
+  void handleShareFinished(void);
 };
 
 #endif // CALENDAR_TODO_LIST_CPP_CLIENTCALDAV_H

@@ -10,6 +10,15 @@
 #ifndef CALENDAR_TODO_LIST_CPP_NEWEVENTDIALOG_H
 #define CALENDAR_TODO_LIST_CPP_NEWEVENTDIALOG_H
 
+#define DEBUG_ED 1
+#if DEBUG_ED
+#define QDEBUG qDebug()
+#else
+#define QDEBUG                                                                 \
+  if (0)                                                                       \
+  qDebug()
+#endif
+
 #include "../../CalendarEvent/CalendarEvent.h"
 #include "../../Utils/ColorUtils.h"
 #include <QComboBox>
