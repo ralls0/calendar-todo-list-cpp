@@ -93,7 +93,7 @@ void ClientCalDAV::saveEvent(QString uid, QString filename, QString summary,
   request.setRawHeader("Authorization", authorization.toUtf8());
   request.setRawHeader("Depth", "0");
   request.setRawHeader("Prefer", "return-minimal");
-  request.setRawHeader("Content-Type", "text/calendar; charset=utf-8");
+  request.setRawHeader("Content-Type", "application/davsharing+xml; charset=utf-8");
   request.setRawHeader("Content-Length", contentlength);
 
   QSslConfiguration conf = request.sslConfiguration();

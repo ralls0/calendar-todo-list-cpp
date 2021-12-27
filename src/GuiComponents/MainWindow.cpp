@@ -21,6 +21,7 @@
 MainWindow::MainWindow(QWidget *parent) : QWidget(parent) {
   _newCalendarDialog = nullptr;
   _newEventDialog = nullptr;
+  _shareCalendarDialog = nullptr;
 
   _calendar = new MainCalendar(this);
   connect(_calendar, &MainCalendar::delete_event, this,
@@ -90,6 +91,21 @@ void MainWindow::createNewEvent(QString uid, QString filename, QString summary,
   }
 }
 
+void MainWindow::createShareCalendar(QString displayName, QString email, QString comments) {
+  QDEBUG << "[i] Calendar" << displayName << " invoke createShareCalendar";
+
+  int i = 0;
+  foreach (QObject *pListItem, _cals->getListOfCalendars()) {
+    if (displayName == pListItem->property("displayName").toString()) {
+      ClientCalDAV *cal = _cals->getListItemAt(i);
+      cal->shareCalendar(email, comments);
+      break;
+    }
+    i++;
+  }
+
+}
+
 void MainWindow::deleteEvent(CalendarEvent *ev) {
   int i = 0;
   foreach (QObject *pListItem, _cals->getListOfCalendars()) {
@@ -110,6 +126,7 @@ void MainWindow::createNewCalendarDialog() {
           &MainWindow::createNewCalendar);
   _newCalendarDialog->show();
 }
+
 void MainWindow::createNewEventDialog() {
   QList<QString> calsName;
   foreach (QObject *c, _cals->getListOfCalendars()) {
@@ -119,6 +136,17 @@ void MainWindow::createNewEventDialog() {
   connect(_newEventDialog, &NewEventDialog::newEvent, this,
           &MainWindow::createNewEvent);
   _newEventDialog->show();
+}
+
+void MainWindow::createShareCalendarDialog() {
+  QList<QString> calsName;
+  foreach (QObject *c, _cals->getListOfCalendars()) {
+    calsName.append(c->property("displayName").toString());
+  }
+  _shareCalendarDialog = new ShareCalendarDialog(calsName, this);
+  connect(_shareCalendarDialog, &ShareCalendarDialog::shareCalendar, this,
+          &MainWindow::createShareCalendar);
+  _shareCalendarDialog->show();
 }
 
 void MainWindow::createNewEventDialogM(CalendarEvent *event) {
@@ -149,12 +177,17 @@ void MainWindow::createPreviewGroupBox() {
   connect(btn_addEvent, &QPushButton::clicked, this,
           &MainWindow::createNewEventDialog);
 
+  QPushButton *btn_shareCalendar = new QPushButton("Share +", this);
+  connect(btn_shareCalendar, &QPushButton::clicked, this,
+          &MainWindow::createShareCalendarDialog);
+
   // QWidget *_todo = new QWidget(this);
   _todo->setMinimumSize(450, 0);
 
   _previewLayout = new QGridLayout(this);
   _previewLayout->addWidget(_calendar, 0, 0);
   _previewLayout->addWidget(_todo, 0, 1);
+  _previewLayout->addWidget(btn_shareCalendar, 1, 0, Qt::AlignLeft);
   _previewLayout->addWidget(btn_addCalendar, 1, 0, Qt::AlignRight);
   _previewLayout->addWidget(btn_addEvent, 1, 1, Qt::AlignRight);
   _previewGroupBox->setLayout(_previewLayout);
