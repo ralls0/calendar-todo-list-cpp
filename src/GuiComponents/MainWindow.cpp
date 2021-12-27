@@ -40,7 +40,10 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent) {
   connect(_calendar, &MainCalendar::calendarDateChanged, _cals,
           &CalendarManager::setDate);
   connect(_cals, &CalendarManager::setToDoList, this, &MainWindow::createToDo);
-
+  connect(_todo, &ToDoList::modifyTask, this,
+            &MainWindow::createNewTaskDialog);
+  connect(_todo, &ToDoList::deleteTask, this,
+            &MainWindow::deleteTask);
   createPreviewGroupBox();
 
   QGridLayout *layout = new QGridLayout(this);
@@ -161,9 +164,17 @@ void MainWindow::createNewEventDialogM(CalendarEvent *event) {
 
 void MainWindow::createToDo(QString acc) {
   _taskm = new TasksManager(acc);
+  connect(_taskm,&TasksManager::getAllTask,_todo,&ToDoList::updateTaskList);
+  connect(_taskm,&TasksManager::getAll,_taskm,&TasksManager::getMyTasks);
   _taskm->getMyTaskLists(_taskm->getAccT());
+  //_taskm->getMyTasks(_taskm->getAccT(),)
 }
-
+void MainWindow::createNewTaskDialog(TaskElement *el) {
+    //_newEventDialog = new NewEventDialog(el);
+}
+void MainWindow::deleteTask(TaskElement *te) {
+    _taskm->deleteTask(_taskm->getAccT(),_taskm->getId(),te->getId());
+}
 void MainWindow::createPreviewGroupBox() {
   _previewGroupBox = new QGroupBox(this);
   _previewGroupBox->setFlat(true);

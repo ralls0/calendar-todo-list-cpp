@@ -15,6 +15,12 @@
 #include <QVariant>
 #include <QVariantList>
 #include <QVariantMap>
+#include <QJsonObject>
+#include <QJsonDocument>
+#include <QJsonArray>
+#include <QJsonParseError>
+#include "TaskElement.h"
+
 
 class TasksManager : public QObject {
   Q_OBJECT
@@ -32,19 +38,30 @@ public:
 
   void createList(const QString &access_token, const QString &title);
   void deleteList(const QString &access_token, const QString &taskListID);
-  QVariantList getTasks();
+  QList<TaskElement*>  getTasks();
   QVariantList getTaskLists();
   const QString &getAccT() const;
   void setAccT(const QString &accT);
 
+signals:
+    void getAllTask(QList<TaskElement* > _tasks);
+    void getAll(QString t, QString r);
 private slots:
   void replyFinished(QNetworkReply *);
 
 private:
   QString _accT;
+public:
+    const QString &getId() const;
+
+    void setId(const QString &id);
+
+private:
+    QString _id;
   QNetworkAccessManager *m_pNetworkAccessManager;
   QVariantList m_taskLists;
-  QVariantList m_tasks;
+
+  QList<TaskElement* > _tasks;
 };
 
 #endif // CALENDAR_TODO_LIST_CPP_TASKSMANAGER_H

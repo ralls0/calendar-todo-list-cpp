@@ -67,7 +67,7 @@ add_executable(calendar_todo_list_cpp
         src/GuiComponents/MainWindow.h
         src/ClientCalDAV/GetEvents.cpp
         src/ClientCalDAV/Handles.cpp
-        src/ClientCalDAV/MachineState.cpp src/GuiComponents/ToDoList/ToDoList.cpp src/GuiComponents/ToDoList/ToDoList.h src/Task/TaskElement.cpp src/Task/TaskElement.h src/Task/TasksManager.cpp src/Task/TasksManager.h src/ClientCalDAV/ShareCalendar.cpp src/GuiComponents/ShareCalendar/ShareCalendarDialog.cpp src/GuiComponents/ShareCalendar/ShareCalendarDialog.h)
+        src/ClientCalDAV/MachineState.cpp src/GuiComponents/ToDoList/ToDoList.cpp src/GuiComponents/ToDoList/ToDoList.h src/Task/TaskElement.cpp src/Task/TaskElement.h src/Task/TasksManager.cpp src/Task/TasksManager.h src/ClientCalDAV/ShareCalendar.cpp src/GuiComponents/ShareCalendar/ShareCalendarDialog.cpp src/GuiComponents/ShareCalendar/ShareCalendarDialog.h src/GuiComponents/ToDoList/QPushButtonExtendedTD.cpp src/GuiComponents/ToDoList/QPushButtonExtendedTD.h)
 target_link_libraries(calendar_todo_list_cpp
         Qt::Core
         Qt::Core5Compat
