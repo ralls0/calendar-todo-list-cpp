@@ -65,7 +65,7 @@ void NewEventDialog::createBaseInfoLayout(QList<QString> cals,
   rb_event = new QRadioButton("Event", this);
   rb_activity = new QRadioButton("Activity", this);
   rb_event->setChecked(true);
-
+  if(event!= nullptr) rb_activity->setDisabled(true);
   _vbox = new QHBoxLayout(this);
   _vbox->addWidget(rb_event);
   _vbox->addWidget(rb_activity);

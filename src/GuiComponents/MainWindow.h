@@ -53,6 +53,8 @@ public slots:
   void createNewEventDialog();
   void createShareCalendarDialog();
   void createToDo(QString acc);
+  void createNewTaskDialog(TaskElement *te);
+  void deleteTask(TaskElement *te);
 
 private:
   void createPreviewGroupBox();

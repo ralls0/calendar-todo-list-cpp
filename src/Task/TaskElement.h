@@ -6,10 +6,11 @@
 #define CALENDAR_TODO_LIST_CPP_TASKELEMENT_H
 #include <QDateTime>
 
+
 class TaskElement {
 public:
-  TaskElement(const QDateTime &deadline, bool status, const QString &name,
-              int id);
+  TaskElement(const QDateTime deadline, bool status, const QString name,
+              QString id);
 
   void setDeadline(const QDateTime &deadline);
 
@@ -19,19 +20,19 @@ public:
 
   const QString &getName() const;
 
-  int getId() const;
+  QString getId() const;
 
   void setStatus(bool status);
 
   void setName(const QString &name);
 
-  void setId(int id);
+  void setId(QString id);
 
 protected:
   QDateTime _deadline;
   bool _status;
   QString _name;
-  int _id;
+  QString _id;
 };
 
 #endif // CALENDAR_TODO_LIST_CPP_TASKELEMENT_H
