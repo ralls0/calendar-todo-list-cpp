@@ -61,7 +61,8 @@ signals:
                 QString calendar);
   void deleteEvent(CalendarEvent *t);
   void newAction(); // FIXME
-  void newTask(QString name, QDateTime t, QString idT);
+  void modifyTask(QString name, QDateTime t, QString idT, TaskElement *te);
+  void newTask(QString name);
 
 private:
   void createBaseInfoLayout(QList<QString> cals,
@@ -72,7 +73,7 @@ private:
   void createActivityLayout(const QList<QString> &cals,
                          TaskElement *te);
   void createButtonGroupBox(CalendarEvent *event = nullptr);
-  void createButtonGroupBox(TaskElement *te = nullptr);
+  //void createButtonGroupBox(TaskElement *te = nullptr);
   TaskElement *_te;
   CalendarEvent *_event;
   QGridLayout *_baseInfoLayout;

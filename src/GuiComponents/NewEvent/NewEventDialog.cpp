@@ -74,7 +74,7 @@ NewEventDialog::NewEventDialog(TaskElement *te, QWidget *parent)
     _baseInfoLayout->addWidget(e_activity, 3, 0);
     gb_baseInfo->setLayout(_baseInfoLayout);
 
-    createButtonGroupBox(te);
+    createButtonGroupBox(_event);
 
     QGridLayout *layout = new QGridLayout(this);
     layout->addWidget(gb_baseInfo, 0, 0);
@@ -89,8 +89,10 @@ NewEventDialog::NewEventDialog(TaskElement *te, QWidget *parent)
 
 NewEventDialog::NewEventDialog(QList<QString> cals, QWidget *parent)
     : QDialog(parent) {
+    //qui entro con il create
   createBaseInfoLayout(cals);
   _event=nullptr;
+  _te=nullptr;
   createButtonGroupBox(_event);
 
   QGridLayout *layout = new QGridLayout(this);
@@ -106,7 +108,7 @@ NewEventDialog::NewEventDialog(QList<QString> cals, QWidget *parent)
 NewEventDialog::~NewEventDialog() {
   delete _baseInfoLayout;
   delete _eventLayout;
-  delete _activityLayout;
+  //delete _activityLayout;
 }
 
 void NewEventDialog::createBaseInfoLayout(QList<QString> cals,
@@ -294,7 +296,12 @@ void NewEventDialog::createButtonGroupBox(CalendarEvent *event) {
   QPixmap pixmapC(CLOSE_PATH);
   QIcon CloseIcon(pixmapC);
   btn_cancel->setIcon(CloseIcon);
-  btn_save = new QPushButton(!event ? tr("Add") : tr("Modify"), this);
+  if( event==nullptr && _te!=nullptr )
+      btn_save = new QPushButton(tr("Modify"), this);
+  else if(event!=nullptr)
+      btn_save = new QPushButton( tr("Modify"), this);
+  else
+      btn_save = new QPushButton( tr("Add"), this);
   btn_save->setCheckable(true);
   if (!event) {
     QPixmap pixmapA(ADD_PATH);
@@ -371,13 +378,18 @@ void NewEventDialog::onSaveClick(void) {
     emit newEvent(uid, filename, title, location, description, rrule,
                   startDateTime, endDateTime, calendar);
   } else if (rb_activity->isChecked()) {
-      QDateTime endDateTime = dte_endDateE->dateTime();
-      QString title = le_title->text();
-      emit newTask(title,endDateTime,_te->getId());
+      if(btn_save->text()=="Modify"){
+        QDateTime endDateTime = dte_endDateE->dateTime();
+        QString title = le_title->text();
+        emit modifyTask(title,endDateTime,_te->getId(), _te);
+      }else if (btn_save->text()=="Add"){
+          QString title = le_title->text();
+          emit newTask(title);
+      }
   }
   this->close();
 }
-
+/*
 void NewEventDialog::createButtonGroupBox(TaskElement *te) {
     btn_cancel = new QPushButton(tr("Close"),this);
     btn_cancel->setCheckable(true);
@@ -404,5 +416,5 @@ void NewEventDialog::createButtonGroupBox(TaskElement *te) {
 
 
     _buttonBox->addButton(btn_cancel, QDialogButtonBox::RejectRole);
-}
+}*/
 

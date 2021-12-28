@@ -56,8 +56,8 @@ public slots:
   void createToDo(QString acc);
   void createNewTaskDialog(TaskElement *te);
   void deleteTask(TaskElement *te);
-  void modifyTask(QString name, QDateTime t, QString idT);
-
+  void modifyTask(QString name, QDateTime t, QString idT, TaskElement *te);
+  void newTask(QString name);
 private:
   void createPreviewGroupBox();
   QString checkDisplayName(QList<QObject *> cals, QString displayName);

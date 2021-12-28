@@ -5,6 +5,7 @@
 #include "ToDoList.h"
 
 ToDoList::ToDoList(QWidget *parent) : QWidget(parent) {
+
   this->layout = new QVBoxLayout;
 
   QHBoxLayout *xTitolo = new QHBoxLayout;
@@ -19,13 +20,6 @@ ToDoList::ToDoList(QWidget *parent) : QWidget(parent) {
   xTitolo->addWidget(todoTitle);
   this->layout->addLayout(xTitolo);
 
-  QHBoxLayout *nascondi = new QHBoxLayout;
-  QCheckBox *switched = new QCheckBox("Nascondi Completate");
-  switched->setStyleSheet(STYLE_TODO_COMPLETE);
-
-  nascondi->addWidget(switched);
-
-  this->layout->addLayout(nascondi);
 
   //updateTaskList();
  // lista = new QVBoxLayout;
@@ -38,31 +32,42 @@ void ToDoList::updateTaskList(QList<TaskElement* > _tasks){
     QVBoxLayout *lista = new QVBoxLayout;
 
         for (TaskElement *t: _tasks) {
-            QCheckBox *do1 = new QCheckBox;
-            do1->setText(t->getName());
-            QStringList listaD = t->getDeadline().toString().split(" ");
-            QLabel *datatodo = new QLabel(listaD[0]+" "+listaD[1]+ " "+listaD[2]);
-            QPushButtonExtendedTD *buttonEdit = new QPushButtonExtendedTD("EDIT");
-            buttonEdit->setTask(t);
-            QPixmap pixmapE(EDIT_PATH);
-            QIcon EditIcon(pixmapE);
-            buttonEdit->setIcon(EditIcon);
-            connect(buttonEdit, &QPushButtonExtendedTD::on_click_edit, this,
-                    &ToDoList::on_button_edit_click);
-            QPushButtonExtendedTD *buttonDelete = new QPushButtonExtendedTD("DELETE");
-            buttonDelete->setTask(t);
-            QPixmap pixmapD(DELETE_PATH);
-            QIcon DeleteIcon(pixmapD);
-            buttonDelete->setIcon(DeleteIcon);
-            connect(buttonDelete, &QPushButtonExtendedTD::on_click_delete, this,
-                    &ToDoList::on_button_delete_click);
-            QHBoxLayout *hl = new QHBoxLayout;
-            hl->addWidget(do1);
-            hl->addWidget(datatodo);
-            hl->addWidget(buttonEdit);
-            hl->addWidget(buttonDelete);
-            lista->addLayout(hl);
-
+            if(!_listaTask.contains(t->getName())) {
+                /*
+                 *
+                 * la create funziona, quando faccio la delete invece non elimina la cosa
+                 */
+                _listaTask.push_front(t->getName());
+                QCheckBox *do1 = new QCheckBox;
+                do1->setText(t->getName());
+                QLabel *datatodo;
+                if (t->getDeadline().isValid()) {
+                    QStringList listaD = t->getDeadline().toString().split(" ");
+                    datatodo = new QLabel(listaD[0] + " " + listaD[1] + " " + listaD[2]);
+                } else {
+                    datatodo = new QLabel("NO DEADLINE");
+                }
+                QPushButtonExtendedTD *buttonEdit = new QPushButtonExtendedTD("EDIT");
+                buttonEdit->setTask(t);
+                QPixmap pixmapE(EDIT_PATH);
+                QIcon EditIcon(pixmapE);
+                buttonEdit->setIcon(EditIcon);
+                connect(buttonEdit, &QPushButtonExtendedTD::on_click_edit, this,
+                        &ToDoList::on_button_edit_click);
+                QPushButtonExtendedTD *buttonDelete = new QPushButtonExtendedTD("DELETE");
+                buttonDelete->setTask(t);
+                QPixmap pixmapD(DELETE_PATH);
+                QIcon DeleteIcon(pixmapD);
+                buttonDelete->setIcon(DeleteIcon);
+                connect(buttonDelete, &QPushButtonExtendedTD::on_click_delete, this,
+                        &ToDoList::on_button_delete_click);
+                QHBoxLayout *hl = new QHBoxLayout;
+                hl->addWidget(do1);
+                hl->addWidget(datatodo);
+                hl->addWidget(buttonEdit);
+                hl->addWidget(buttonDelete);
+                lista->addLayout(hl);
+            }
     }
     this->layout->addLayout(lista);
 }
@@ -85,6 +90,7 @@ void ToDoList::on_button_delete_click(QPushButtonExtendedTD *d) {
                                   QMessageBox::Yes | QMessageBox::No);
     if (reply == QMessageBox::Yes) {
         // QApplication::quit();
+        //_listaTask.removeOne(e->getName());
         emit deleteTask(e);
     }
 }

@@ -18,6 +18,7 @@
 #include <QJsonObject>
 #include <QJsonDocument>
 #include <QJsonArray>
+
 #include <QJsonParseError>
 #include "TaskElement.h"
 
@@ -31,8 +32,8 @@ public:
   void deleteTask(const QString &access_token, const QString &taskListID,
                   const QString &taskID);
   void createTask(const QString &access_token, const QString &taskListID,
-                  const QString &title, const QString &prevTaskID,
-                  const QString &parentID);
+                  const QString &title/*, const QString &prevTaskID,
+                  const QString &parentID */);
   void updateTask(const QString &access_token, const QString &taskListID,
                   const QString &taskID, const QVariant &json_object);
 
