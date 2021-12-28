@@ -103,13 +103,13 @@ void TasksManager::updateTask(const QString &access_token,
                   .arg(taskID)
                   .arg(access_token);
 
-  /*QJson::Serializer serializer;
-  QByteArray params = serializer.serialize(json_object);
+  //QJson::Serializer serializer;
+  //QByteArray params = serializer.serialize(json_object);
 
   QNetworkRequest request;
   request.setUrl(QUrl(s));
   request.setRawHeader("Content-Type", "application/json");
-  m_pNetworkAccessManager->put(request, params);*/
+  //m_pNetworkAccessManager->put(request, params);
 }
 
 const QString &TasksManager::getAccT() const { return _accT; }

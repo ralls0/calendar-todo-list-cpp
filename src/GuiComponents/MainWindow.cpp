@@ -170,8 +170,17 @@ void MainWindow::createToDo(QString acc) {
   //_taskm->getMyTasks(_taskm->getAccT(),)
 }
 void MainWindow::createNewTaskDialog(TaskElement *el) {
-    //_newEventDialog = new NewEventDialog(el);
+    _newEventDialog = new NewEventDialog(el);
+    connect(_newEventDialog, &NewEventDialog::newTask, this,
+            &MainWindow::modifyTask);
+    _newEventDialog->show();
 }
+void MainWindow::modifyTask(QString name, QDateTime t, QString idT) {
+    //FA SIA MODIFY CHE CREATE
+    QVariantMap jsonObj;
+    _taskm->updateTask(_taskm->getAccT(),_taskm->getId(),idT, jsonObj);
+}
+
 void MainWindow::deleteTask(TaskElement *te) {
     _taskm->deleteTask(_taskm->getAccT(),_taskm->getId(),te->getId());
 }

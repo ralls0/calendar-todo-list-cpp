@@ -35,7 +35,7 @@
 #include <QRadioButton>
 #include <QTextEdit>
 #include <QWidget>
-
+#include "../../Task/TaskElement.h"
 #define EDIT_PATH "../img/edit.png"
 #define DELETE_PATH "../img/delete.png"
 #define CLOSE_PATH "../img/close.png"
@@ -47,6 +47,7 @@ class NewEventDialog : public QDialog {
 public:
   NewEventDialog(QList<QString> cals, QWidget *parent = nullptr);
   NewEventDialog(CalendarEvent *event, QWidget *parent = nullptr);
+  NewEventDialog(TaskElement *te, QWidget *parent = nullptr);
   ~NewEventDialog();
 
 public slots:
@@ -60,6 +61,7 @@ signals:
                 QString calendar);
   void deleteEvent(CalendarEvent *t);
   void newAction(); // FIXME
+  void newTask(QString name, QDateTime t, QString idT);
 
 private:
   void createBaseInfoLayout(QList<QString> cals,
@@ -67,8 +69,11 @@ private:
   void createEventLayout(QList<QString> cals, CalendarEvent *event = nullptr);
   void createActivityLayout(const QList<QString> &cals,
                             CalendarEvent *event = nullptr);
+  void createActivityLayout(const QList<QString> &cals,
+                         TaskElement *te);
   void createButtonGroupBox(CalendarEvent *event = nullptr);
-
+  void createButtonGroupBox(TaskElement *te = nullptr);
+  TaskElement *_te;
   CalendarEvent *_event;
   QGridLayout *_baseInfoLayout;
   QGridLayout *_eventLayout;
