@@ -9,15 +9,6 @@
 
 #include "NewCalendarDialog.h"
 
-#define DEBUG_OAUTH 1
-#if DEBUG_OAUTH
-#define QDEBUG qDebug()
-#else
-#define QDEBUG                                                                 \
-  if (0)                                                                       \
-  qDebug()
-#endif
-
 NewCalendarDialog::NewCalendarDialog(QWidget *parent) : QDialog(parent) {
 
   createBaseInfoGroupBox();

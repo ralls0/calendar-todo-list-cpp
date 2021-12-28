@@ -9,8 +9,6 @@
 
 #include "QWidgetExtended.h"
 
-#include <QDebug>
-
 QWidgetExtended::QWidgetExtended(QWidget *parent) : QWidget(parent) {}
 
 void QWidgetExtended::signalEvent(QMouseEvent *event, int code) {

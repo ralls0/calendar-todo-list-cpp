@@ -9,8 +9,6 @@
 
 #include "QPushButtonExtended.h"
 
-#include <QDebug>
-
 QPushButtonExtended::QPushButtonExtended(const char *text, QWidget *parent)
     : QPushButton(text, parent) {
   // clicked can't be overwritten

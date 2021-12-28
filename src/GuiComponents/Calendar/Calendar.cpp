@@ -13,15 +13,6 @@
 
 #include "Calendar.h"
 
-#define DEBUG_MAINCAL 1
-#if DEBUG_MAINCAL
-#define QDEBUG qDebug()
-#else
-#define QDEBUG                                                                 \
-  if (0)                                                                       \
-  qDebug()
-#endif
-
 MainCalendar::MainCalendar(QWidget *parent) : QWidget(parent) {
   Date current_date = DateUtil::get_current_date();
   this->labelDate = new QLabel;
