@@ -9,8 +9,6 @@
 
 #include "CustomDialog.h"
 
-#include <QDebug>
-
 CustomDialog::CustomDialog(QLayout *layout, QWidget *parent) : QDialog(parent) {
   this->setWindowFlags(Qt::WindowCloseButtonHint |
                        Qt::WindowMinimizeButtonHint);

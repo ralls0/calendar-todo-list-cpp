@@ -10,8 +10,8 @@
 #ifndef CALENDAR_TODO_LIST_CPP_SHARECALENDARDIALOG_H
 #define CALENDAR_TODO_LIST_CPP_SHARECALENDARDIALOG_H
 
-#define DEBUG_SC 1
-#if DEBUG_SC
+#define DEBUG_ 1
+#if DEBUG_
 #define QDEBUG qDebug()
 #else
 #define QDEBUG                                                                 \

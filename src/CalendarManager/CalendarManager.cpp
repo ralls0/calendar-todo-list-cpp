@@ -9,15 +9,6 @@
 
 #include "CalendarManager.h"
 
-#define DEBUG_ 1
-#if DEBUG_
-#define QDEBUG qDebug()
-#else
-#define QDEBUG                                                                 \
-  if (0)                                                                       \
-  qDebug()
-#endif
-
 CalendarManager::CalendarManager(QString iniFileName, QObject *parent)
     : QObject(parent) {
   _date = QDate::currentDate();

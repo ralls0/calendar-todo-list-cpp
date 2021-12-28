@@ -32,6 +32,16 @@
 #include <QTextCharFormat>
 #include <QWidget>
 #include <iostream>
+
+#define DEBUG_ 1
+#if DEBUG_
+#define QDEBUG qDebug()
+#else
+#define QDEBUG                                                                 \
+  if (0)                                                                       \
+  qDebug()
+#endif
+
 class MainWindow : public QWidget {
   Q_OBJECT
 

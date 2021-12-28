@@ -9,8 +9,6 @@
 
 #include "QLabelEvent.h"
 
-#include <QDebug>
-
 QLabelEvent::QLabelEvent(QWidget *parent) : QLabel(parent) {
   this->event = NULL;
 }

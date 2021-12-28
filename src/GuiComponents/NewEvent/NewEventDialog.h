@@ -10,8 +10,8 @@
 #ifndef CALENDAR_TODO_LIST_CPP_NEWEVENTDIALOG_H
 #define CALENDAR_TODO_LIST_CPP_NEWEVENTDIALOG_H
 
-#define DEBUG_ED 1
-#if DEBUG_ED
+#define DEBUG_ 1
+#if DEBUG_
 #define QDEBUG qDebug()
 #else
 #define QDEBUG                                                                 \
@@ -73,8 +73,13 @@ private:
   void createActivityLayout(const QList<QString> &cals,
                          TaskElement *te);
   void createButtonGroupBox(CalendarEvent *event = nullptr);
+
   //void createButtonGroupBox(TaskElement *te = nullptr);
   TaskElement *_te;
+
+
+  QGridLayout *_layout;
+
   CalendarEvent *_event;
   QGridLayout *_baseInfoLayout;
   QGridLayout *_eventLayout;

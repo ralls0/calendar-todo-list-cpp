@@ -37,6 +37,16 @@
 #include <QTextCharFormat>
 #include <QWidget>
 #include <iostream>
+
+#define DEBUG_ 1
+#if DEBUG_
+#define QDEBUG qDebug()
+#else
+#define QDEBUG                                                                 \
+  if (0)                                                                       \
+  qDebug()
+#endif
+
 /* Gets the current month displayed using an hack. Infact, the cell in the
  * middle will have always a value setted. This should be used when you don't
  * care about the day */

@@ -17,6 +17,15 @@
 #include <fstream>
 #include <iostream>
 
+#define DEBUG_ 1
+#if DEBUG_
+#define QDEBUG qDebug()
+#else
+#define QDEBUG                                                                 \
+  if (0)                                                                       \
+  qDebug()
+#endif
+
 /**
  * QOAuth2AuthorizationCodeFlow object use scope need to access from the
  * application. for calendar:
