@@ -22,6 +22,15 @@
 #include <QRadioButton>
 #include <QWidget>
 
+#define DEBUG_ 1
+#if DEBUG_
+#define QDEBUG qDebug()
+#else
+#define QDEBUG                                                                 \
+  if (0)                                                                       \
+  qDebug()
+#endif
+
 class NewCalendarDialog : public QDialog {
   Q_OBJECT
 

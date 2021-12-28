@@ -9,15 +9,6 @@
 
 #include "OAuth.h"
 
-#define DEBUG_OAUTH 1
-#if DEBUG_OAUTH
-#define QDEBUG qDebug()
-#else
-#define QDEBUG                                                                 \
-  if (0)                                                                       \
-  qDebug()
-#endif
-
 OAuth::OAuth() {
   _google = new QOAuth2AuthorizationCodeFlow;
   _requestTimeoutTimer.setSingleShot(true);

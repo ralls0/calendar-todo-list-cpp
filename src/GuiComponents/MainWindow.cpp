@@ -9,15 +9,6 @@
 
 #include "MainWindow.h"
 
-#define DEBUG_MAINWINDOW 1
-#if DEBUG_MAINWINDOW
-#define QDEBUG qDebug()
-#else
-#define QDEBUG                                                                 \
-  if (0)                                                                       \
-  qDebug()
-#endif
-
 MainWindow::MainWindow(QWidget *parent) : QWidget(parent) {
   _newCalendarDialog = nullptr;
   _newEventDialog = nullptr;

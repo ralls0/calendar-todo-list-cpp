@@ -40,6 +40,15 @@
 #include "../ClientCalDAV/ClientCalDAV.h"
 #include "../Utils/SimpleCrypt.h"
 
+#define DEBUG_ 1
+#if DEBUG_
+#define QDEBUG qDebug()
+#else
+#define QDEBUG                                                                 \
+  if (0)                                                                       \
+  qDebug()
+#endif
+
 #define PWD_CRYPT Q_UINT64_C(0x3A3CF524EC443FB1)
 
 class CalendarManager : public QObject {
