@@ -27,6 +27,7 @@
 #include <QGroupBox>
 #include <QLabel>
 #include <QLocale>
+#include <QVariant>
 #include <QPushButton>
 #include <QTextCharFormat>
 #include <QWidget>
@@ -65,7 +66,8 @@ public slots:
   void createToDo(QString acc);
   void createNewTaskDialog(TaskElement *te);
   void deleteTask(TaskElement *te);
-
+  void modifyTask(QString name, QDateTime t, QString idT, TaskElement *te);
+  void newTask(QString name);
 private:
   void createPreviewGroupBox();
   QString checkDisplayName(QList<QObject *> cals, QString displayName);

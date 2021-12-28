@@ -35,6 +35,7 @@ private:
     void on_button_delete_click(QPushButtonExtendedTD *d);
   QVBoxLayout *layout;
   QVBoxLayout *lista;
+  QList<QString> _listaTask;
 };
 
 #endif // CALENDAR_TODO_LIST_CPP_TODOLIST_H

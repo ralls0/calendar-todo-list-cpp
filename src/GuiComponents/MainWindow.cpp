@@ -129,6 +129,8 @@ void MainWindow::createNewEventDialog() {
   _newEventDialog = new NewEventDialog(calsName, this);
   connect(_newEventDialog, &NewEventDialog::newEvent, this,
           &MainWindow::createNewEvent);
+  connect(_newEventDialog, &NewEventDialog::newTask, this,
+            &MainWindow::newTask);
   _newEventDialog->show();
 }
 
@@ -161,8 +163,33 @@ void MainWindow::createToDo(QString acc) {
   //_taskm->getMyTasks(_taskm->getAccT(),)
 }
 void MainWindow::createNewTaskDialog(TaskElement *el) {
-    //_newEventDialog = new NewEventDialog(el);
+    _newEventDialog = new NewEventDialog(el);
+    connect(_newEventDialog, &NewEventDialog::modifyTask, this,
+            &MainWindow::modifyTask);
+    connect(_newEventDialog, &NewEventDialog::newTask, this,
+            &MainWindow::newTask);
+    _newEventDialog->show();
 }
+
+void MainWindow::newTask(QString name) {
+    _taskm->createTask(_taskm->getAccT(),_taskm->getId(),name);
+}
+
+void MainWindow::modifyTask(QString name, QDateTime t, QString idT, TaskElement *te) {
+
+        QVariantMap jsonObj;
+        jsonObj["kind"] = te->getKind();
+        jsonObj["id"] = te->getId();
+        jsonObj["etag"] = te->getEtag();
+        jsonObj["title"] = name;
+        jsonObj["updated"] = te->getUpdated().toString();
+        jsonObj["selfLink"] = te->getSelflink();
+        jsonObj["position"] = "00000000000000000002";
+        jsonObj["status"] = te->getStatusS();
+        jsonObj["due"] = t.toString();
+        _taskm->updateTask(_taskm->getAccT(),_taskm->getId(),idT, jsonObj);
+}
+
 void MainWindow::deleteTask(TaskElement *te) {
     _taskm->deleteTask(_taskm->getAccT(),_taskm->getId(),te->getId());
 }

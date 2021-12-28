@@ -227,17 +227,6 @@ void MainCalendar::updateListOfEvents(const QList<QObject *> &eventList) {
 
                               ));
 
-        /*COSE DA DIRE: SE IO CREO CON COSTRUTT DI COPIA FAI VEDERE CHE SUCCEDE
-         * (DEVO PASSARE DA QOBJECT->cALENDAREVENT, COME?
-         *
-         * SE IO LO COSTRUISCO COSI, FUNZIONA MA ALCUNE PROPERTY VANNO A NULL ED
-         * È PER QUESTO CHE POI GLI PASSO UN HREF A NULL, ED è PER LO STESSO
-         * MOTIVO SECONDO ME CHE NON TI CREA UN EVENTO LASCIO TITTI PER FARTELO
-         * VEDERE IN DEBUG mi ricordo di aver commentato la detele bastarda
-         */
-        QString titti = event->property("HREF").toString();
-        QString titti2 = event->property("_HREF").toString();
-        // serve se ho tanti eventi sulla stessa cella
         if (this->frames[i]->children().size() == 3) {
           QPushButtonExtended *button_show_all =
               new QPushButtonExtended("Show All");
@@ -259,15 +248,11 @@ void MainCalendar::updateListOfEvents(const QList<QObject *> &eventList) {
 
 void MainCalendar::on_back_button_click() {
   Date newDate;
-  // MODIFICA DI QAPPLICATION AGGIORNA A QT 6, COMPRENDI MEGLIO
   if (QApplication::queryKeyboardModifiers().testFlag(Qt::ControlModifier))
     newDate = DateUtil::decrease_year(CURRENT_MONTH);
   else
     newDate = DateUtil::decrease_month(CURRENT_MONTH);
   display_days(newDate);
-  /* Reload events */
-  // this->selected_event = NULL;
-  // display_events(newDate);
   emit calendarDateChanged(QDate(newDate.getYear(), newDate.getMonth(), 1));
 }
 

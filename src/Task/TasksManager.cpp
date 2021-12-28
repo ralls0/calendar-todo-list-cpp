@@ -70,21 +70,21 @@ void TasksManager::deleteTask(const QString &access_token,
 }
 
 void TasksManager::createTask(const QString &access_token,
-                              const QString &taskListID, const QString &title,
+                              const QString &taskListID, const QString &title/*,
                               const QString &prevTaskID,
-                              const QString &parentID) {
+                              const QString &parentID*/) {
   QString s;
   s = QString(
           "https://www.googleapis.com/tasks/v1/lists/%1/tasks?access_token=%2")
           .arg(taskListID)
           .arg(access_token);
 
-  if (!prevTaskID.isEmpty()) {
+  /*if (!prevTaskID.isEmpty()) {
     s += QString("&previous=%1").arg(prevTaskID);
   }
   if (!parentID.isEmpty()) {
     s += QString("&parent=%1").arg(parentID);
-  }
+  }*/
 
   QByteArray params;
   params.append(QString("{ title: \"%1\" }").arg(title).toUtf8());
@@ -103,13 +103,13 @@ void TasksManager::updateTask(const QString &access_token,
                   .arg(taskID)
                   .arg(access_token);
 
-  /*QJson::Serializer serializer;
-  QByteArray params = serializer.serialize(json_object);
-
+  //QJson::Serializer serializer;
+  //QByteArray params = serializer.serialize(json_object);
+    QByteArray params = json_object.toByteArray();
   QNetworkRequest request;
   request.setUrl(QUrl(s));
   request.setRawHeader("Content-Type", "application/json");
-  m_pNetworkAccessManager->put(request, params);*/
+  m_pNetworkAccessManager->put(request, params);
 }
 
 const QString &TasksManager::getAccT() const { return _accT; }
@@ -139,8 +139,14 @@ void TasksManager::replyFinished(QNetworkReply *reply) {
         foreach (const QJsonValue & value, jsonArray) {
             QJsonObject obj = value.toObject();
             QDateTime dataN = QDateTime::fromString(obj["due"].toString(), "yyyy-MM-ddTHH:mm:ss.zzzZ");
-            TaskElement *te = new TaskElement(dataN, false , obj["title"].toString(),
-                                 obj["id"].toString());
+            QDateTime dataUpd = QDateTime::fromString(obj["updated"].toString(), "yyyy-MM-ddTHH:mm:ss.zzzZ");
+            TaskElement *te = new TaskElement(dataN, false ,
+                                              obj["title"].toString(),
+                                 obj["id"].toString(), dataUpd,obj["etag"].toString(),
+                                              //obj["position"].toString(),
+                                              obj["selfLink"].toString(),
+                                              obj["status"].toString(),
+                                              obj["kind"].toString());
             _tasks.append(te);
         }
         emit getAllTask(getTasks());
