@@ -69,6 +69,7 @@ private:
                             CalendarEvent *event = nullptr);
   void createButtonGroupBox(CalendarEvent *event = nullptr);
 
+  QGridLayout *_layout;
   CalendarEvent *_event;
   QGridLayout *_baseInfoLayout;
   QGridLayout *_eventLayout;
