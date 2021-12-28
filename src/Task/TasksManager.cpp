@@ -121,6 +121,7 @@ const QString &TasksManager::getId() const {
 }
 
 void TasksManager::setId(const QString &id) {
+
     _id = id;
 }
 
