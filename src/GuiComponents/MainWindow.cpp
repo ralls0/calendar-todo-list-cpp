@@ -144,8 +144,7 @@ void MainWindow::createShareCalendarDialog() {
 }
 
 void MainWindow::createNewEventDialogM(CalendarEvent *event) {
-
-  _newEventDialog = new NewEventDialog(event);
+  _newEventDialog = new NewEventDialog(event, nullptr, this);
   connect(_newEventDialog, &NewEventDialog::newEvent, this,
           &MainWindow::createNewEvent);
   connect(_newEventDialog, &NewEventDialog::deleteEvent, this,
@@ -161,7 +160,7 @@ void MainWindow::createToDo(QString acc) {
   //_taskm->getMyTasks(_taskm->getAccT(),)
 }
 void MainWindow::createNewTaskDialog(TaskElement *el) {
-  _newEventDialog = new NewEventDialog(nullptr, el);
+  _newEventDialog = new NewEventDialog(nullptr, el, this);
   connect(_newEventDialog, &NewEventDialog::modifyTask, this,
           &MainWindow::modifyTask);
   connect(_newEventDialog, &NewEventDialog::newTask, this,
