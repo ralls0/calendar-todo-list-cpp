@@ -13,7 +13,7 @@ TasksManager::TasksManager(QString accT, QObject *parent) : QObject(parent) {
 
 QVariantList TasksManager::getTaskLists() { return m_taskLists; }
 
-QList<TaskElement*>  TasksManager::getTasks() { return _tasks; }
+QList<TaskElement *> TasksManager::getTasks() { return _tasks; }
 
 void TasksManager::getMyTaskLists(const QString &access_token) {
   QString s = QString("https://www.googleapis.com/tasks/v1/users/@me/"
@@ -103,9 +103,9 @@ void TasksManager::updateTask(const QString &access_token,
                   .arg(taskID)
                   .arg(access_token);
 
-  //QJson::Serializer serializer;
-  //QByteArray params = serializer.serialize(json_object);
-    QByteArray params = json_object.toByteArray();
+  // QJson::Serializer serializer;
+  // QByteArray params = serializer.serialize(json_object);
+  QByteArray params = json_object.toByteArray();
   QNetworkRequest request;
   request.setUrl(QUrl(s));
   request.setRawHeader("Content-Type", "application/json");
@@ -116,43 +116,40 @@ const QString &TasksManager::getAccT() const { return _accT; }
 
 void TasksManager::setAccT(const QString &accT) { _accT = accT; }
 
-const QString &TasksManager::getId() const {
-    return _id;
-}
+const QString &TasksManager::getId() const { return _id; }
 
-void TasksManager::setId(const QString &id) {
-    _id = id;
-}
+void TasksManager::setId(const QString &id) { _id = id; }
 
 void TasksManager::replyFinished(QNetworkReply *reply) {
 
-    QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());
-    QJsonObject jsonObj = doc.object();
-    QString strUrl = reply->url().toString();
-    QJsonArray jsonArray;
-    if( jsonObj["kind"]=="tasks#taskLists") {
-        setId(jsonObj["items"][0]["id"].toString() );
-        emit getAll( getAccT(), getId());
+  _tasks.clear();
+  QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());
+  QJsonObject jsonObj = doc.object();
+  QString strUrl = reply->url().toString();
+  QJsonArray jsonArray;
+  if (jsonObj["kind"] == "tasks#taskLists") {
+    setId(jsonObj["items"][0]["id"].toString());
+    emit getAll(getAccT(), getId());
+  } else if (jsonObj["kind"] == "tasks#tasks") {
+    jsonArray = jsonObj["items"].toArray();
+    foreach (const QJsonValue &value, jsonArray) {
+      QJsonObject obj = value.toObject();
+      QDateTime dataN = QDateTime::fromString(obj["due"].toString(),
+                                              "yyyy-MM-ddTHH:mm:ss.zzzZ");
+      QDateTime dataUpd = QDateTime::fromString(obj["updated"].toString(),
+                                                "yyyy-MM-ddTHH:mm:ss.zzzZ");
+      TaskElement *te =
+          new TaskElement(dataN, false, obj["title"].toString(),
+                          obj["id"].toString(), dataUpd, obj["etag"].toString(),
+                          // obj["position"].toString(),
+                          obj["selfLink"].toString(), obj["status"].toString(),
+                          obj["kind"].toString());
+      _tasks.append(te);
     }
-    else if (jsonObj["kind"]=="tasks#tasks"){
-        jsonArray = jsonObj["items"].toArray();
-        foreach (const QJsonValue & value, jsonArray) {
-            QJsonObject obj = value.toObject();
-            QDateTime dataN = QDateTime::fromString(obj["due"].toString(), "yyyy-MM-ddTHH:mm:ss.zzzZ");
-            QDateTime dataUpd = QDateTime::fromString(obj["updated"].toString(), "yyyy-MM-ddTHH:mm:ss.zzzZ");
-            TaskElement *te = new TaskElement(dataN, false ,
-                                              obj["title"].toString(),
-                                 obj["id"].toString(), dataUpd,obj["etag"].toString(),
-                                              //obj["position"].toString(),
-                                              obj["selfLink"].toString(),
-                                              obj["status"].toString(),
-                                              obj["kind"].toString());
-            _tasks.append(te);
-        }
-        emit getAllTask(getTasks());
-    }else{
-        emit getAll( getAccT(), getId());
-    }
+    emit getAllTask(getTasks());
+  } else {
+    emit getAll(getAccT(), getId());
+  }
   /*QString json = reply->readAll();
   QString strUrl = reply->url().toString();
 

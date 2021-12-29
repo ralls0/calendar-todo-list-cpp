@@ -5,38 +5,26 @@
 #include "TaskElement.h"
 
 TaskElement::TaskElement(const QDateTime deadline, bool status,
-                         const QString name, QString id,QDateTime updated, QString etag ,
-                         //QString position,
-        QString selfLink,QString statusS,QString kind)
-    : _deadline(deadline), _status(status), _name(name), _id(id), _updated(updated),
- _etag(etag),
- //_position(_position),
-  _selflink(selfLink),
-    _statusS(statusS),_kind(kind){}
+                         const QString name, QString id, QDateTime updated,
+                         QString etag,
+                         // QString position,
+                         QString selfLink, QString statusS, QString kind)
+    : _deadline(deadline), _status(status), _name(name), _id(id),
+      _updated(updated), _etag(etag),
+      //_position(_position),
+      _selflink(selfLink), _statusS(statusS), _kind(kind) {}
 
-const QString &TaskElement::getEtag() const {
-    return _etag;
-}
+const QString &TaskElement::getEtag() const { return _etag; }
 
-const QString &TaskElement::getPosition() const {
-    return _position;
-}
+const QString &TaskElement::getPosition() const { return _position; }
 
-const QString &TaskElement::getSelflink() const {
-    return _selflink;
-}
+const QString &TaskElement::getSelflink() const { return _selflink; }
 
-const QString &TaskElement::getStatusS() const {
-    return _statusS;
-}
+const QString &TaskElement::getStatusS() const { return _statusS; }
 
-const QDateTime &TaskElement::getUpdated() const {
-    return _updated;
-}
+const QDateTime &TaskElement::getUpdated() const { return _updated; }
 
-const QString &TaskElement::getKind() const {
-    return _kind;
-}
+const QString &TaskElement::getKind() const { return _kind; }
 
 void TaskElement::setDeadline(const QDateTime &deadline) {
   _deadline = deadline;

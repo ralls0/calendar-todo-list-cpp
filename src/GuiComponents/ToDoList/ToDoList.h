@@ -4,38 +4,51 @@
 
 #ifndef CALENDAR_TODO_LIST_CPP_TODOLIST_H
 #define CALENDAR_TODO_LIST_CPP_TODOLIST_H
+#include "../../Task/TaskElement.h"
 #include <QApplication>
 #include <QCheckBox>
 #include <QGroupBox>
 #include <QLabel>
 #include <QLayout>
 #include <QListWidget>
+#include <QMessageBox>
 #include <QObject>
 #include <QPushButton>
 #include <QWidget>
-#include <QMessageBox>
-#include "../../Task/TaskElement.h"
 #define EDIT_PATH "../img/edit.png"
 #include "./QPushButtonExtendedTD.h"
 #define DELETE_PATH "../img/delete.png"
 #define STYLE_TODO_TITLE                                                       \
-  "font-size: 24px; font-weight:bold;margin-top:13px;background-color:yellow;"
+  "font-size: 24px; font-weight:bold; margin-bottom: 100px;"
 #define STYLE_TODO_COMPLETE "font-size: 12px; font-weight:bold;"
+
+#define DEBUG_ 1
+#if DEBUG_
+#define QDEBUG qDebug()
+#else
+#define QDEBUG                                                                 \
+  if (0)                                                                       \
+  qDebug()
+#endif
 
 class ToDoList : public QWidget {
   Q_OBJECT
-  signals:
-    void deleteTask(TaskElement *t);
-    void modifyTask(TaskElement *t);
+signals:
+  void deleteTask(TaskElement *t);
+  void modifyTask(TaskElement *t);
+
 public:
   explicit ToDoList(QWidget *parent = nullptr);
-  void updateTaskList(QList<TaskElement* > _tasks);
+  ~ToDoList();
+  void updateTaskList(QList<TaskElement *> _tasks);
+
 private:
-    void on_button_edit_click(QPushButtonExtendedTD *d);
-    void on_button_delete_click(QPushButtonExtendedTD *d);
-  QVBoxLayout *layout;
-  QVBoxLayout *lista;
+  void on_button_edit_click(QPushButtonExtendedTD *d);
+  void on_button_delete_click(QPushButtonExtendedTD *d);
+  QGridLayout *_layout;
   QList<QString> _listaTask;
+
+  QLabel *lbl_title;
 };
 
 #endif // CALENDAR_TODO_LIST_CPP_TODOLIST_H

@@ -20,6 +20,7 @@
 #endif
 
 #include "../../CalendarEvent/CalendarEvent.h"
+#include "../../Task/TaskElement.h"
 #include "../../Utils/ColorUtils.h"
 #include <QComboBox>
 #include <QDateTimeEdit>
@@ -35,7 +36,6 @@
 #include <QRadioButton>
 #include <QTextEdit>
 #include <QWidget>
-#include "../../Task/TaskElement.h"
 #define EDIT_PATH "../img/edit.png"
 #define DELETE_PATH "../img/delete.png"
 #define CLOSE_PATH "../img/close.png"
@@ -46,8 +46,7 @@ class NewEventDialog : public QDialog {
 
 public:
   NewEventDialog(QList<QString> cals, QWidget *parent = nullptr);
-  NewEventDialog(CalendarEvent *event, QWidget *parent = nullptr);
-  NewEventDialog(TaskElement *te, QWidget *parent = nullptr);
+  NewEventDialog(CalendarEvent *event  = nullptr, TaskElement *te  = nullptr, QWidget *parent = nullptr);
   ~NewEventDialog();
 
 public slots:
@@ -60,23 +59,19 @@ signals:
                 QDateTime startDateTime, QDateTime endDateTime,
                 QString calendar);
   void deleteEvent(CalendarEvent *t);
-  void newAction(); // FIXME
+  void deleteTask(void); // FIXME aggancia a tu sai chi
   void modifyTask(QString name, QDateTime t, QString idT, TaskElement *te);
   void newTask(QString name);
 
 private:
   void createBaseInfoLayout(QList<QString> cals,
-                            CalendarEvent *event = nullptr);
+                            CalendarEvent *event = nullptr, TaskElement *te = nullptr);
   void createEventLayout(QList<QString> cals, CalendarEvent *event = nullptr);
-  void createActivityLayout(const QList<QString> &cals,
-                            CalendarEvent *event = nullptr);
-  void createActivityLayout(const QList<QString> &cals,
-                         TaskElement *te);
-  void createButtonGroupBox(CalendarEvent *event = nullptr);
+  void createActivityLayout(const QList<QString> &cals, TaskElement *te);
+  void createButtonGroupBox(CalendarEvent *event = nullptr, TaskElement *te  = nullptr);
 
-  //void createButtonGroupBox(TaskElement *te = nullptr);
+  // void createButtonGroupBox(TaskElement *te = nullptr);
   TaskElement *_te;
-
 
   QGridLayout *_layout;
 
@@ -98,8 +93,7 @@ private:
 
   QDateTimeEdit *dte_startDateE;
   QDateTimeEdit *dte_endDateE;
-  QDateTimeEdit *dte_startDateA;
-  QDateTimeEdit *dte_endDateA;
+  QDateTimeEdit *dte_deadline;
   QComboBox *cb_rrule;
   QComboBox *cb_calendar;
   QComboBox *cb_activity;
