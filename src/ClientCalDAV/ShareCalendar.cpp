@@ -34,11 +34,17 @@ void ClientCalDAV::shareCalendar(QString email, QString comment) {
 
   QString requestString = "<D:share-resource xmlns:D=\"DAV:\">\n"
                           "     <D:sharee>\n"
-                          "       <D:href>"+email+"</D:href>\n"
+                          "       <D:href>" +
+                          email +
+                          "</D:href>\n"
                           "       <D:prop>\n"
-                          "         <D:displayname> "+_displayName+"</D:displayname>\n"
+                          "         <D:displayname> " +
+                          _displayName +
+                          "</D:displayname>\n"
                           "       </D:prop>\n"
-                          "       <D:comment>"+comment+"</D:comment>\n"
+                          "       <D:comment>" +
+                          comment +
+                          "</D:comment>\n"
                           "       <D:share-access>\n"
                           "         <D:read-write />\n"
                           "       </D:share-access>\n"
@@ -91,6 +97,6 @@ void ClientCalDAV::handleShareFinished(void) {
     std::cout << _displayName.toStdString() << ": "
               << "received:\r\n"
               << _pUploadReply->readAll().toStdString();
-    //emit forceSynchronization();
+    // emit forceSynchronization();
   }
 }

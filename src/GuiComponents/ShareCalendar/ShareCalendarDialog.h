@@ -19,24 +19,24 @@
   qDebug()
 #endif
 
-#include <QDialog>
-#include <QWidget>
-#include <QDebug>
 #include <QComboBox>
-#include <QTextEdit>
-#include <QLineEdit>
-#include <QLabel>
+#include <QDebug>
+#include <QDialog>
 #include <QDialogButtonBox>
-#include <QPushButton>
 #include <QGroupBox>
 #include <QHBoxLayout>
+#include <QLabel>
+#include <QLineEdit>
+#include <QPushButton>
+#include <QTextEdit>
+#include <QWidget>
 
 #define EDIT_PATH "../img/edit.png"
 #define DELETE_PATH "../img/delete.png"
 #define CLOSE_PATH "../img/close.png"
 #define ADD_PATH "../img/add.png"
 
-class ShareCalendarDialog: public QDialog {
+class ShareCalendarDialog : public QDialog {
   Q_OBJECT
 
 public:
@@ -66,7 +66,6 @@ private:
   QDialogButtonBox *_buttonBox;
   QPushButton *btn_cancel;
   QPushButton *btn_share;
-
 };
 
 #endif // CALENDAR_TODO_LIST_CPP_SHARECALENDARDIALOG_H

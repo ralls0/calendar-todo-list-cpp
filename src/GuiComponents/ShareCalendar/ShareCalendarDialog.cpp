@@ -34,7 +34,7 @@ void ShareCalendarDialog::createBaseLayout(QList<QString> cals) {
   gb_base->setFlat(true);
   gb_base->setStyleSheet("border:0;");
 
-  lbl_email = new QLabel(tr("Email"),gb_base);
+  lbl_email = new QLabel(tr("Email"), gb_base);
   le_email = new QLineEdit(this);
   le_email->setPlaceholderText(tr("email"));
 
@@ -50,10 +50,10 @@ void ShareCalendarDialog::createBaseLayout(QList<QString> cals) {
   te_comment->setPlaceholderText("Comment");
 
   _baseLayout = new QGridLayout(gb_base);
-  _baseLayout->addWidget(lbl_email, 0,0);
-  _baseLayout->addWidget(le_email, 0,1);
-  _baseLayout->addWidget(cb_calendar, 1,0, 1, 2);
-  _baseLayout->addWidget(te_comment, 2,0, 2, 2);
+  _baseLayout->addWidget(lbl_email, 0, 0);
+  _baseLayout->addWidget(le_email, 0, 1);
+  _baseLayout->addWidget(cb_calendar, 1, 0, 1, 2);
+  _baseLayout->addWidget(te_comment, 2, 0, 2, 2);
   gb_base->setLayout(_baseLayout);
 }
 
@@ -69,7 +69,8 @@ void ShareCalendarDialog::createButtonGroupBox() {
   QIcon AddIcon(pixmapA);
   btn_share->setIcon(AddIcon);
 
-  connect(btn_share, &QPushButton::clicked, this, &ShareCalendarDialog::onShareClick);
+  connect(btn_share, &QPushButton::clicked, this,
+          &ShareCalendarDialog::onShareClick);
   connect(btn_cancel, &QPushButton::clicked, this, &QWidget::close);
 
   _buttonBox = new QDialogButtonBox(Qt::Horizontal, this);

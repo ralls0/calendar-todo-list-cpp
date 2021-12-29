@@ -110,11 +110,13 @@ void MainCalendar::setCalendarList(QList<QObject *> t) {
     QGridLayout *wly = new QGridLayout(wget);
     QCheckBox *cbox =
         new QCheckBox(x->property("displayName").toString(), wget);
-    cbox->setStyleSheet(QString("QCheckBox {background-color: %1; font-size: 12px;}").arg(x->property("color").toString()));
+    cbox->setStyleSheet(
+        QString("QCheckBox {background-color: %1; font-size: 12px;}")
+            .arg(x->property("color").toString()));
     connect(cbox, &QCheckBox::stateChanged, this,
             &MainCalendar::filterCalendar);
     cbox->setCheckState(Qt::Checked);
-    wly->addWidget(cbox, 0,0, Qt::AlignLeft);
+    wly->addWidget(cbox, 0, 0, Qt::AlignLeft);
     wget->setLayout(wly);
     wget->setVisible(true);
 
@@ -160,11 +162,16 @@ void MainCalendar::resetCalendarList(QList<QObject *> t) {
     QGridLayout *wly = new QGridLayout(wget);
     QCheckBox *cbox =
         new QCheckBox(x->property("displayName").toString(), wget);
-    cbox->setStyleSheet(QString("QCheckBox {background-color: %1; font-size: 12px;}").arg(x->property("color").toString()));
-    cbox->setCheckState(_calendarList->contains(x->property("displayName").toString()) ? Qt::Checked : Qt::Unchecked);
+    cbox->setStyleSheet(
+        QString("QCheckBox {background-color: %1; font-size: 12px;}")
+            .arg(x->property("color").toString()));
+    cbox->setCheckState(
+        _calendarList->contains(x->property("displayName").toString())
+            ? Qt::Checked
+            : Qt::Unchecked);
     connect(cbox, &QCheckBox::stateChanged, this,
             &MainCalendar::filterCalendar);
-    wly->addWidget(cbox, 0,0, Qt::AlignLeft);
+    wly->addWidget(cbox, 0, 0, Qt::AlignLeft);
     wget->setLayout(wly);
     wget->setVisible(true);
 
@@ -196,7 +203,8 @@ void MainCalendar::updateListOfEvents(const QList<QObject *> &eventList) {
 
   for (QObject *event : _eventList) {
     if (_calendarList->contains(event->property("calendarName").toString())) {
-      QDEBUG << "[i] _calendarList contains " << event->property("calendarName").toString();
+      QDEBUG << "[i] _calendarList contains "
+             << event->property("calendarName").toString();
       QDate start = event->property("startDateTime").toDate();
       QDate end = event->property("endDateTime").toDate();
 
