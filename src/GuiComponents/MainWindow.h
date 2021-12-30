@@ -27,9 +27,9 @@
 #include <QGroupBox>
 #include <QLabel>
 #include <QLocale>
-#include <QVariant>
 #include <QPushButton>
 #include <QTextCharFormat>
+#include <QVariant>
 #include <QWidget>
 #include <iostream>
 
@@ -53,7 +53,8 @@ public slots:
   void createNewCalendar(const QString &displayName, const QString &hostURL,
                          bool isBasicAuth, const QString &username,
                          const QString &password, const QString &clientSecret);
-  void createShareCalendar(QString displayName, QString email, QString comments);
+  void createShareCalendar(QString displayName, QString email,
+                           QString comments);
   void createNewEvent(QString uid, QString filename, QString summary,
                       QString location, QString description, QString rrule,
                       QDateTime startDateTime, QDateTime endDateTime,
@@ -68,6 +69,7 @@ public slots:
   void deleteTask(TaskElement *te);
   void modifyTask(QString name, QDateTime t, QString idT, TaskElement *te);
   void newTask(QString name);
+
 private:
   void createPreviewGroupBox();
   QString checkDisplayName(QList<QObject *> cals, QString displayName);

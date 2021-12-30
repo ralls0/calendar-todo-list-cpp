@@ -9,14 +9,23 @@
 
 #include "NewEventDialog.h"
 
-NewEventDialog::NewEventDialog(CalendarEvent *event, QWidget *parent)
+NewEventDialog::NewEventDialog(CalendarEvent *event, TaskElement *te, QWidget *parent)
     : QDialog(parent) {
 
-  if (event)
-    _event = event;
+  if (te) {
+    _te = te;
+    _event = nullptr;
+    setWindowTitle(tr("Modify Task"));
+  }
 
-  createBaseInfoLayout(QList<QString>(), event);
-  createButtonGroupBox(event);
+  if (event) {
+    _event = event;
+    _te = nullptr;
+    setWindowTitle(tr("Modify Event"));
+  }
+
+  createBaseInfoLayout(QList<QString>(), _event, _te);
+  createButtonGroupBox(_event, _te);
 
   _layout = new QGridLayout(this);
   _layout->addWidget(gb_baseInfo, 0, 0);
@@ -24,76 +33,14 @@ NewEventDialog::NewEventDialog(CalendarEvent *event, QWidget *parent)
   _layout->setSizeConstraint(QLayout::SetFixedSize);
   setLayout(_layout);
 
-  setWindowTitle(tr("Modify Event"));
   this->setStyleSheet(_colorStyle.getDialogStyle());
+
 }
-
-NewEventDialog::NewEventDialog(TaskElement *te, QWidget *parent)
-        : QDialog(parent) {
-
-    if (te){
-        _te = te;
-        _event= nullptr;
-    }
-
-    gb_baseInfo = new QGroupBox(this);
-    gb_baseInfo->setFlat(true);
-    gb_baseInfo->setStyleSheet("border:0;");
-
-    le_title = new QLineEdit(this);
-    le_title->setPlaceholderText(tr("Title"));
-    le_title->setObjectName("title");
-    if (te != nullptr)
-        le_title->setText(te->getName());
-    _groupBox = new QGroupBox(this);
-
-    rb_event = new QRadioButton("Event", this);
-    rb_activity = new QRadioButton("Activity", this);
-    if(te!= nullptr) rb_event->setDisabled(true);
-    rb_activity->setChecked(true);
-    _vbox = new QHBoxLayout(this);
-    _vbox->addWidget(rb_event);
-    _vbox->addWidget(rb_activity);
-    _vbox->addStretch(1);
-
-    _groupBox->setLayout(_vbox);
-
-    createEventLayout(QList<QString>(), _event);
-    createActivityLayout(QList<QString>(), _event);
-
-    connect(rb_event, &QRadioButton::toggled, e_event, &QWidget::setVisible);
-    connect(rb_event, &QRadioButton::toggled, e_activity, &QWidget::setHidden);
-    connect(rb_activity, &QRadioButton::toggled, e_activity,
-            &QWidget::setVisible);
-    connect(rb_activity, &QRadioButton::toggled, e_event, &QWidget::setHidden);
-
-    _baseInfoLayout = new QGridLayout(this);
-    _baseInfoLayout->addWidget(le_title, 0, 0);
-    _baseInfoLayout->addWidget(_groupBox, 1, 0);
-    _baseInfoLayout->addWidget(e_event, 2, 0);
-    _baseInfoLayout->addWidget(e_activity, 3, 0);
-    gb_baseInfo->setLayout(_baseInfoLayout);
-
-    createButtonGroupBox(_event);
-
-    QGridLayout *layout = new QGridLayout(this);
-    layout->addWidget(gb_baseInfo, 0, 0);
-    layout->addWidget(_buttonBox, 2, 0, Qt::AlignRight);
-    layout->setSizeConstraint(QLayout::SetFixedSize);
-    setLayout(layout);
-
-    setWindowTitle(tr("Modify Task"));
-    this->setStyleSheet(_colorStyle.getDialogStyle());
-}
-
 
 NewEventDialog::NewEventDialog(QList<QString> cals, QWidget *parent)
     : QDialog(parent) {
-    //qui entro con il create
   createBaseInfoLayout(cals);
-  _event=nullptr;
-  _te=nullptr;
-  createButtonGroupBox(_event);
+  createButtonGroupBox();
 
   _layout = new QGridLayout(this);
   _layout->addWidget(gb_baseInfo, 0, 0);
@@ -106,21 +53,12 @@ NewEventDialog::NewEventDialog(QList<QString> cals, QWidget *parent)
 }
 
 NewEventDialog::~NewEventDialog() {
-
-  delete _baseInfoLayout;
-  delete _eventLayout;
-
-
   delete _layout;
   delete gb_baseInfo;
-  delete _groupBox;
-  delete e_event;
-  delete e_activity;
-
 }
 
 void NewEventDialog::createBaseInfoLayout(QList<QString> cals,
-                                          CalendarEvent *event) {
+                                          CalendarEvent *event, TaskElement *te) {
   gb_baseInfo = new QGroupBox(this);
   gb_baseInfo->setFlat(true);
   gb_baseInfo->setStyleSheet("border:0;");
@@ -130,21 +68,40 @@ void NewEventDialog::createBaseInfoLayout(QList<QString> cals,
   le_title->setObjectName("title");
   if (event != nullptr)
     le_title->setText(event->name());
-  _groupBox = new QGroupBox(this);
+  if (te != nullptr)
+    le_title->setText(te->getName());
+  _groupBox = new QGroupBox(gb_baseInfo);
 
   rb_event = new QRadioButton("Event", _groupBox);
   rb_activity = new QRadioButton("Activity", _groupBox);
-  rb_event->setChecked(true);
-  if(event!= nullptr) rb_activity->setDisabled(true);
+
+
+  createEventLayout(cals, event);
+  createActivityLayout(cals, te);
+
+  if (event == nullptr && te == nullptr) {
+    rb_event->setChecked(true);
+    e_event->show();
+  }
+  if (event != nullptr) {
+    rb_event->setChecked(true);
+    rb_activity->setDisabled(true);
+    e_event->show();
+    e_activity->hide();
+  }
+  if (te != nullptr) {
+    rb_activity->setChecked(true);
+    rb_event->setDisabled(true);
+    e_event->hide();
+    e_activity->show();
+  }
+
   _vbox = new QHBoxLayout(_groupBox);
   _vbox->addWidget(rb_event);
   _vbox->addWidget(rb_activity);
   _vbox->addStretch(1);
 
   _groupBox->setLayout(_vbox);
-
-  createEventLayout(cals, event);
-  createActivityLayout(cals, event);
 
   connect(rb_event, &QRadioButton::toggled, e_event, &QWidget::setVisible);
   connect(rb_event, &QRadioButton::toggled, e_activity, &QWidget::setHidden);
@@ -162,7 +119,7 @@ void NewEventDialog::createBaseInfoLayout(QList<QString> cals,
 
 void NewEventDialog::createEventLayout(QList<QString> cals,
                                        CalendarEvent *event) {
-  e_event = new QWidget(this);
+  e_event = new QWidget(gb_baseInfo);
 
   QDateTime startD, endD;
   if (event == nullptr) {
@@ -225,96 +182,55 @@ void NewEventDialog::createEventLayout(QList<QString> cals,
   _eventLayout->addWidget(cb_calendar, 3, 0, 3, 2);
   _eventLayout->addWidget(te_descriptionE, 6, 0, 4, 2);
   e_event->setLayout(_eventLayout);
-  e_event->show();
 }
 
 void NewEventDialog::createActivityLayout(const QList<QString> &cals,
                                           TaskElement *te) {
-    e_activity = new QWidget(this);
+  e_activity = new QWidget(gb_baseInfo);
 
-    QLabel *deadLine = new QLabel("DeadLine: ");
+  QLabel *deadLine = new QLabel("DeadLine: ");
 
-
-    dte_endDateA = new QDateTimeEdit(QDate::currentDate(),this);
-    dte_endDateA->setMinimumDate(QDate::currentDate().addDays(-365));
-    dte_endDateA->setMaximumDate(QDate::currentDate().addDays(365));
-    dte_endDateA->setDisplayFormat("yyyy.MM.dd");
-
-
-
-    cb_activity = new QComboBox(this);
-    if (!cals.isEmpty()) {
-        cb_activity->addItems(cals);
-    } else {
-        if (te != nullptr) {
-            cb_activity->addItem(QString("TASK_"));
-        } else {
-            cb_activity->addItem(QString("Nessun Calendario"));
-        }
-    }
-
-    _eventLayout = new QGridLayout(this);
-    _eventLayout->addWidget(deadLine, 0, 0);
-    _eventLayout->addWidget(dte_endDateA, 0, 1);
-    _eventLayout->addWidget(cb_activity, 1, 0, 1, 2);
-    e_activity->setLayout(_eventLayout);
-    e_activity->hide();
-}
-
-void NewEventDialog::createActivityLayout(const QList<QString> &cals,
-                                          CalendarEvent *event) {
-  e_activity = new QWidget(this);
-
-  dte_startDateA = new QDateTimeEdit(QDate::currentDate(), e_activity);
-  dte_startDateA->setMinimumDate(QDate::currentDate().addDays(-365));
-  dte_startDateA->setMaximumDate(QDate::currentDate().addDays(365));
-  dte_startDateA->setDisplayFormat("yyyy.MM.dd");
-
-  dte_endDateA = new QDateTimeEdit(QDate::currentDate(),e_activity);
-  dte_endDateA->setMinimumDate(QDate::currentDate().addDays(-365));
-  dte_endDateA->setMaximumDate(QDate::currentDate().addDays(365));
-  dte_endDateA->setDisplayFormat("yyyy.MM.dd");
-
-  te_descriptionA = new QTextEdit(e_activity);
-  te_descriptionA->setPlaceholderText("Description");
+  if (te != nullptr)
+    dte_deadline = new QDateTimeEdit(te->getDeadline(), e_activity);
+  else
+    dte_deadline = new QDateTimeEdit(QDate::currentDate(), e_activity);
+  dte_deadline->setMinimumDate(QDate::currentDate().addDays(-365));
+  dte_deadline->setMaximumDate(QDate::currentDate().addDays(365));
+  dte_deadline->setDisplayFormat("yyyy.MM.dd");
 
   cb_activity = new QComboBox(e_activity);
   if (!cals.isEmpty()) {
     cb_activity->addItems(cals);
   } else {
-    if (event != nullptr) {
-      cb_activity->addItem(QString(event->calendarName()));
+    if (te != nullptr) {
+      cb_activity->addItem(te->getName());
     } else {
       cb_activity->addItem(QString("Nessun Calendario"));
     }
   }
 
-  _eventLayout = new QGridLayout(e_activity);
-  _eventLayout->addWidget(dte_startDateA, 0, 0);
-  _eventLayout->addWidget(dte_endDateA, 0, 1);
-  _eventLayout->addWidget(cb_activity, 1, 0, 1, 2);
-  _eventLayout->addWidget(te_descriptionA, 2, 0, 2, 2);
-  e_activity->setLayout(_eventLayout);
-  e_activity->hide();
+  _activityLayout = new QGridLayout(e_activity);
+  _activityLayout->addWidget(deadLine, 0, 0);
+  _activityLayout->addWidget(dte_deadline, 0, 1);
+  _activityLayout->addWidget(cb_activity, 1, 0, 1, 2);
+  e_activity->setLayout(_activityLayout);
 }
 
-void NewEventDialog::createButtonGroupBox(CalendarEvent *event) {
+void NewEventDialog::createButtonGroupBox(CalendarEvent *event, TaskElement *te) {
   _buttonBox = new QDialogButtonBox(Qt::Horizontal, this);
-  btn_cancel = new QPushButton(tr("Close"),_buttonBox);
+  btn_cancel = new QPushButton(tr("Close"), _buttonBox);
   btn_cancel->setCheckable(true);
   QPixmap pixmapC(CLOSE_PATH);
   QIcon CloseIcon(pixmapC);
   btn_cancel->setIcon(CloseIcon);
 
-  if( event==nullptr && _te!=nullptr )
-      btn_save = new QPushButton(tr("Modify"), this);
-  else if(event!=nullptr)
-      btn_save = new QPushButton( tr("Modify"), this);
+  if (event != nullptr || te != nullptr)
+    btn_save = new QPushButton(tr("Modify"), this);
   else
-      btn_save = new QPushButton( tr("Add"), this);
+    btn_save = new QPushButton(tr("Add"), this);
 
   btn_save->setCheckable(true);
-  if (!event) {
+  if (!event && !te) {
     QPixmap pixmapA(ADD_PATH);
     QIcon AddIcon(pixmapA);
     btn_save->setIcon(AddIcon);
@@ -323,7 +239,7 @@ void NewEventDialog::createButtonGroupBox(CalendarEvent *event) {
     QIcon EditIcon(pixmapE);
     btn_save->setIcon(EditIcon);
   }
-  if(event){
+  if (event || te) {
     btn_delete = new QPushButton(tr("Delete"), _buttonBox);
     btn_delete->setCheckable(true);
     QPixmap pixmapD(DELETE_PATH);
@@ -335,7 +251,7 @@ void NewEventDialog::createButtonGroupBox(CalendarEvent *event) {
 
   _buttonBox->addButton(btn_save, QDialogButtonBox::AcceptRole);
 
-  if (event) {
+  if (event || te) {
     connect(btn_delete, &QPushButton::clicked, this,
             &NewEventDialog::onDeleteClick);
     _buttonBox->addButton(btn_delete, QDialogButtonBox::RejectRole);
@@ -343,8 +259,11 @@ void NewEventDialog::createButtonGroupBox(CalendarEvent *event) {
   _buttonBox->addButton(btn_cancel, QDialogButtonBox::RejectRole);
 }
 
-void NewEventDialog::onDeleteClick(void) {
-  emit deleteEvent(_event);
+void NewEventDialog::onDeleteClick(void) { //TODO: add te
+  if (rb_event->isChecked())
+    emit deleteEvent(_event);
+  if (rb_activity->isChecked())
+    emit deleteTask();
   this->close();
 };
 
@@ -388,14 +307,14 @@ void NewEventDialog::onSaveClick(void) {
     emit newEvent(uid, filename, title, location, description, rrule,
                   startDateTime, endDateTime, calendar);
   } else if (rb_activity->isChecked()) {
-      if(btn_save->text()=="Modify"){
-        QDateTime endDateTime = dte_endDateE->dateTime();
-        QString title = le_title->text();
-        emit modifyTask(title,endDateTime,_te->getId(), _te);
-      }else if (btn_save->text()=="Add"){
-          QString title = le_title->text();
-          emit newTask(title);
-      }
+    if (btn_save->text() == "Modify") {
+      QDateTime endDateTime = dte_endDateE->dateTime();
+      QString title = le_title->text();
+      emit modifyTask(title, endDateTime, _te->getId(), _te);
+    } else if (btn_save->text() == "Add") {
+      QString title = le_title->text();
+      emit newTask(title);
+    }
   }
   this->close();
 }
@@ -418,8 +337,9 @@ void NewEventDialog::createButtonGroupBox(TaskElement *te) {
         btn_save->setIcon(EditIcon);
     }
 
-    connect(btn_save, &QPushButton::clicked, this, &NewEventDialog::onSaveClick);
-    connect(btn_cancel, &QPushButton::clicked, this, &QWidget::close);
+    connect(btn_save, &QPushButton::clicked, this,
+&NewEventDialog::onSaveClick); connect(btn_cancel, &QPushButton::clicked, this,
+&QWidget::close);
 
     _buttonBox = new QDialogButtonBox(Qt::Horizontal,this);
     _buttonBox->addButton(btn_save, QDialogButtonBox::AcceptRole);
@@ -427,4 +347,3 @@ void NewEventDialog::createButtonGroupBox(TaskElement *te) {
 
     _buttonBox->addButton(btn_cancel, QDialogButtonBox::RejectRole);
 }*/
-
