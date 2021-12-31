@@ -32,7 +32,7 @@ public:
                   const QString &title/*, const QString &prevTaskID,
                   const QString &parentID */);
   void updateTask(const QString &access_token, const QString &taskListID,
-                  const QString &taskID, const QVariant &json_object);
+                  const QString &taskID, const QJsonObject &json_object);
 
   void createList(const QString &access_token, const QString &title);
   void deleteList(const QString &access_token, const QString &taskListID);

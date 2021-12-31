@@ -1,6 +1,6 @@
 /**
  *
- * @author  Marco Manco
+ * @author  Marco Manco Davide Manco
  * @date    05/12/21.
  * @file    MainWindow.cpp
  * @brief
@@ -174,18 +174,16 @@ void MainWindow::newTask(QString name) {
 
 void MainWindow::modifyTask(QString name, QDateTime t, QString idT,
                             TaskElement *te) {
-
-  QVariantMap jsonObj;
+    QJsonObject jsonObj;
   jsonObj["kind"] = te->getKind();
   jsonObj["id"] = te->getId();
   jsonObj["etag"] = te->getEtag();
   jsonObj["title"] = name;
-  jsonObj["updated"] = te->getUpdated().toString();
+  jsonObj["updated"] = te->getUpdatedString();
   jsonObj["selfLink"] = te->getSelflink();
-  jsonObj["position"] = "00000000000000000002";
   jsonObj["status"] = te->getStatusS();
-  jsonObj["due"] = t.toString();
-  _taskm->updateTask(_taskm->getAccT(), _taskm->getId(), idT, jsonObj);
+  jsonObj["due"] = t.toString( Qt::ISODateWithMs).append("Z");
+    _taskm->updateTask(_taskm->getAccT(), _taskm->getId(), idT, jsonObj);
 }
 
 void MainWindow::deleteTask(TaskElement *te) {

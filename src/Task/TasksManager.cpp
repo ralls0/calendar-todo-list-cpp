@@ -96,7 +96,7 @@ void TasksManager::createTask(const QString &access_token,
 
 void TasksManager::updateTask(const QString &access_token,
                               const QString &taskListID, const QString &taskID,
-                              const QVariant &json_object) {
+                              const QJsonObject &json_object) {
   QString s = QString("https://www.googleapis.com/tasks/v1/lists/%1/tasks/"
                       "%2?access_token=%3")
                   .arg(taskListID)
@@ -105,11 +105,15 @@ void TasksManager::updateTask(const QString &access_token,
 
   // QJson::Serializer serializer;
   // QByteArray params = serializer.serialize(json_object);
-  QByteArray params = json_object.toByteArray();
+  // QJsonDocument(params).toJson()
+  //QByteArray params = json_object.toByteArray();
   QNetworkRequest request;
   request.setUrl(QUrl(s));
+    QJsonDocument doc(json_object);
+    QByteArray data = doc.toJson();
+
   request.setRawHeader("Content-Type", "application/json");
-  m_pNetworkAccessManager->put(request, params);
+  m_pNetworkAccessManager->put(request,data);
 }
 
 const QString &TasksManager::getAccT() const { return _accT; }
@@ -143,7 +147,7 @@ void TasksManager::replyFinished(QNetworkReply *reply) {
                           obj["id"].toString(), dataUpd, obj["etag"].toString(),
                           // obj["position"].toString(),
                           obj["selfLink"].toString(), obj["status"].toString(),
-                          obj["kind"].toString());
+                          obj["kind"].toString(),obj["due"].toString(),obj["updated"].toString());
       _tasks.append(te);
     }
     emit getAllTask(getTasks());
