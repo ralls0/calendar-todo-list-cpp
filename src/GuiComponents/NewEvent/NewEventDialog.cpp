@@ -1,6 +1,6 @@
 /**
  *
- * @author  Marco Manco
+ * @author  Marco Manco Davide Manco
  * @date    29/11/21.
  * @file    NewEventDialog.cpp
  * @brief
@@ -308,7 +308,7 @@ void NewEventDialog::onSaveClick(void) {
                   startDateTime, endDateTime, calendar);
   } else if (rb_activity->isChecked()) {
     if (btn_save->text() == "Modify") {
-      QDateTime endDateTime = dte_endDateE->dateTime();
+      QDateTime endDateTime = dte_deadline->dateTime();
       QString title = le_title->text();
       emit modifyTask(title, endDateTime, _te->getId(), _te);
     } else if (btn_save->text() == "Add") {

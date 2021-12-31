@@ -1,6 +1,6 @@
 /**
  *
- * @author  Marco Manco
+ * @author  Marco Manco Davide Manco
  * @date    28/11/21.
  * @file    NewCalendarDialog.cpp
  * @brief

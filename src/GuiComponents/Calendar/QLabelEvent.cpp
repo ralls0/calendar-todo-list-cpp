@@ -1,6 +1,6 @@
 /**
  *
- * @author  Marco Manco
+ * @author  Marco Manco Davide Manco
  * @date    04/12/21.
  * @file    QLabelEvent.cpp
  * @brief

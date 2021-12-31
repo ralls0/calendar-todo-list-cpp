@@ -10,8 +10,7 @@ class TaskElement {
 public:
   TaskElement(const QDateTime deadline, bool status, const QString name,
               QString id, QDateTime _updated, QString _etag,
-              // QString _position,
-              QString _selflink, QString _statusS, QString _kind);
+              QString _selflink, QString _statusS, QString _kind, QString dString, QString uString);
 
   void setDeadline(const QDateTime &deadline);
 
@@ -41,8 +40,17 @@ public:
 
   const QString &getKind() const;
 
+  const QString &getDeadlineString() const;
+
+  void setDeadlineString(const QString &deadlineString);
+
+  const QString &getUpdatedString() const;
+
+  void setUpdatedString(const QString &updatedString);
+
 protected:
   QDateTime _deadline;
+  QString _deadlineString;
   bool _status;
   QString _name;
   QString _id;
@@ -51,6 +59,7 @@ protected:
   QString _selflink;
   QString _statusS;
   QDateTime _updated;
+  QString _updatedString;
   QString _kind;
 };
 
