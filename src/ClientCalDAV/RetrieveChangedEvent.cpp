@@ -16,8 +16,8 @@ void ClientCalDAV::retrieveChangedEvent(void) {
          << "month: " << _month;
   QString authorization = "";
   if (_auth == E_AUTH_TOKEN) {
-      authorization.append("Bearer ");
-      authorization.append(_accessToken);
+    authorization.append("Bearer ");
+    authorization.append(_accessToken);
   }
   QDEBUG << "[i] (" << _displayName << ") Authorization: " << authorization;
 
@@ -85,7 +85,7 @@ void ClientCalDAV::retrieveChangedEvent(void) {
   request.setUrl(_hostURL);
   request.setRawHeader("User-Agent", "ClientCalDAV");
   if (_auth == E_AUTH_TOKEN) {
-        request.setRawHeader("Authorization", authorization.toUtf8());
+    request.setRawHeader("Authorization", authorization.toUtf8());
   }
 
   request.setRawHeader("Depth", "1");
@@ -102,11 +102,11 @@ void ClientCalDAV::retrieveChangedEvent(void) {
   if (_pReply) {
     connect(_pReply, &QNetworkReply::errorOccurred, this,
             &ClientCalDAV::handleHTTPError);
-    connect(_pReply, SIGNAL(finished()), this, SLOT(handleRequestChangesEventFinished()));
+    connect(_pReply, SIGNAL(finished()), this,
+            SLOT(handleRequestChangesEventFinished()));
 
-    connect(&_networkManager, &QNetworkAccessManager::authenticationRequired, this, &ClientCalDAV::handleRequestAuthentication);
-
-
+    connect(&_networkManager, &QNetworkAccessManager::authenticationRequired,
+            this, &ClientCalDAV::handleRequestAuthentication);
 
     _requestTimeoutTimer.start(_requestTimeoutMS);
   } else {

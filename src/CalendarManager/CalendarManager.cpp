@@ -179,7 +179,6 @@ void CalendarManager::addCalendarCalDAVUP(QString calendarName, QString url,
   QDEBUG << "[i] Emit listOfCalendarsChanged and listOfEventsChanged";
   emit listOfCalendarsChanged(this->getListOfCalendars());
   emit listOfEventsChanged(this->getListOfEvents());
-
 }
 
 void CalendarManager::addCalendarCalDAVOA(QString calendarName, QString url,

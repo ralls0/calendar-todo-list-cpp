@@ -46,7 +46,8 @@ class NewEventDialog : public QDialog {
 
 public:
   NewEventDialog(QList<QString> cals, QWidget *parent = nullptr);
-  NewEventDialog(CalendarEvent *event  = nullptr, TaskElement *te  = nullptr, QWidget *parent = nullptr);
+  NewEventDialog(CalendarEvent *event = nullptr, TaskElement *te = nullptr,
+                 QWidget *parent = nullptr);
   ~NewEventDialog();
 
 public slots:
@@ -64,11 +65,12 @@ signals:
   void newTask(QString name);
 
 private:
-  void createBaseInfoLayout(QList<QString> cals,
-                            CalendarEvent *event = nullptr, TaskElement *te = nullptr);
+  void createBaseInfoLayout(QList<QString> cals, CalendarEvent *event = nullptr,
+                            TaskElement *te = nullptr);
   void createEventLayout(QList<QString> cals, CalendarEvent *event = nullptr);
   void createActivityLayout(const QList<QString> &cals, TaskElement *te);
-  void createButtonGroupBox(CalendarEvent *event = nullptr, TaskElement *te  = nullptr);
+  void createButtonGroupBox(CalendarEvent *event = nullptr,
+                            TaskElement *te = nullptr);
 
   // void createButtonGroupBox(TaskElement *te = nullptr);
   TaskElement *_te;
@@ -102,8 +104,8 @@ private:
   QPixmap _pixmap;
   QLineEdit *le_location;
 
+  QLabel *_deadLine;
   QTextEdit *te_descriptionE;
-  QTextEdit *te_descriptionA;
 
   QDialogButtonBox *_buttonBox;
   QPushButton *btn_cancel;

@@ -106,14 +106,14 @@ void TasksManager::updateTask(const QString &access_token,
   // QJson::Serializer serializer;
   // QByteArray params = serializer.serialize(json_object);
   // QJsonDocument(params).toJson()
-  //QByteArray params = json_object.toByteArray();
+  // QByteArray params = json_object.toByteArray();
   QNetworkRequest request;
   request.setUrl(QUrl(s));
-    QJsonDocument doc(json_object);
-    QByteArray data = doc.toJson();
+  QJsonDocument doc(json_object);
+  QByteArray data = doc.toJson();
 
   request.setRawHeader("Content-Type", "application/json");
-  m_pNetworkAccessManager->put(request,data);
+  m_pNetworkAccessManager->put(request, data);
 }
 
 const QString &TasksManager::getAccT() const { return _accT; }
@@ -147,7 +147,8 @@ void TasksManager::replyFinished(QNetworkReply *reply) {
                           obj["id"].toString(), dataUpd, obj["etag"].toString(),
                           // obj["position"].toString(),
                           obj["selfLink"].toString(), obj["status"].toString(),
-                          obj["kind"].toString(),obj["due"].toString(),obj["updated"].toString());
+                          obj["kind"].toString(), obj["due"].toString(),
+                          obj["updated"].toString());
       _tasks.append(te);
     }
     emit getAllTask(getTasks());

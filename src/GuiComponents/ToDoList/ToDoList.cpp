@@ -41,7 +41,8 @@ void ToDoList::updateTaskList(QList<TaskElement *> tasks) {
     QLabel *datatodo;
     if (t->getDeadline().isValid()) {
       QStringList listaD = t->getDeadline().toString().split(" ");
-      datatodo = new QLabel(listaD[0] + " " + listaD[1] + " " + listaD[2], wget);
+      datatodo =
+          new QLabel(listaD[0] + " " + listaD[1] + " " + listaD[2], wget);
     } else {
       datatodo = new QLabel("NO DEADLINE", wget);
     }
@@ -52,7 +53,8 @@ void ToDoList::updateTaskList(QList<TaskElement *> tasks) {
     buttonEdit->setIcon(EditIcon);
     connect(buttonEdit, &QPushButtonExtendedTD::on_click_edit, this,
             &ToDoList::on_button_edit_click);
-    QPushButtonExtendedTD *buttonDelete = new QPushButtonExtendedTD("DELETE", wget);
+    QPushButtonExtendedTD *buttonDelete =
+        new QPushButtonExtendedTD("DELETE", wget);
     buttonDelete->setTask(t);
     QPixmap pixmapD(DELETE_PATH);
     QIcon DeleteIcon(pixmapD);

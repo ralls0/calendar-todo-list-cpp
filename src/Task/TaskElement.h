@@ -9,8 +9,9 @@
 class TaskElement {
 public:
   TaskElement(const QDateTime deadline, bool status, const QString name,
-              QString id, QDateTime _updated, QString _etag,
-              QString _selflink, QString _statusS, QString _kind, QString dString, QString uString);
+              QString id, QDateTime _updated, QString _etag, QString _selflink,
+              QString _statusS, QString _kind, QString dString,
+              QString uString);
 
   void setDeadline(const QDateTime &deadline);
 
