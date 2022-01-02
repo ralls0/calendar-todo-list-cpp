@@ -6,11 +6,13 @@
 
 TaskElement::TaskElement(const QDateTime deadline, bool status,
                          const QString name, QString id, QDateTime updated,
-                         QString etag, QString selfLink, QString statusS, QString kind, QString dString, QString uString)
+                         QString etag, QString selfLink, QString statusS,
+                         QString kind, QString dString, QString uString)
     : _deadline(deadline), _status(status), _name(name), _id(id),
       _updated(updated), _etag(etag),
       //_position(_position),
-      _selflink(selfLink), _statusS(statusS), _kind(kind), _updatedString(uString), _deadlineString(dString) {}
+      _selflink(selfLink), _statusS(statusS), _kind(kind),
+      _updatedString(uString), _deadlineString(dString) {}
 
 const QString &TaskElement::getEtag() const { return _etag; }
 
@@ -43,17 +45,15 @@ const QString &TaskElement::getName() const { return _name; }
 QString TaskElement::getId() const { return _id; }
 
 const QString &TaskElement::getDeadlineString() const {
-    return _deadlineString;
+  return _deadlineString;
 }
 
 void TaskElement::setDeadlineString(const QString &deadlineString) {
-    _deadlineString = deadlineString;
+  _deadlineString = deadlineString;
 }
 
-const QString &TaskElement::getUpdatedString() const {
-    return _updatedString;
-}
+const QString &TaskElement::getUpdatedString() const { return _updatedString; }
 
 void TaskElement::setUpdatedString(const QString &updatedString) {
-    _updatedString = updatedString;
+  _updatedString = updatedString;
 }

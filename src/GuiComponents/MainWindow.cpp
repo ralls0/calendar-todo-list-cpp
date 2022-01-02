@@ -174,7 +174,7 @@ void MainWindow::newTask(QString name) {
 
 void MainWindow::modifyTask(QString name, QDateTime t, QString idT,
                             TaskElement *te) {
-    QJsonObject jsonObj;
+  QJsonObject jsonObj;
   jsonObj["kind"] = te->getKind();
   jsonObj["id"] = te->getId();
   jsonObj["etag"] = te->getEtag();
@@ -182,8 +182,8 @@ void MainWindow::modifyTask(QString name, QDateTime t, QString idT,
   jsonObj["updated"] = te->getUpdatedString();
   jsonObj["selfLink"] = te->getSelflink();
   jsonObj["status"] = te->getStatusS();
-  jsonObj["due"] = t.toString( Qt::ISODateWithMs).append("Z");
-    _taskm->updateTask(_taskm->getAccT(), _taskm->getId(), idT, jsonObj);
+  jsonObj["due"] = t.toString(Qt::ISODateWithMs).append("Z");
+  _taskm->updateTask(_taskm->getAccT(), _taskm->getId(), idT, jsonObj);
 }
 
 void MainWindow::deleteTask(TaskElement *te) {

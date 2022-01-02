@@ -47,64 +47,67 @@ ClientCalDAV::ClientCalDAV(const QString &username, const QString &password,
 
   setupStateMachine();
   retrieveChangedEvent();
-  //retrieveChangedTask() TODO
+  // retrieveChangedTask() TODO
 }
 
-void ClientCalDAV::sendRequestSyncToken()
-{
+void ClientCalDAV::sendRequestSyncToken() {
 
-//QString authorization = "Digest ";
-//authorization.append(encodeBase64(_username + ":" + _password));
+  // QString authorization = "Digest ";
+  // authorization.append(encodeBase64(_username + ":" + _password));
 
-QBuffer* buffer = new QBuffer();
+  QBuffer *buffer = new QBuffer();
 
-buffer->open(QIODevice::ReadWrite);
+  buffer->open(QIODevice::ReadWrite);
 
-QString requestString = "<d:propfind xmlns:d=\"DAV:\" xmlns:cs=\"http://calendarserver.org/ns/\">\r\n"
-                        "  <d:prop>\r\n"
-                        "    <d:displayname />\r\n"
-                        "    <cs:getctag />\r\n"
-                        "    <d:sync-token />"
-                        "  </d:prop>\r\n"
-                        "</d:propfind>";
+  QString requestString = "<d:propfind xmlns:d=\"DAV:\" "
+                          "xmlns:cs=\"http://calendarserver.org/ns/\">\r\n"
+                          "  <d:prop>\r\n"
+                          "    <d:displayname />\r\n"
+                          "    <cs:getctag />\r\n"
+                          "    <d:sync-token />"
+                          "  </d:prop>\r\n"
+                          "</d:propfind>";
 
-int buffersize = buffer->write(requestString.toUtf8());
-buffer->seek(0);
-buffer->size();
+  int buffersize = buffer->write(requestString.toUtf8());
+  buffer->seek(0);
+  buffer->size();
 
-QByteArray contentlength;
-contentlength.append(QString::number(buffersize).toUtf8());
+  QByteArray contentlength;
+  contentlength.append(QString::number(buffersize).toUtf8());
 
-QNetworkRequest request;
-request.setUrl(_hostURL);
-request.setRawHeader("User-Agent", "CalendarClient_CalDAV");
-//request.setRawHeader("Authorization", authorization.toUtf8());
-request.setRawHeader("Depth", "0");
-request.setRawHeader("Prefer", "return-minimal");
-request.setRawHeader("Content-Type", "text/xml; charset=utf-8");
-request.setRawHeader("Content-Length", contentlength);
+  QNetworkRequest request;
+  request.setUrl(_hostURL);
+  request.setRawHeader("User-Agent", "CalendarClient_CalDAV");
+  // request.setRawHeader("Authorization", authorization.toUtf8());
+  request.setRawHeader("Depth", "0");
+  request.setRawHeader("Prefer", "return-minimal");
+  request.setRawHeader("Content-Type", "text/xml; charset=utf-8");
+  request.setRawHeader("Content-Length", contentlength);
 
-QSslConfiguration conf = request.sslConfiguration();
-conf.setPeerVerifyMode(QSslSocket::VerifyNone);
-request.setSslConfiguration(conf);
-_pReply = _networkManager.sendCustomRequest(request, QByteArray("PROPFIND"), buffer);
+  QSslConfiguration conf = request.sslConfiguration();
+  conf.setPeerVerifyMode(QSslSocket::VerifyNone);
+  request.setSslConfiguration(conf);
+  _pReply = _networkManager.sendCustomRequest(request, QByteArray("PROPFIND"),
+                                              buffer);
 
-if (NULL != _pReply)
-{
-    connect(_pReply, SIGNAL(error(QNetworkReply::NetworkError)),this, SLOT(handleHTTPError()));
+  if (NULL != _pReply) {
+    connect(_pReply, SIGNAL(error(QNetworkReply::NetworkError)), this,
+            SLOT(handleHTTPError()));
 
-    connect(_pReply, SIGNAL(finished()),this, SLOT(handleRequestSyncTokenFinished()));
-    connect(&_networkManager, &QNetworkAccessManager::authenticationRequired, this, &ClientCalDAV::handleRequestAuthentication);
+    connect(_pReply, SIGNAL(finished()), this,
+            SLOT(handleRequestSyncTokenFinished()));
+    connect(&_networkManager, &QNetworkAccessManager::authenticationRequired,
+            this, &ClientCalDAV::handleRequestAuthentication);
     _requestTimeoutTimer.start(_requestTimeoutMS);
+  } else {
+    qDebug() << _displayName << ": "
+             << "ERROR: Invalid reply pointer when requesting sync token.";
+    emit error("Invalid reply pointer when requesting sync token.");
+  }
 }
-else
-{
-qDebug() << _displayName << ": " << "ERROR: Invalid reply pointer when requesting sync token.";
-emit error("Invalid reply pointer when requesting sync token.");
-}
-}
-void ClientCalDAV::handleRequestSyncTokenFinished(void){
-   // qDebug()<<"OUTPUT CONNECT" << _pReply->readAll()<<" adsti " << _pReply->error();
+void ClientCalDAV::handleRequestSyncTokenFinished(void) {
+  // qDebug()<<"OUTPUT CONNECT" << _pReply->readAll()<<" adsti " <<
+  // _pReply->error();
 }
 
 ClientCalDAV::ClientCalDAV(const QString &filepath, const QString &hostURL,

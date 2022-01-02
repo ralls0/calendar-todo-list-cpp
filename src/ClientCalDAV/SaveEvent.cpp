@@ -24,8 +24,8 @@ void ClientCalDAV::saveEvent(QString uid, QString filename, QString summary,
 
   QString authorization = "";
   if (_auth == E_AUTH_TOKEN) {
-      authorization.append("Bearer ");
-      authorization.append(_accessToken);
+    authorization.append("Bearer ");
+    authorization.append(_accessToken);
   }
 
   QDEBUG << "[i] (" << _displayName << ") "
@@ -88,7 +88,7 @@ void ClientCalDAV::saveEvent(QString uid, QString filename, QString summary,
   request.setUrl(QUrl(_hostURL.toString() + filename));
   request.setRawHeader("User-Agent", "ClientCalDAV");
   if (_auth == E_AUTH_TOKEN) {
-        request.setRawHeader("Authorization", authorization.toUtf8());
+    request.setRawHeader("Authorization", authorization.toUtf8());
   }
 
   request.setRawHeader("Depth", "0");
@@ -105,8 +105,11 @@ void ClientCalDAV::saveEvent(QString uid, QString filename, QString summary,
 
   if (_pUploadReply) {
 
-    connect(_pUploadReply, &QNetworkReply::errorOccurred, this, &ClientCalDAV::handleHTTPError);
-    connect(&_uploadNetworkManager, &QNetworkAccessManager::authenticationRequired, this, &ClientCalDAV::handleRequestAuthentication);
+    connect(_pUploadReply, &QNetworkReply::errorOccurred, this,
+            &ClientCalDAV::handleHTTPError);
+    connect(&_uploadNetworkManager,
+            &QNetworkAccessManager::authenticationRequired, this,
+            &ClientCalDAV::handleRequestAuthentication);
 
     connect(_pUploadReply, SIGNAL(finished()), this,
             SLOT(handleUploadFinished()));

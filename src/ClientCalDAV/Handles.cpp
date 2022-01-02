@@ -40,9 +40,10 @@ void ClientCalDAV::handleUploadHTTPError(void) {
 /**
  * @brief         Methods to receive HTTP(S) responses from CalDAV server.
  */
-void ClientCalDAV::handleRequestAuthentication(QNetworkReply *reply, QAuthenticator *_authenticator){
-    _authenticator->setUser(_username);
-    _authenticator->setPassword(_password);
+void ClientCalDAV::handleRequestAuthentication(QNetworkReply *reply,
+                                               QAuthenticator *_authenticator) {
+  _authenticator->setUser(_username);
+  _authenticator->setPassword(_password);
 }
 void ClientCalDAV::handleHTTPError(void) {
   _state = E_STATE_ERROR;

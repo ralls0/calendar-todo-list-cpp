@@ -9,7 +9,8 @@
 
 #include "NewEventDialog.h"
 
-NewEventDialog::NewEventDialog(CalendarEvent *event, TaskElement *te, QWidget *parent)
+NewEventDialog::NewEventDialog(CalendarEvent *event, TaskElement *te,
+                               QWidget *parent)
     : QDialog(parent) {
 
   if (te) {
@@ -34,7 +35,6 @@ NewEventDialog::NewEventDialog(CalendarEvent *event, TaskElement *te, QWidget *p
   setLayout(_layout);
 
   this->setStyleSheet(_colorStyle.getDialogStyle());
-
 }
 
 NewEventDialog::NewEventDialog(QList<QString> cals, QWidget *parent)
@@ -58,7 +58,8 @@ NewEventDialog::~NewEventDialog() {
 }
 
 void NewEventDialog::createBaseInfoLayout(QList<QString> cals,
-                                          CalendarEvent *event, TaskElement *te) {
+                                          CalendarEvent *event,
+                                          TaskElement *te) {
   gb_baseInfo = new QGroupBox(this);
   gb_baseInfo->setFlat(true);
   gb_baseInfo->setStyleSheet("border:0;");
@@ -74,7 +75,6 @@ void NewEventDialog::createBaseInfoLayout(QList<QString> cals,
 
   rb_event = new QRadioButton("Event", _groupBox);
   rb_activity = new QRadioButton("Activity", _groupBox);
-
 
   createEventLayout(cals, event);
   createActivityLayout(cals, te);
@@ -217,7 +217,8 @@ void NewEventDialog::createActivityLayout(const QList<QString> &cals,
   e_activity->setLayout(_activityLayout);
 }
 
-void NewEventDialog::createButtonGroupBox(CalendarEvent *event, TaskElement *te) {
+void NewEventDialog::createButtonGroupBox(CalendarEvent *event,
+                                          TaskElement *te) {
   _buttonBox = new QDialogButtonBox(Qt::Horizontal, this);
   btn_cancel = new QPushButton(tr("Close"), _buttonBox);
   btn_cancel->setCheckable(true);
@@ -260,7 +261,7 @@ void NewEventDialog::createButtonGroupBox(CalendarEvent *event, TaskElement *te)
   _buttonBox->addButton(btn_cancel, QDialogButtonBox::RejectRole);
 }
 
-void NewEventDialog::onDeleteClick(void) { //TODO: add te
+void NewEventDialog::onDeleteClick(void) { // TODO: add te
   if (rb_event->isChecked())
     emit deleteEvent(_event);
   if (rb_activity->isChecked())

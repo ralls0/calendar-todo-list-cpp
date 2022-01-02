@@ -15,10 +15,9 @@
 #include <QDebug>
 #include <QDomDocument>
 #include <QList>
-#include <QObject>
-#include <QStateMachine>
 #include <QNetworkAccessManager>
 #include <QObject>
+#include <QStateMachine>
 #include <QTextStream>
 #include <QTimer>
 #include <QUrl>
@@ -121,8 +120,6 @@ public:
   ClientCalDAV(const QString &filepath, const QString &hostURL,
                const QString &displayName, QObject *parent = nullptr);
   ~ClientCalDAV();
-
-
 
   /**
    * @brief     Restituisce un elenco di eventi che si verificano nella data
@@ -290,7 +287,8 @@ public slots:
   QString getColor(void) const;
   void setColor(const QString &color);
   void handleHTTPError(void);
-  void handleRequestAuthentication(QNetworkReply *reply, QAuthenticator *authenticator);
+  void handleRequestAuthentication(QNetworkReply *reply,
+                                   QAuthenticator *authenticator);
   E_CalendarState getSyncState(void);
 
   virtual bool setHostURL(const QUrl hostURL);
@@ -369,7 +367,6 @@ public slots:
   void deleteEvent(QString href);
 
 protected slots:
-
 
   void handleRequestCTagFinished(void);
   void handleRequestChangesEventFinished(void);
