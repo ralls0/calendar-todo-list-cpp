@@ -17,6 +17,8 @@
 #include <QList>
 #include <QObject>
 #include <QStateMachine>
+#include <QNetworkAccessManager>
+#include <QObject>
 #include <QTextStream>
 #include <QTimer>
 #include <QUrl>
@@ -28,7 +30,7 @@
 #include "../OAuth2/OAuth.h"
 #include "../Utils/DateUtils.h"
 
-#define DEBUG_ 0
+#define DEBUG_ 1
 #if DEBUG_
 #define QDEBUG qDebug()
 #else
@@ -120,6 +122,8 @@ public:
                const QString &displayName, QObject *parent = nullptr);
   ~ClientCalDAV();
 
+
+
   /**
    * @brief     Restituisce un elenco di eventi che si verificano nella data
    *            inserita
@@ -146,7 +150,7 @@ protected:
   void retrieveChangedTask(void);
   void retrieveCTag(void);
   void setupStateMachine(void);
-
+  void sendRequestSyncToken(void);
   // Tipo di auth verso il server
   E_CalendarAuth _auth;
 
@@ -282,10 +286,11 @@ signals:
 
 public slots:
   QString getCTag(void) const;
-
+  void handleRequestSyncTokenFinished(void);
   QString getColor(void) const;
   void setColor(const QString &color);
-
+  void handleHTTPError(void);
+  void handleRequestAuthentication(QNetworkReply *reply, QAuthenticator *authenticator);
   E_CalendarState getSyncState(void);
 
   virtual bool setHostURL(const QUrl hostURL);
@@ -364,7 +369,7 @@ public slots:
   void deleteEvent(QString href);
 
 protected slots:
-  void handleHTTPError(void);
+
 
   void handleRequestCTagFinished(void);
   void handleRequestChangesEventFinished(void);

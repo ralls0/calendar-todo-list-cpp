@@ -26,12 +26,9 @@ void ClientCalDAV::deleteEvent(QString href) {
   }
 
   QString authorization = "";
-  if (_auth == E_AUTH_UPWD) {
-    authorization.append("Basic ");
-    authorization.append(encodeBase64(_username + ":" + _password));
-  } else {
-    authorization.append("Bearer ");
-    authorization.append(_accessToken);
+  if (_auth == E_AUTH_TOKEN) {
+      authorization.append("Bearer ");
+      authorization.append(_accessToken);
   }
 
   QString filename = QUrl(href).fileName();
@@ -39,7 +36,10 @@ void ClientCalDAV::deleteEvent(QString href) {
   QNetworkRequest request;
   request.setUrl(QUrl(_hostURL.toString() + filename));
   request.setRawHeader("User-Agent", "ClientCalDAV");
-  request.setRawHeader("Authorization", authorization.toUtf8());
+  if (_auth == E_AUTH_TOKEN) {
+        request.setRawHeader("Authorization", authorization.toUtf8());
+    }
+
   request.setRawHeader("Depth", "0");
   request.setRawHeader("Prefer", "return-minimal");
   request.setRawHeader("Content-Type", "text/calendar; charset=utf-8");
@@ -57,6 +57,7 @@ void ClientCalDAV::deleteEvent(QString href) {
   if (_pUploadReply) {
     connect(_pReply, &QNetworkReply::errorOccurred, this,
             &ClientCalDAV::handleHTTPError);
+      connect(&_uploadNetworkManager, &QNetworkAccessManager::authenticationRequired, this, &ClientCalDAV::handleRequestAuthentication);
 
     connect(_pUploadReply, SIGNAL(finished()), this,
             SLOT(handleUploadFinished()));
