@@ -81,13 +81,14 @@ void NewEventDialog::createBaseInfoLayout(QList<QString> cals,
 
   if (event == nullptr && te == nullptr) {
     rb_event->setChecked(true);
+    e_activity->hide();
     e_event->show();
   }
   if (event != nullptr) {
     rb_event->setChecked(true);
     rb_activity->setDisabled(true);
-    e_event->show();
     e_activity->hide();
+    e_event->show();
   }
   if (te != nullptr) {
     rb_activity->setChecked(true);
@@ -152,7 +153,7 @@ void NewEventDialog::createEventLayout(QList<QString> cals,
     le_location->setText(event->location());
   _pixmap = QPixmap("../img/place.png");
   _pixmap = _pixmap.scaled(QSize(18, 18), Qt::KeepAspectRatio);
-  lbl_location = new QLabel(this);
+  lbl_location = new QLabel(e_event);
   lbl_location->setPixmap(_pixmap);
   lbl_location->setMask(_pixmap.mask());
 
@@ -188,7 +189,7 @@ void NewEventDialog::createActivityLayout(const QList<QString> &cals,
                                           TaskElement *te) {
   e_activity = new QWidget(gb_baseInfo);
 
-  QLabel *deadLine = new QLabel("DeadLine: ");
+  _deadLine = new QLabel("Deadline:", e_activity);
 
   if (te != nullptr)
     dte_deadline = new QDateTimeEdit(te->getDeadline(), e_activity);
@@ -210,7 +211,7 @@ void NewEventDialog::createActivityLayout(const QList<QString> &cals,
   }
 
   _activityLayout = new QGridLayout(e_activity);
-  _activityLayout->addWidget(deadLine, 0, 0);
+  _activityLayout->addWidget(_deadLine, 0, 0);
   _activityLayout->addWidget(dte_deadline, 0, 1);
   _activityLayout->addWidget(cb_activity, 1, 0, 1, 2);
   e_activity->setLayout(_activityLayout);

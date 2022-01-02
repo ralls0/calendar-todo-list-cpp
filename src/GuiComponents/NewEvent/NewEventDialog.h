@@ -102,8 +102,8 @@ private:
   QPixmap _pixmap;
   QLineEdit *le_location;
 
+  QLabel *_deadLine;
   QTextEdit *te_descriptionE;
-  QTextEdit *te_descriptionA;
 
   QDialogButtonBox *_buttonBox;
   QPushButton *btn_cancel;
