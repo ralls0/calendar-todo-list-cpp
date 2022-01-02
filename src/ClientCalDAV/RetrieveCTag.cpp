@@ -11,13 +11,10 @@
 
 void ClientCalDAV::retrieveCTag(void) {
   QString authorization = "";
-  if (_auth == E_AUTH_UPWD) {
-    authorization.append("Basic ");
-    authorization.append(encodeBase64(_username + ":" + _password));
-  } else {
-    authorization.append("Bearer ");
-    authorization.append(_accessToken);
-  }
+    if (_auth == E_AUTH_TOKEN) {
+        authorization.append("Bearer ");
+        authorization.append(_accessToken);
+    }
 
   QBuffer *buffer = new QBuffer();
 
@@ -41,7 +38,9 @@ void ClientCalDAV::retrieveCTag(void) {
   QNetworkRequest request;
   request.setUrl(_hostURL);
   request.setRawHeader("User-Agent", "ClientCalDAV");
-  request.setRawHeader("Authorization", authorization.toUtf8());
+    if (_auth == E_AUTH_TOKEN) {
+        request.setRawHeader("Authorization", authorization.toUtf8());
+    }
   request.setRawHeader("Depth", "0");
   request.setRawHeader("Content-Type", "application/xml; charset=utf-8");
   request.setRawHeader("Content-Length", contentlength);
@@ -58,7 +57,7 @@ void ClientCalDAV::retrieveCTag(void) {
             &ClientCalDAV::handleHTTPError);
     connect(_pReply, SIGNAL(finished()), this,
             SLOT(handleRequestCTagFinished()));
-
+    connect(&_uploadNetworkManager, &QNetworkAccessManager::authenticationRequired, this, &ClientCalDAV::handleRequestAuthentication);
     _requestTimeoutTimer.start(_requestTimeoutMS);
   } else {
     QDEBUG << "[i] (" << _displayName << ") "
