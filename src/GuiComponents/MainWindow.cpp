@@ -33,6 +33,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent) {
   connect(_cals, &CalendarManager::setToDoList, this, &MainWindow::createToDo);
   connect(_todo, &ToDoList::modifyTask, this, &MainWindow::createNewTaskDialog);
   connect(_todo, &ToDoList::deleteTask, this, &MainWindow::deleteTask);
+  connect(_todo, &ToDoList::doneTask, this, &MainWindow::deleteTask);
   createPreviewGroupBox();
 
   QGridLayout *layout = new QGridLayout(this);
