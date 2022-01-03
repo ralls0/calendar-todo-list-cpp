@@ -1,6 +1,6 @@
 /**
  *
- * @author  Marco Manco
+ * @author  Marco Manco Davide Manco
  * @date    29/11/21.
  * @file    NewEventDialog.h
  * @brief
@@ -60,7 +60,7 @@ signals:
                 QDateTime startDateTime, QDateTime endDateTime,
                 QString calendar);
   void deleteEvent(CalendarEvent *t);
-  void deleteTask(void); // FIXME aggancia a tu sai chi
+  void deleteTask(void);
   void modifyTask(QString name, QDateTime t, QString idT, TaskElement *te);
   void newTask(QString name);
 

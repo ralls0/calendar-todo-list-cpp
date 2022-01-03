@@ -158,7 +158,6 @@ void MainWindow::createToDo(QString acc) {
   connect(_taskm, &TasksManager::getAllTask, _todo, &ToDoList::updateTaskList);
   connect(_taskm, &TasksManager::getAll, _taskm, &TasksManager::getMyTasks);
   _taskm->getMyTaskLists(_taskm->getAccT());
-  //_taskm->getMyTasks(_taskm->getAccT(),)
 }
 void MainWindow::createNewTaskDialog(TaskElement *el) {
   _newEventDialog = new NewEventDialog(nullptr, el, this);

@@ -9,16 +9,18 @@
 
 class QCheckBoxExtended : public QCheckBox  {
     Q_OBJECT
-private:
-    TaskElement *te;
+
 public:
     explicit QCheckBoxExtended(QWidget *parent = 0);
     void checkbox_done_clicked(int x);
     void setTask(TaskElement *ted) { te = ted; };
     TaskElement *getTask() { return te; };
 
+private:
+    TaskElement *te;
+
     signals:
-            void on_click_done(QCheckBoxExtended *d);
+    void on_click_done(QCheckBoxExtended *d);
 };
 
 
