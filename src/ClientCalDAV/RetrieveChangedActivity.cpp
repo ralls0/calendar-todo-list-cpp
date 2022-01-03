@@ -1,6 +1,6 @@
 /**
  *
- * @author  Marco Manco
+ * @author  Marco Manco Davide Manco
  * @date    03/12/21.
  * @file    GetChangedActivity.cpp
  * @brief

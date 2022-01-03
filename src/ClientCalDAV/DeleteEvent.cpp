@@ -1,6 +1,6 @@
 /**
  *
- * @author  Marco Manco
+ * @author  Marco Manco Davide Manco
  * @date    28/11/21.
  * @file    DeleteEvent.cpp
  * @brief   Delete an event from the calendar
@@ -10,7 +10,6 @@
 #include "ClientCalDAV.h"
 
 void ClientCalDAV::deleteEvent(QString href) {
-  // href="/caldav/v2/pdsmariorossi@gmail.com/events/20211218-1212-0009-0000-202112181212.ics";
   if (href.isEmpty()) {
     return;
   }

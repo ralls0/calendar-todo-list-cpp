@@ -122,7 +122,7 @@ public slots:
 
   QList<QObject *> getListOfCalendars(void);
   QList<QObject *> getListOfEvents(void);
-
+  //QList<QObject *>  listOfTaskChanged(void);
   void addCalendarCalDAVUP(QString calendarName, QString url, QString username,
                            QString password);
 

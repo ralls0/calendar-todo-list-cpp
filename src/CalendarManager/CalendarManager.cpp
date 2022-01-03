@@ -1,6 +1,6 @@
 /**
  *
- * @author  Marco Manco
+ * @author  Marco Manco Davide Manco
  * @date    28/11/21.
  * @file    CalendarManager.cpp
  * @brief   Implementation file of class CalendarManager
@@ -169,6 +169,17 @@ QList<QObject *> CalendarManager::getListOfEvents(void) {
   return returnList;
 }
 
+/*QList<QObject *> CalendarManager::listOfTaskChanged(void) {
+    QList<QObject *> returnList;
+    foreach (ClientCalDAV *pListItem, _calendarList) {
+        returnList.append(pListItem->eventsInRange(
+                QDate(_date.year(), _date.month(), 1),
+                QDate(_date.year(), _date.month(), 1).addMonths(1).addDays(-1)));
+    }
+
+    return returnList;
+}*/
+
 void CalendarManager::addCalendarCalDAVUP(QString calendarName, QString url,
                                           QString username, QString password) {
   ClientCalDAV *pCalendar =
@@ -179,6 +190,7 @@ void CalendarManager::addCalendarCalDAVUP(QString calendarName, QString url,
   QDEBUG << "[i] Emit listOfCalendarsChanged and listOfEventsChanged";
   emit listOfCalendarsChanged(this->getListOfCalendars());
   emit listOfEventsChanged(this->getListOfEvents());
+  //emit listOfTaskChanged(this->getListOfTasks());
 }
 
 void CalendarManager::addCalendarCalDAVOA(QString calendarName, QString url,

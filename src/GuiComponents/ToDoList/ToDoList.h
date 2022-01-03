@@ -34,6 +34,7 @@
 
 class ToDoList : public QWidget {
   Q_OBJECT
+
 signals:
   void deleteTask(TaskElement *t);
   void modifyTask(TaskElement *t);
@@ -49,7 +50,6 @@ private:
   void on_check_edit_click(QCheckBoxExtended *d);
   QGridLayout *_layout;
   QList<QString> _listaTask;
-
   QLabel *lbl_title;
 };
 

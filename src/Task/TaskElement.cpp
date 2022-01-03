@@ -10,7 +10,6 @@ TaskElement::TaskElement(const QDateTime deadline, bool status,
                          QString kind, QString dString, QString uString, int type)
     : _deadline(deadline), _status(status), _name(name), _id(id),
       _updated(updated), _etag(etag),
-      //_position(_position),
       _selflink(selfLink), _statusS(statusS), _kind(kind),
       _updatedString(uString), _deadlineString(dString), _type(type) {}
 
