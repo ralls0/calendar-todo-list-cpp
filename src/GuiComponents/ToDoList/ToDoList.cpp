@@ -36,8 +36,10 @@ void ToDoList::updateTaskList(QList<TaskElement *> tasks) {
     QWidget *wget = new QWidget();
     QGridLayout *wly = new QGridLayout(wget);
     _listaTask.push_front(t->getName());
-    QCheckBox *do1 = new QCheckBox(wget);
+    QCheckBoxExtended *do1 = new QCheckBoxExtended(wget);
+    connect(do1, &QCheckBoxExtended::on_click_done, this, &ToDoList::on_check_edit_click);
     do1->setText(t->getName());
+    do1->setTask(t);
     QLabel *datatodo;
     if (t->getDeadline().isValid()) {
       QStringList listaD = t->getDeadline().toString().split(" ");
@@ -71,6 +73,13 @@ void ToDoList::updateTaskList(QList<TaskElement *> tasks) {
   }
 }
 
+void ToDoList::on_check_edit_click(QCheckBoxExtended *d){
+    TaskElement *e = nullptr;
+    if (d != nullptr) {
+        e = d->getTask();
+        emit doneTask(e);
+    }
+}
 void ToDoList::on_button_edit_click(QPushButtonExtendedTD *d) {
   TaskElement *e = nullptr;
   if (d != nullptr) {
@@ -85,7 +94,7 @@ void ToDoList::on_button_delete_click(QPushButtonExtendedTD *d) {
     e = d->getTask();
   QMessageBox::StandardButton reply;
   reply =
-      QMessageBox::question(this, "Delete Task", "Are you sure to delete task?",
+      QMessageBox::question(this, "Delete Task", "Are you sure to delete task '"+d->getTask()->getName()+"' ?",
                             QMessageBox::Yes | QMessageBox::No);
   if (reply == QMessageBox::Yes) {
     // QApplication::quit();

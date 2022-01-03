@@ -309,6 +309,10 @@ void NewEventDialog::onSaveClick(void) {
     emit newEvent(uid, filename, title, location, description, rrule,
                   startDateTime, endDateTime, calendar);
   } else if (rb_activity->isChecked()) {
+
+      /*
+       * devo controllare se sto facendo create/modify task con google
+       */
     if (btn_save->text() == "Modify") {
       QDateTime endDateTime = dte_deadline->dateTime();
       QString title = le_title->text();
