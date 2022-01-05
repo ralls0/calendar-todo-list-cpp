@@ -33,6 +33,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent) {
   connect(_cals, &CalendarManager::setToDoList, this, &MainWindow::createToDo);
   connect(_todo, &ToDoList::modifyTask, this, &MainWindow::createNewTaskDialog);
   connect(_todo, &ToDoList::deleteTask, this, &MainWindow::deleteTask);
+  connect(_todo, &ToDoList::doneTask, this, &MainWindow::deleteTask);
   createPreviewGroupBox();
 
   QGridLayout *layout = new QGridLayout(this);
@@ -157,7 +158,6 @@ void MainWindow::createToDo(QString acc) {
   connect(_taskm, &TasksManager::getAllTask, _todo, &ToDoList::updateTaskList);
   connect(_taskm, &TasksManager::getAll, _taskm, &TasksManager::getMyTasks);
   _taskm->getMyTaskLists(_taskm->getAccT());
-  //_taskm->getMyTasks(_taskm->getAccT(),)
 }
 void MainWindow::createNewTaskDialog(TaskElement *el) {
   _newEventDialog = new NewEventDialog(nullptr, el, this);

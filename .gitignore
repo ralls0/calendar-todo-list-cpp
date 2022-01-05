@@ -4,6 +4,7 @@
 
 # testing
 client_setup.json
+client_setupMio.json
 
 # production
 /cmake-build-debug

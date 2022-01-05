@@ -312,40 +312,21 @@ void NewEventDialog::onSaveClick(void) {
     if (btn_save->text() == "Modify") {
       QDateTime endDateTime = dte_deadline->dateTime();
       QString title = le_title->text();
-      emit modifyTask(title, endDateTime, _te->getId(), _te);
+      if(_te->getType()==0)
+        emit modifyTask(title, endDateTime, _te->getId(), _te);
+      /*else{
+          if(_event) uid = _event->getUID(); //PERICOLO CRASH DA CONTROLLARE
+          QString location = le_location->text();
+          QString description = te_descriptionE->toPlainText();
+          //start endtime??
+          emit newEvent(uid, "", title, location, description, "",
+                        startDateTime, endDateTime, calendar);
+      }*/
     } else if (btn_save->text() == "Add") {
       QString title = le_title->text();
+      //per l'add dovrei controllare il calendario selezionato, ma da qui ho solo una lista di qstring
       emit newTask(title);
     }
   }
   this->close();
 }
-/*
-void NewEventDialog::createButtonGroupBox(TaskElement *te) {
-    btn_cancel = new QPushButton(tr("Close"),this);
-    btn_cancel->setCheckable(true);
-    QPixmap pixmapC(CLOSE_PATH);
-    QIcon CloseIcon(pixmapC);
-    btn_cancel->setIcon(CloseIcon);
-    btn_save = new QPushButton(!te ? tr("Add") : tr("Modify"), this);
-    btn_save->setCheckable(true);
-    if (!te) {
-        QPixmap pixmapA(ADD_PATH);
-        QIcon AddIcon(pixmapA);
-        btn_save->setIcon(AddIcon);
-    } else {
-        QPixmap pixmapE(EDIT_PATH);
-        QIcon EditIcon(pixmapE);
-        btn_save->setIcon(EditIcon);
-    }
-
-    connect(btn_save, &QPushButton::clicked, this,
-&NewEventDialog::onSaveClick); connect(btn_cancel, &QPushButton::clicked, this,
-&QWidget::close);
-
-    _buttonBox = new QDialogButtonBox(Qt::Horizontal,this);
-    _buttonBox->addButton(btn_save, QDialogButtonBox::AcceptRole);
-
-
-    _buttonBox->addButton(btn_cancel, QDialogButtonBox::RejectRole);
-}*/

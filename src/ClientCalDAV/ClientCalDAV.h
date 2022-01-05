@@ -28,6 +28,7 @@
 #include "../CalendarEvent/CalendarEvent.h"
 #include "../OAuth2/OAuth.h"
 #include "../Utils/DateUtils.h"
+#include "../Task/TaskElement.h"
 
 #define DEBUG_ 1
 #if DEBUG_
@@ -193,7 +194,7 @@ protected:
 
   // Elenco degli eventi gestiti CalendarEvent
   QList<CalendarEvent> _eventList;
-
+  QList<TaskElement> _taskList;
   /**
    * @brief     Helper function per codificare le richieste di autorizzazione di
    *            rete

@@ -138,8 +138,7 @@ ClientCalDAV::ClientCalDAV(const QString &filepath, const QString &hostURL,
   _au = new OAuth(
       filepath,
       "https://www.googleapis.com/auth/calendar "
-      "https://www.googleapis.com/auth/tasks"); // FIXME IN CASO DI ERROR PER
-                                                // IL TODO FIX LO SCOPE
+      "https://www.googleapis.com/auth/tasks ");
   connect(_au, &OAuth::accessTokenChanged, this, &ClientCalDAV::setAccessToken);
   connect(_au, &OAuth::accessTokenTimeout, this, &ClientCalDAV::notifyError);
 
