@@ -16,7 +16,7 @@ ClientCalDAV::ClientCalDAV(const QString &username, const QString &password,
       _username(username), _password(password) {
   _requestTimeoutMS = 32000;
   _requestTimeoutTimer.setSingleShot(true);
-
+  _t = nullptr;
   /*
    * Il timer è impostato su singolo scatto,
    * quindi non è necessario interromperlo
@@ -158,6 +158,8 @@ ClientCalDAV::ClientCalDAV(const QString &filepath, const QString &hostURL,
 ClientCalDAV::~ClientCalDAV() {
   _eventList.clear();
   _synchronizationTimer.stop();
+
+  if(_t->joinable()) _t->join();
 
   if (_au)
     delete _au;

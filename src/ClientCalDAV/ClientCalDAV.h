@@ -10,6 +10,7 @@
 #ifndef CALENDAR_TODO_LIST_CPP_CLIENTCALDAV_H
 #define CALENDAR_TODO_LIST_CPP_CLIENTCALDAV_H
 
+#include <thread>
 #include <QColor>
 #include <QDate>
 #include <QDebug>
@@ -151,6 +152,8 @@ protected:
   void sendRequestSyncToken(void);
   // Tipo di auth verso il server
   E_CalendarAuth _auth;
+
+  std::thread *_t;
 
   int _yearToBeRequested;
   int _monthToBeRequested;
