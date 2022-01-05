@@ -76,7 +76,7 @@ void ClientCalDAV::parseCalendarVEVENT(QString href) {
         QDEBUG << "[i] (" << _displayName << ") "
                << "could not parse" << line;
 
-      event.setEndDateTime(utcTime.toLocalTime().addSecs(1)); // FIXME
+      event.setEndDateTime(utcTime.toLocalTime().addSecs(10)); // FIXME
     } else if (key == QLatin1String("RRULE")) {
       event.setRRULE(value);
     } else if (key == QLatin1String("EXDATE")) {
