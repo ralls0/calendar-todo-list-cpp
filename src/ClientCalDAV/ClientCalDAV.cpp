@@ -14,9 +14,14 @@ ClientCalDAV::ClientCalDAV(const QString &username, const QString &password,
                            QObject *parent)
     : QObject(parent), _hostURL(hostURL), _displayName(displayName),
       _username(username), _password(password) {
+
+  std::thread t([this]() {
+      this->handle(); //Chiama la funzione privata.
+  });
+
+  _t = std::move(t);
   _requestTimeoutMS = 32000;
   _requestTimeoutTimer.setSingleShot(true);
-  _t = nullptr;
   /*
    * Il timer è impostato su singolo scatto,
    * quindi non è necessario interromperlo
@@ -159,7 +164,7 @@ ClientCalDAV::~ClientCalDAV() {
   _eventList.clear();
   _synchronizationTimer.stop();
 
-  if(_t->joinable()) _t->join();
+  if(_t.joinable()) _t.join();
 
   if (_au)
     delete _au;
@@ -297,4 +302,24 @@ void ClientCalDAV::setMonth(const int &month) {
 
 ClientCalDAV::E_CalendarAuth ClientCalDAV::getClientAuth(void) const {
   return _auth;
+}
+
+void ClientCalDAV::handle(void) {
+
+  std::unique_lock<std::mutex> ul{_m};
+  while (_tasks.empty() == false) {
+    _cv.wait(ul, [this]() {
+      // Waiting for a task
+      return (_tasks.empty() == false);
+    });
+    // Validity check
+    if (_tasks.empty() == false) {
+
+      // Getting the next task and remove it form the queue.
+      std::packaged_task<void> cTask = _tasks.front();
+      _tasks.pop_front();
+      ul.unlock();
+      cTask();
+      ul.lock(); }
+  } }
 }

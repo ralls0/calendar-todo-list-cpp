@@ -11,6 +11,9 @@
 #define CALENDAR_TODO_LIST_CPP_CLIENTCALDAV_H
 
 #include <thread>
+#include <mutex>
+#include <condition_variable>
+#include <future>
 #include <QColor>
 #include <QDate>
 #include <QDebug>
@@ -144,6 +147,9 @@ public:
    */
   Q_INVOKABLE QList<QObject *> allEvents(void);
 
+private:
+  void handle(void);
+
 protected:
   void retrieveChangedEvent(void);
   void retrieveChangedTask(void);
@@ -153,7 +159,10 @@ protected:
   // Tipo di auth verso il server
   E_CalendarAuth _auth;
 
-  std::thread *_t;
+  std::thread _t;
+  std::mutex _m;
+  std::condition_variable _cv;
+  std::list<std::packaged_task<void>> _tasks;
 
   int _yearToBeRequested;
   int _monthToBeRequested;
