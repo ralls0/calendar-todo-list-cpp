@@ -9,30 +9,38 @@
 
 #include "ClientCalDAV.h"
 
-void ClientCalDAV::parseVCALENDAR(QString href) {
-  QString line = _dataStream->readLine();
+void ClientCalDAV::parseVTODO(QString href, QTextStream &dataStream) {
+  QString line = dataStream.readLine();
 
   while (!line.isNull()) {
     if (line.contains("BEGIN:VEVENT")) {
-      parseCalendarVEVENT(href);
+      parseTodoVEVENT(href, dataStream);
     }
-    line = _dataStream->readLine();
+    line = dataStream.readLine();
   }
 }
 
-void ClientCalDAV::parseVTODO(QString href) {
-  QString line = _dataStream->readLine();
+void ClientCalDAV::parseVCALENDAR(QString href, QTextStream &dataStream) {
+  QList<CalendarEvent> eventList;
+  QString line = dataStream.readLine();
 
+  QDEBUG << "[i] (" << _displayName << ") Start while into the parseVCALENDAR function";
   while (!line.isNull()) {
     if (line.contains("BEGIN:VEVENT")) {
-      parseTodoVEVENT(href);
+      CalendarEvent event = parseCalendarVEVENT(href, dataStream);
+      QDEBUG << "[i] (" << _displayName << ") Adding event " << event.name();
+      if (event.name() != "") {
+        eventList.append(event);
+      }
     }
-    line = _dataStream->readLine();
+    line = dataStream.readLine();
   }
+
+  emit eventParsed(eventList);
 }
 
-void ClientCalDAV::parseCalendarVEVENT(QString href) {
-  CalendarEvent event(this);
+CalendarEvent ClientCalDAV::parseCalendarVEVENT(QString href, QTextStream &dataStream) {
+  CalendarEvent event(nullptr);
   event.setIsCalendar(true);
   event.setColor(_color);
   event.setCalendarName(_displayName);
@@ -40,7 +48,7 @@ void ClientCalDAV::parseCalendarVEVENT(QString href) {
   event.setHREF(href);
   QString line;
   QDateTime utcTime;
-  while (!(line = _dataStream->readLine()).contains(QByteArray("END:VEVENT")) &&
+  while (!(line = dataStream.readLine()).contains(QByteArray("END:VEVENT")) &&
          !line.contains(QByteArray("BEGIN:VALARM"))) {
     const int deliminatorPosition = line.indexOf(QLatin1Char(':'));
     const QString key = line.mid(0, deliminatorPosition);
@@ -76,7 +84,7 @@ void ClientCalDAV::parseCalendarVEVENT(QString href) {
         QDEBUG << "[i] (" << _displayName << ") "
                << "could not parse" << line;
 
-      event.setEndDateTime(utcTime.toLocalTime().addSecs(1)); // FIXME
+      event.setEndDateTime(utcTime.toLocalTime().addSecs(10)); // FIXME
     } else if (key == QLatin1String("RRULE")) {
       event.setRRULE(value);
     } else if (key == QLatin1String("EXDATE")) {
@@ -93,12 +101,12 @@ void ClientCalDAV::parseCalendarVEVENT(QString href) {
       event.setDescription(value);
     }
   }
-  if (event.name() != "") {
-    _eventList.append(event);
-  }
+
+  return event;
 }
 
-void ClientCalDAV::parseTodoVEVENT(QString href) {
+
+void ClientCalDAV::parseTodoVEVENT(QString href, QTextStream &dataStream) {
   CalendarEvent event(this);
   event.setIsCalendar(false);
   event.setColor(_color);
@@ -107,7 +115,7 @@ void ClientCalDAV::parseTodoVEVENT(QString href) {
   event.setHREF(href);
   QString line;
   QDateTime utcTime;
-  while (!(line = _dataStream->readLine()).contains(QByteArray("END:VEVENT"))) {
+  while (!(line = dataStream.readLine()).contains(QByteArray("END:VEVENT"))) {
     const int deliminatorPosition = line.indexOf(QLatin1Char(':'));
     const QString key = line.mid(0, deliminatorPosition);
     QString value = (line.mid(deliminatorPosition + 1, -1)

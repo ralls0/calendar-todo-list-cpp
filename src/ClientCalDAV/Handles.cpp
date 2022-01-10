@@ -122,3 +122,11 @@ void ClientCalDAV::debug_handleTimerTimeout(void) {
          << "~~~~~~sync timer timeout~~~~~~";
   emit calendarCheckCTag();
 }
+
+void ClientCalDAV::handleEventParsed(QList<CalendarEvent> eventList) {
+  QDEBUG << "[i] (" << _displayName << ") Start handleEventParsed, eventList get: " << eventList.size();
+  for(auto e : eventList) {
+    _eventList.append(CalendarEvent(e));
+  }
+  emit eventsUpdated();
+}

@@ -14,9 +14,14 @@ ClientCalDAV::ClientCalDAV(const QString &username, const QString &password,
                            QObject *parent)
     : QObject(parent), _hostURL(hostURL), _displayName(displayName),
       _username(username), _password(password) {
+  connect(this, &ClientCalDAV::eventParsed, this, &ClientCalDAV::handleEventParsed);
+  std::thread t([this]() {
+      this->handle();
+  });
+  _t = std::move(t);
+
   _requestTimeoutMS = 32000;
   _requestTimeoutTimer.setSingleShot(true);
-
   /*
    * Il timer è impostato su singolo scatto,
    * quindi non è necessario interromperlo
@@ -29,7 +34,6 @@ ClientCalDAV::ClientCalDAV(const QString &username, const QString &password,
   _color = QColor(rand() & 0xFF, rand() & 0xFF, rand() & 0xFF).name();
 
   _auth = E_AUTH_UPWD;
-  _dataStream = nullptr;
   _pUploadReply = nullptr;
   _pReply = nullptr;
   _au = nullptr;
@@ -50,70 +54,16 @@ ClientCalDAV::ClientCalDAV(const QString &username, const QString &password,
   // retrieveChangedTask() TODO
 }
 
-void ClientCalDAV::sendRequestSyncToken() {
-
-  // QString authorization = "Digest ";
-  // authorization.append(encodeBase64(_username + ":" + _password));
-
-  QBuffer *buffer = new QBuffer();
-
-  buffer->open(QIODevice::ReadWrite);
-
-  QString requestString = "<d:propfind xmlns:d=\"DAV:\" "
-                          "xmlns:cs=\"http://calendarserver.org/ns/\">\r\n"
-                          "  <d:prop>\r\n"
-                          "    <d:displayname />\r\n"
-                          "    <cs:getctag />\r\n"
-                          "    <d:sync-token />"
-                          "  </d:prop>\r\n"
-                          "</d:propfind>";
-
-  int buffersize = buffer->write(requestString.toUtf8());
-  buffer->seek(0);
-  buffer->size();
-
-  QByteArray contentlength;
-  contentlength.append(QString::number(buffersize).toUtf8());
-
-  QNetworkRequest request;
-  request.setUrl(_hostURL);
-  request.setRawHeader("User-Agent", "CalendarClient_CalDAV");
-  // request.setRawHeader("Authorization", authorization.toUtf8());
-  request.setRawHeader("Depth", "0");
-  request.setRawHeader("Prefer", "return-minimal");
-  request.setRawHeader("Content-Type", "text/xml; charset=utf-8");
-  request.setRawHeader("Content-Length", contentlength);
-
-  QSslConfiguration conf = request.sslConfiguration();
-  conf.setPeerVerifyMode(QSslSocket::VerifyNone);
-  request.setSslConfiguration(conf);
-  _pReply = _networkManager.sendCustomRequest(request, QByteArray("PROPFIND"),
-                                              buffer);
-
-  if (NULL != _pReply) {
-    connect(_pReply, SIGNAL(error(QNetworkReply::NetworkError)), this,
-            SLOT(handleHTTPError()));
-
-    connect(_pReply, SIGNAL(finished()), this,
-            SLOT(handleRequestSyncTokenFinished()));
-    connect(&_networkManager, &QNetworkAccessManager::authenticationRequired,
-            this, &ClientCalDAV::handleRequestAuthentication);
-    _requestTimeoutTimer.start(_requestTimeoutMS);
-  } else {
-    qDebug() << _displayName << ": "
-             << "ERROR: Invalid reply pointer when requesting sync token.";
-    emit error("Invalid reply pointer when requesting sync token.");
-  }
-}
-void ClientCalDAV::handleRequestSyncTokenFinished(void) {
-  // qDebug()<<"OUTPUT CONNECT" << _pReply->readAll()<<" adsti " <<
-  // _pReply->error();
-}
-
 ClientCalDAV::ClientCalDAV(const QString &filepath, const QString &hostURL,
                            const QString &displayName, QObject *parent)
     : QObject(parent), _hostURL(hostURL), _displayName(displayName),
       _filepath(filepath) {
+
+  connect(this, &ClientCalDAV::eventParsed, this, &ClientCalDAV::handleEventParsed);
+  std::thread t([this]() {
+    this->handle();
+  });
+  _t = std::move(t);
 
   _requestTimeoutMS = 32000;
   _requestTimeoutTimer.setSingleShot(true);
@@ -130,7 +80,6 @@ ClientCalDAV::ClientCalDAV(const QString &filepath, const QString &hostURL,
   _color = QColor(rand() & 0xFF, rand() & 0xFF, rand() & 0xFF).name();
 
   _auth = E_AUTH_TOKEN;
-  _dataStream = nullptr;
   _pUploadReply = nullptr;
   _pReply = nullptr;
   _accessToken = "";
@@ -158,6 +107,8 @@ ClientCalDAV::ClientCalDAV(const QString &filepath, const QString &hostURL,
 ClientCalDAV::~ClientCalDAV() {
   _eventList.clear();
   _synchronizationTimer.stop();
+
+  if(_t.joinable()) _t.join();
 
   if (_au)
     delete _au;
@@ -295,4 +246,37 @@ void ClientCalDAV::setMonth(const int &month) {
 
 ClientCalDAV::E_CalendarAuth ClientCalDAV::getClientAuth(void) const {
   return _auth;
+}
+
+void ClientCalDAV::handle(void) {
+  QDEBUG << "[i] (" << _displayName << ") Handle Thread";
+  std::unique_lock<std::mutex> ul{_m};
+  while (true) {
+    QDEBUG << "[i] (" << _displayName << ") Start loop Thread";
+    _cv.wait(ul, [this]() {
+      // Waiting for a task
+      return (_eventsp.empty() == false);
+    });
+    // Validity check
+    QDEBUG << "[i] (" << _displayName << ") Validity check";
+    if (_eventsp.empty() == false) {
+
+      // Getting the next href and remove it form the queue.
+      QDEBUG << "[i] (" << _displayName << ") Getting the next href and dataStream";
+      auto it = _eventsp.begin();
+      ul.unlock();
+      QDEBUG << "[i] (" << _displayName << ") Start parsing";
+      parseVCALENDAR(it->first, *(it->second));
+      _eventsp.erase(it->first);
+      ul.lock();
+    }
+  }
+}
+
+void  ClientCalDAV::submit(QString href, QTextStream *dataStream) {
+  const std::lock_guard<std::mutex> lg{_m};
+  // Adding new href.
+  QDEBUG << "[i] (" << _displayName << ") Adding new href";
+  _eventsp.insert(std::pair<QString,QTextStream *>(href, dataStream));
+  _cv.notify_one();
 }

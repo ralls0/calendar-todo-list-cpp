@@ -20,10 +20,7 @@ void ClientCalDAV::shareCalendar(QString email, QString comment) {
   }
 
   QString authorization = "";
-  if (_auth == E_AUTH_UPWD) {
-    authorization.append("Basic ");
-    authorization.append(encodeBase64(_username + ":" + _password));
-  } else {
+  if (_auth == E_AUTH_TOKEN) {
     authorization.append("Bearer ");
     authorization.append(_accessToken);
   }
@@ -61,7 +58,9 @@ void ClientCalDAV::shareCalendar(QString email, QString comment) {
   QNetworkRequest request;
   request.setUrl(_hostURL);
   request.setRawHeader("User-Agent", "ClientCalDAV");
-  request.setRawHeader("Authorization", authorization.toUtf8());
+  if (_auth == E_AUTH_TOKEN) {
+    request.setRawHeader("Authorization", authorization.toUtf8());
+  }
   request.setRawHeader("Depth", "0");
   request.setRawHeader("Content-Type", "application/xml; charset=utf-8");
   request.setRawHeader("Content-Length", contentlength);
@@ -78,6 +77,9 @@ void ClientCalDAV::shareCalendar(QString email, QString comment) {
 
     connect(_pUploadReply, SIGNAL(finished()), this,
             SLOT(handleShareFinished()));
+
+    connect(&_networkManager, &QNetworkAccessManager::authenticationRequired,
+            this, &ClientCalDAV::handleRequestAuthentication);
 
     _uploadRequestTimeoutTimer.start(_requestTimeoutMS);
   } else {

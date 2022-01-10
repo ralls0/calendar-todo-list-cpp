@@ -20,6 +20,17 @@ ClientCalDAV::handleSingleEvent(CalendarEvent &evt,
                                 const QDateTime &startOfQuestionedDate,
                                 const QDateTime &endOfQuestionedDate) {
   CalendarEvent *event = nullptr;
+  if (evt.getEndDateTime().time() == evt.getStartDateTime().time()) {
+    if (0 == evt.getEndDateTime().time().msecsSinceStartOfDay() || evt.getEndDateTime().addSecs(10).time().msecsSinceStartOfDay() == 0) {
+      // removing one second from endDateTime
+      QDateTime newStartDateTime = evt.getStartDateTime().addSecs(-10);
+      evt.setStartDateTime(newStartDateTime);
+    }
+    else {
+      QDateTime newEndDateTime = evt.getEndDateTime().addSecs(10);
+      evt.setEndDateTime(newEndDateTime);
+    }
+  }
   // events must not end at 00:00:00
   if (0 == evt.getEndDateTime().time().msecsSinceStartOfDay()) {
     // removing one second from endDateTime
@@ -92,10 +103,20 @@ QList<QObject *> ClientCalDAV::eventsInRange(const QDate &startDate,
       } else {
         QDEBUG << "[i] (" << _displayName << ") Event not in range";
       }
-    }
-
-    else {
+    } else {
       // è un evento che si ripete
+
+      if (evt.getEndDateTime().time() == evt.getStartDateTime().time()) {
+        if (0 == evt.getEndDateTime().time().msecsSinceStartOfDay() || evt.getEndDateTime().addSecs(10).time().msecsSinceStartOfDay() == 0) {
+          // removing one second from endDateTime
+          QDateTime newStartDateTime = evt.getStartDateTime().addSecs(-10);
+          evt.setStartDateTime(newStartDateTime);
+        }
+        else {
+          QDateTime newEndDateTime = evt.getEndDateTime().addSecs(10);
+          evt.setEndDateTime(newEndDateTime);
+        }
+      }
 
       // retrieve an array of rules
       QStringList rruleList =

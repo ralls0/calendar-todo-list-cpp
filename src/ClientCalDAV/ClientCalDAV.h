@@ -10,6 +10,10 @@
 #ifndef CALENDAR_TODO_LIST_CPP_CLIENTCALDAV_H
 #define CALENDAR_TODO_LIST_CPP_CLIENTCALDAV_H
 
+#include <thread>
+#include <mutex>
+#include <condition_variable>
+#include <future>
 #include <QColor>
 #include <QDate>
 #include <QDebug>
@@ -143,6 +147,10 @@ public:
    */
   Q_INVOKABLE QList<QObject *> allEvents(void);
 
+private:
+  void handle(void);
+  void submit(QString href, QTextStream *dataStream);
+
 protected:
   void retrieveChangedEvent(void);
   void retrieveChangedTask(void);
@@ -151,6 +159,11 @@ protected:
   void sendRequestSyncToken(void);
   // Tipo di auth verso il server
   E_CalendarAuth _auth;
+
+  std::thread _t;
+  std::mutex _m;
+  std::condition_variable _cv;
+  std::map<QString, QTextStream *> _eventsp;
 
   int _yearToBeRequested;
   int _monthToBeRequested;
@@ -189,8 +202,8 @@ protected:
   // Timer per risincronizzare automaticamente con la sorgente dell'evento
   QTimer _synchronizationTimer;
 
-  // Flusso di prova per gestire il contenuto del file iCalendar
-  QTextStream *_dataStream;
+  /*// Flusso di prova per gestire il contenuto del file iCalendar
+  QTextStream *_dataStream;*/
 
   // Elenco degli eventi gestiti CalendarEvent
   QList<CalendarEvent> _eventList;
@@ -209,22 +222,22 @@ protected:
   /**
    * @brief   Parser per i campi del calendario da un iCalendar.
    */
-  void parseVCALENDAR(QString href);
+  void parseVCALENDAR(QString href, QTextStream &dataStream);
 
   /**
    * @brief   Parser per i campi dei task da un iCalendar.
    */
-  void parseVTODO(QString href);
+  void parseVTODO(QString href, QTextStream &dataStream);
 
   /**
    * @brief   Parser per i campi VEVENT di un evento VCALENDAR.
    */
-  void parseCalendarVEVENT(QString href);
+  CalendarEvent parseCalendarVEVENT(QString href, QTextStream &dataStream);
 
   /**
    * @brief   Parser per i campi VEVENT di un task VTODO.
    */
-  void parseTodoVEVENT(QString href);
+  void parseTodoVEVENT(QString href, QTextStream &dataStream);
 
   /**
    * @brief   Aggiunge un singolo evento a _eventList
@@ -244,6 +257,7 @@ protected:
 
 signals:
 
+  void eventParsed(QList<CalendarEvent> eventList);
   void accessTokenError(QString displayName);
   void colorChanged(QString color);
   // emesso quando il calendario è entrato in un nuovo stato di sincronizzazione
@@ -283,8 +297,8 @@ signals:
   void calendarCheckCTag(void);
 
 public slots:
+  void handleEventParsed(QList<CalendarEvent> eventList);
   QString getCTag(void) const;
-  void handleRequestSyncTokenFinished(void);
   QString getColor(void) const;
   void setColor(const QString &color);
   void handleHTTPError(void);

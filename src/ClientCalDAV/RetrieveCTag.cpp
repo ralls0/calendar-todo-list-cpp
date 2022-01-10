@@ -86,12 +86,19 @@ void ClientCalDAV::handleRequestCTagFinished(void) {
     QDEBUG << "[i] (" << _displayName << ") Response: " << reply;
     reply = reply.replace("<D:", "<")
                 .replace("</D:", "</")
+                .replace("<d:", "<")
+                .replace("</d:", "</")
                 .replace("<cs:", "<")
-                .replace("</cs:", "</");
+                .replace("</cs:", "</")
+                .replace("<cal:calendar-data", "<calendardata")
+                .replace("</cal:calendar-data", "</calendardata")
+                .replace("<caldav:calendar-data", "<calendardata")
+                .replace("</caldav:calendar-data", "</calendardata");
     QDEBUG << "[i] (" << _displayName << ") Response replaced: " << reply;
 
     doc.setContent(reply);
 
+    QString sDisplayName = "";
     QString sCTag = "";
     QString sStatus = "";
 
@@ -100,6 +107,12 @@ void ClientCalDAV::handleRequestCTagFinished(void) {
            << ") response.size() = " << response.size();
     for (int i = 0; i < response.size(); i++) {
       QDomNode n = response.item(i);
+      QDomElement displayname = n.firstChildElement("displayname");
+      if (!displayname.isNull())
+      {
+        QDEBUG << "[i] (" << _displayName << ") DISPLAYNAME = " << displayname.text();
+        sDisplayName = displayname.text();
+      }
       QDomElement ctag = n.firstChildElement("getctag");
       if (!ctag.isNull()) {
         QDEBUG << "[i] (" << _displayName << ") CTAG = " << ctag.text();
@@ -120,6 +133,7 @@ void ClientCalDAV::handleRequestCTagFinished(void) {
     if ((!sCTag.isEmpty()) && (sStatus.endsWith("200 OK"))) {
       bool bCTagChanged = (_cTag != sCTag);
 
+      _displayName = sDisplayName;
       _cTag = sCTag;
 
       if (bCTagChanged) {

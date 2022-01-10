@@ -39,6 +39,10 @@ NewEventDialog::NewEventDialog(CalendarEvent *event, TaskElement *te,
 
 NewEventDialog::NewEventDialog(QList<QString> cals, QWidget *parent)
     : QDialog(parent) {
+
+  _event = nullptr;
+  _te = nullptr;
+
   createBaseInfoLayout(cals);
   createButtonGroupBox();
 
@@ -314,17 +318,8 @@ void NewEventDialog::onSaveClick(void) {
       QString title = le_title->text();
       if(_te->getType()==0)
         emit modifyTask(title, endDateTime, _te->getId(), _te);
-      /*else{
-          if(_event) uid = _event->getUID(); //PERICOLO CRASH DA CONTROLLARE
-          QString location = le_location->text();
-          QString description = te_descriptionE->toPlainText();
-          //start endtime??
-          emit newEvent(uid, "", title, location, description, "",
-                        startDateTime, endDateTime, calendar);
-      }*/
     } else if (btn_save->text() == "Add") {
       QString title = le_title->text();
-      //per l'add dovrei controllare il calendario selezionato, ma da qui ho solo una lista di qstring
       emit newTask(title);
     }
   }
