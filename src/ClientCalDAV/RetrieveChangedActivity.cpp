@@ -203,12 +203,7 @@ void ClientCalDAV::handleRequestChangesActivityFinished(void) {
             QDEBUG << "[i] (" << _displayName << ") "
                    << "    CALENDARDATA = " << elCalendarData.text();
 
-            if (_dataStream) {
-              delete _dataStream;
-            }
-            _dataStream = new QTextStream(elCalendarData.text().toLatin1());
-
-            parseVTODO(sHref);
+            parseVTODO(sHref, *(new QTextStream(elCalendarData.text().toLatin1())));
 
             strCalendarData = elCalendarData.text();
           } else {

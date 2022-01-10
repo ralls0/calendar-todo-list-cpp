@@ -215,7 +215,7 @@ ClientCalDAV *CalendarManager::getListItemAt(int index) {
   if ((index < 0) || (index >= _calendarList.count())) {
     QDEBUG << "[e] ERROR: index" << index << "is invalid in _calendarList("
            << _calendarList.count() << ")";
-    return NULL;
+    return nullptr;
   }
 
   return _calendarList[index];

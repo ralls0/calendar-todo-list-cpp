@@ -102,6 +102,7 @@ void ClientCalDAV::retrieveChangedEvent(void) {
   if (_pReply) {
     connect(_pReply, &QNetworkReply::errorOccurred, this,
             &ClientCalDAV::handleHTTPError);
+
     connect(_pReply, SIGNAL(finished()), this,
             SLOT(handleRequestChangesEventFinished()));
 
@@ -202,12 +203,7 @@ void ClientCalDAV::handleRequestChangesEventFinished(void) {
             QDEBUG << "[i] (" << _displayName << ") "
                    << "    CALENDARDATA = " << elCalendarData.text();
 
-            if (_dataStream) {
-              delete _dataStream;
-            }
-            _dataStream = new QTextStream(elCalendarData.text().toLatin1());
-
-            parseVCALENDAR(sHref);
+            submit(sHref, std::move(new QTextStream(elCalendarData.text().toLatin1())));
 
             strCalendarData = elCalendarData.text();
           } else {
