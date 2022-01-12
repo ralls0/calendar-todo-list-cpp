@@ -10,10 +10,6 @@
 #ifndef CALENDAR_TODO_LIST_CPP_CLIENTCALDAV_H
 #define CALENDAR_TODO_LIST_CPP_CLIENTCALDAV_H
 
-#include <thread>
-#include <mutex>
-#include <condition_variable>
-#include <future>
 #include <QColor>
 #include <QDate>
 #include <QDebug>
@@ -27,12 +23,16 @@
 #include <QUrl>
 #include <QXmlStreamReader>
 #include <QtNetwork>
+#include <condition_variable>
+#include <future>
 #include <iostream>
+#include <mutex>
+#include <thread>
 
 #include "../CalendarEvent/CalendarEvent.h"
 #include "../OAuth2/OAuth.h"
-#include "../Utils/DateUtils.h"
 #include "../Task/TaskElement.h"
+#include "../Utils/DateUtils.h"
 
 #define DEBUG_ 1
 #if DEBUG_
@@ -175,6 +175,7 @@ protected:
   QString _password;
   QString _accessToken;
   QString _filepath;
+  bool _on;
 
   QString _color;
   E_CalendarState _state;
@@ -263,7 +264,7 @@ signals:
   // emesso quando il calendario è entrato in un nuovo stato di sincronizzazione
   void syncStateChanged(E_CalendarState syncState);
   void hostURLChanged(QString hostURL);
-  void displayNameChanged(QString hostURL);
+  void displayNameChanged(QString displayName);
 
   // emesso quando l'evento in _eventList ha dei cambiamenti
   void eventsUpdated(void);

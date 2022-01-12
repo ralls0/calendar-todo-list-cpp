@@ -16,8 +16,8 @@
 #include <QPushButton>
 #include <QWidget>
 #define EDIT_PATH "../img/edit.png"
-#include "./QPushButtonExtendedTD.h"
 #include "./QCheckBoxExtended.h"
+#include "./QPushButtonExtendedTD.h"
 #define DELETE_PATH "../img/delete.png"
 #define STYLE_TODO_TITLE                                                       \
   "font-size: 24px; font-weight:bold; margin-bottom: 100px;"
@@ -39,6 +39,7 @@ signals:
   void deleteTask(TaskElement *t);
   void modifyTask(TaskElement *t);
   void doneTask(TaskElement *t);
+
 public:
   explicit ToDoList(QWidget *parent = nullptr);
   ~ToDoList();

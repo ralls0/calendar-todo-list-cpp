@@ -26,6 +26,4 @@ QPushButtonExtendedTD::QPushButtonExtendedTD(const char *text, QWidget *parent)
 void QPushButtonExtendedTD::button_clicked_delete() {
   emit on_click_delete(this);
 }
-void QPushButtonExtendedTD::button_edit_clicked() {
-    emit on_click_edit(this);
-}
+void QPushButtonExtendedTD::button_edit_clicked() { emit on_click_edit(this); }

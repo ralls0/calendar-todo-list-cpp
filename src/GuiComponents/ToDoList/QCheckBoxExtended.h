@@ -7,21 +7,20 @@
 #include "../../Task/TaskElement.h"
 #include <QCheckBox>
 
-class QCheckBoxExtended : public QCheckBox  {
-    Q_OBJECT
+class QCheckBoxExtended : public QCheckBox {
+  Q_OBJECT
 
 public:
-    explicit QCheckBoxExtended(QWidget *parent = 0);
-    void checkbox_done_clicked(int x);
-    void setTask(TaskElement *ted) { te = ted; };
-    TaskElement *getTask() { return te; };
+  explicit QCheckBoxExtended(QWidget *parent = 0);
+  void checkbox_done_clicked(int x);
+  void setTask(TaskElement *ted) { te = ted; };
+  TaskElement *getTask() { return te; };
 
 private:
-    TaskElement *te;
+  TaskElement *te;
 
-    signals:
-    void on_click_done(QCheckBoxExtended *d);
+signals:
+  void on_click_done(QCheckBoxExtended *d);
 };
 
-
-#endif //CALENDAR_TODO_LIST_CPP_QCHECKBOXEXTENDED_H
+#endif // CALENDAR_TODO_LIST_CPP_QCHECKBOXEXTENDED_H

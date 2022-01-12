@@ -65,7 +65,7 @@ void CalendarManager::saveSettings(void) {
       settings.setValue("Type", ClientCalDAV::E_CalendarAuth::E_AUTH_UPWD);
       settings.setValue("Username", pCalDAVClient->getUsername());
       settings.setValue("Password",
-                        crypto.encryptToString(pCalDAVClient->getPassword()));
+                        QString(pCalDAVClient->getPassword().toUtf8().toBase64()));
     } else {
       settings.setValue("Type", ClientCalDAV::E_CalendarAuth::E_AUTH_TOKEN);
       settings.setValue("FilePath", pCalDAVClient->getFilePath());
@@ -114,7 +114,7 @@ void CalendarManager::loadSettings(void) {
         key.append("Password");
         QString password = settings.value(key, "").toString();
         if (!password.isEmpty()) {
-          password = crypto.decryptToString(password);
+          password = QString(QByteArray::fromBase64(QByteArray(password.toStdString().c_str(), password.length())));
         }
 
         addCalendarCalDAVUP(displayName, url, username, password);
@@ -169,28 +169,18 @@ QList<QObject *> CalendarManager::getListOfEvents(void) {
   return returnList;
 }
 
-/*QList<QObject *> CalendarManager::listOfTaskChanged(void) {
-    QList<QObject *> returnList;
-    foreach (ClientCalDAV *pListItem, _calendarList) {
-        returnList.append(pListItem->eventsInRange(
-                QDate(_date.year(), _date.month(), 1),
-                QDate(_date.year(), _date.month(), 1).addMonths(1).addDays(-1)));
-    }
-
-    return returnList;
-}*/
-
 void CalendarManager::addCalendarCalDAVUP(QString calendarName, QString url,
                                           QString username, QString password) {
   ClientCalDAV *pCalendar =
       new ClientCalDAV(username, password, url, calendarName, this);
   _calendarList.append(pCalendar);
-  connect(pCalendar, SIGNAL(eventsUpdated()), this, SLOT(handleEventUpdate()));
-
+  connect(pCalendar, &ClientCalDAV::eventsUpdated, this, &CalendarManager::handleEventUpdate);
+  connect(pCalendar, &ClientCalDAV::displayNameChanged, this,
+          &CalendarManager::handleDisplayNameChanged);
   QDEBUG << "[i] Emit listOfCalendarsChanged and listOfEventsChanged";
   emit listOfCalendarsChanged(this->getListOfCalendars());
   emit listOfEventsChanged(this->getListOfEvents());
-  //emit listOfTaskChanged(this->getListOfTasks());
+  // emit listOfTaskChanged(this->getListOfTasks());
 }
 
 void CalendarManager::addCalendarCalDAVOA(QString calendarName, QString url,
@@ -222,9 +212,6 @@ ClientCalDAV *CalendarManager::getListItemAt(int index) {
 }
 
 void CalendarManager::handleEventUpdate(void) {
-  emit eventsUpdated();
-  if (this->getListOfEvents().isEmpty())
-    return;
   emit listOfEventsChanged(this->getListOfEvents());
 }
 
@@ -242,3 +229,7 @@ void CalendarManager::handleErrorOAuthCalendar(QString displayName) {
 }
 
 void CalendarManager::handleLoadSetting(void) { loadSettings(); }
+
+void CalendarManager::handleDisplayNameChanged(void) {
+  emit listOfCalendarsChanged(this->getListOfCalendars());
+}

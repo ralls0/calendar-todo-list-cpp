@@ -14,10 +14,10 @@ void ClientCalDAV::retrieveChangedTask(void) {
          << ") Start getChangedEvent with year: " << _year
          << "month: " << _month;
   QString authorization = "";
-    if (_auth == E_AUTH_TOKEN) {
-        authorization.append("Bearer ");
-        authorization.append(_accessToken);
-    }
+  if (_auth == E_AUTH_TOKEN) {
+    authorization.append("Bearer ");
+    authorization.append(_accessToken);
+  }
   QDEBUG << "[i] (" << _displayName << ") Authorization: " << authorization;
 
   QBuffer *buffer = new QBuffer();
@@ -86,9 +86,9 @@ void ClientCalDAV::retrieveChangedTask(void) {
   QNetworkRequest request;
   request.setUrl(_hostURL);
   request.setRawHeader("User-Agent", "ClientCalDAV");
-    if (_auth == E_AUTH_TOKEN) {
-        request.setRawHeader("Authorization", authorization.toUtf8());
-    }
+  if (_auth == E_AUTH_TOKEN) {
+    request.setRawHeader("Authorization", authorization.toUtf8());
+  }
   request.setRawHeader("Depth", "1");
   request.setRawHeader("Content-Type", "application/xml; charset=utf-8");
   request.setRawHeader("Content-Length", contentlength);
@@ -103,9 +103,8 @@ void ClientCalDAV::retrieveChangedTask(void) {
   if (_pReply) {
     connect(_pReply, &QNetworkReply::errorOccurred, this,
             &ClientCalDAV::handleHTTPError);
-    connect(&_networkManager,
-              &QNetworkAccessManager::authenticationRequired, this,
-              &ClientCalDAV::handleRequestAuthentication);
+    connect(&_networkManager, &QNetworkAccessManager::authenticationRequired,
+            this, &ClientCalDAV::handleRequestAuthentication);
     connect(_pReply, SIGNAL(finished()), this,
             SLOT(handleRequestChangesActivityFinished()));
 
@@ -203,7 +202,8 @@ void ClientCalDAV::handleRequestChangesActivityFinished(void) {
             QDEBUG << "[i] (" << _displayName << ") "
                    << "    CALENDARDATA = " << elCalendarData.text();
 
-            parseVTODO(sHref, *(new QTextStream(elCalendarData.text().toLatin1())));
+            parseVTODO(sHref,
+                       *(new QTextStream(elCalendarData.text().toLatin1())));
 
             strCalendarData = elCalendarData.text();
           } else {

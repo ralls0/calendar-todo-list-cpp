@@ -24,7 +24,8 @@ void ClientCalDAV::parseVCALENDAR(QString href, QTextStream &dataStream) {
   QList<CalendarEvent> eventList;
   QString line = dataStream.readLine();
 
-  QDEBUG << "[i] (" << _displayName << ") Start while into the parseVCALENDAR function";
+  QDEBUG << "[i] (" << _displayName
+         << ") Start while into the parseVCALENDAR function";
   while (!line.isNull()) {
     if (line.contains("BEGIN:VEVENT")) {
       CalendarEvent event = parseCalendarVEVENT(href, dataStream);
@@ -39,7 +40,8 @@ void ClientCalDAV::parseVCALENDAR(QString href, QTextStream &dataStream) {
   emit eventParsed(eventList);
 }
 
-CalendarEvent ClientCalDAV::parseCalendarVEVENT(QString href, QTextStream &dataStream) {
+CalendarEvent ClientCalDAV::parseCalendarVEVENT(QString href,
+                                                QTextStream &dataStream) {
   CalendarEvent event(nullptr);
   event.setIsCalendar(true);
   event.setColor(_color);
@@ -104,7 +106,6 @@ CalendarEvent ClientCalDAV::parseCalendarVEVENT(QString href, QTextStream &dataS
 
   return event;
 }
-
 
 void ClientCalDAV::parseTodoVEVENT(QString href, QTextStream &dataStream) {
   CalendarEvent event(this);

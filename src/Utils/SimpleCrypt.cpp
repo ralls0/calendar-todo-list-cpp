@@ -151,7 +151,7 @@ QString SimpleCrypt::encryptToString(QByteArray plaintext) {
 }
 
 QString SimpleCrypt::decryptToString(const QString &cyphertext) {
-  QByteArray cyphertextArray = QByteArray::fromBase64(cyphertext.toLatin1());
+  QByteArray cyphertextArray = QByteArray::fromBase64(cyphertext.toUtf8());
   QByteArray plaintextArray = decryptToByteArray(cyphertextArray);
   QString plaintext = QString::fromUtf8(plaintextArray, plaintextArray.size());
 

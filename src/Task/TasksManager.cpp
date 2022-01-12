@@ -148,7 +148,7 @@ void TasksManager::replyFinished(QNetworkReply *reply) {
                           // obj["position"].toString(),
                           obj["selfLink"].toString(), obj["status"].toString(),
                           obj["kind"].toString(), obj["due"].toString(),
-                          obj["updated"].toString(),0);
+                          obj["updated"].toString(), 0);
       _tasks.append(te);
     }
     emit getAllTask(getTasks());

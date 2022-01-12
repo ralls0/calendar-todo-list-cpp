@@ -203,7 +203,8 @@ void ClientCalDAV::handleRequestChangesEventFinished(void) {
             QDEBUG << "[i] (" << _displayName << ") "
                    << "    CALENDARDATA = " << elCalendarData.text();
 
-            submit(sHref, std::move(new QTextStream(elCalendarData.text().toLatin1())));
+            submit(sHref, std::move(new QTextStream(
+                              elCalendarData.text().toLatin1())));
 
             strCalendarData = elCalendarData.text();
           } else {
@@ -224,8 +225,6 @@ void ClientCalDAV::handleRequestChangesEventFinished(void) {
              << "ERROR: Invalid HTTP return code:" << iStatusCode;
       emit error("Invalid HTTP return code.");
     } else {
-      QDEBUG << "[i] (" << _displayName << ") Events updated";
-      emit eventsUpdated();
       QDEBUG << "[i] (" << _displayName << ") Restarting synchronization\r\n";
       _synchronizationTimer.start();
     }

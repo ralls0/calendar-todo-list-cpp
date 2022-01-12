@@ -50,7 +50,7 @@ void ClientCalDAV::setupStateMachine(void) {
 
   // pStateRequestingChanges
   pStateRequestingChanges->addTransition(
-      this, SIGNAL(calendarHasNotChanged()), // FIXME REPLICARE PER IL TODO
+      this, SIGNAL(calendarHasNotChanged()),
       pStateWaiting);
   pStateRequestingChanges->addTransition(this, SIGNAL(eventsUpdated()),
                                          pStateWaiting);

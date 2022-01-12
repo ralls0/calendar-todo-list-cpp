@@ -55,11 +55,14 @@ void ClientCalDAV::retrieveCTag(void) {
   if (_pReply) {
     connect(_pReply, &QNetworkReply::errorOccurred, this,
             &ClientCalDAV::handleHTTPError);
+
     connect(_pReply, SIGNAL(finished()), this,
             SLOT(handleRequestCTagFinished()));
-    connect(&_uploadNetworkManager,
+
+    connect(&_networkManager,
             &QNetworkAccessManager::authenticationRequired, this,
             &ClientCalDAV::handleRequestAuthentication);
+
     _requestTimeoutTimer.start(_requestTimeoutMS);
   } else {
     QDEBUG << "[i] (" << _displayName << ") "
@@ -108,9 +111,9 @@ void ClientCalDAV::handleRequestCTagFinished(void) {
     for (int i = 0; i < response.size(); i++) {
       QDomNode n = response.item(i);
       QDomElement displayname = n.firstChildElement("displayname");
-      if (!displayname.isNull())
-      {
-        QDEBUG << "[i] (" << _displayName << ") DISPLAYNAME = " << displayname.text();
+      if (!displayname.isNull()) {
+        QDEBUG << "[i] (" << _displayName
+               << ") DISPLAYNAME = " << displayname.text();
         sDisplayName = displayname.text();
       }
       QDomElement ctag = n.firstChildElement("getctag");
@@ -132,9 +135,15 @@ void ClientCalDAV::handleRequestCTagFinished(void) {
 
     if ((!sCTag.isEmpty()) && (sStatus.endsWith("200 OK"))) {
       bool bCTagChanged = (_cTag != sCTag);
+      bool bDisplayNameChanged = (_displayName != sDisplayName);
 
       _displayName = sDisplayName;
       _cTag = sCTag;
+
+      if (bDisplayNameChanged) {
+        QDEBUG << "[i] (" << _displayName << ") display name has changed";
+        emit displayNameChanged(_displayName);
+      }
 
       if (bCTagChanged) {
         QDEBUG << "[i] (" << _displayName << ") ctag has changed";
