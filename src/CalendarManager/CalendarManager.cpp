@@ -177,10 +177,8 @@ void CalendarManager::addCalendarCalDAVUP(QString calendarName, QString url,
   connect(pCalendar, &ClientCalDAV::eventsUpdated, this, &CalendarManager::handleEventUpdate);
   connect(pCalendar, &ClientCalDAV::displayNameChanged, this,
           &CalendarManager::handleDisplayNameChanged);
-  QDEBUG << "[i] Emit listOfCalendarsChanged and listOfEventsChanged";
+  QDEBUG << "[i] Emit listOfCalendarsChanged";
   emit listOfCalendarsChanged(this->getListOfCalendars());
-  emit listOfEventsChanged(this->getListOfEvents());
-  // emit listOfTaskChanged(this->getListOfTasks());
 }
 
 void CalendarManager::addCalendarCalDAVOA(QString calendarName, QString url,
@@ -190,11 +188,11 @@ void CalendarManager::addCalendarCalDAVOA(QString calendarName, QString url,
           &CalendarManager::handleErrorOAuthCalendar);
   _calendarList.append(pCalendar);
   connect(pCalendar, SIGNAL(eventsUpdated()), this, SLOT(handleEventUpdate()));
-
+  connect(pCalendar, &ClientCalDAV::displayNameChanged, this,
+          &CalendarManager::handleDisplayNameChanged);
   QDEBUG << "[i] New calendar added";
-  QDEBUG << "[i] Emit listOfCalendarsChanged and listOfEventsChanged";
+  QDEBUG << "[i] Emit listOfCalendarsChanged";
   emit listOfCalendarsChanged(this->getListOfCalendars());
-  emit listOfEventsChanged(this->getListOfEvents());
   connect(pCalendar, &ClientCalDAV::accessTokenChanged, this,
           &CalendarManager::setToDo);
 }

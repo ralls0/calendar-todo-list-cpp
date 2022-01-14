@@ -66,6 +66,11 @@ void ClientCalDAV::handleStateWaitingEntry(void) {
   _state = E_STATE_IDLE;
   emit syncStateChanged(_state);
 
+  if (_firstSync && _auth != E_AUTH_TOKEN) {
+    QDEBUG << "[i] (" << _displayName << ") First sync";
+    _firstSync = false;
+    startSynchronization();
+  }
   if ((_yearToBeRequested != _year) || (_monthToBeRequested != _month)) {
     QDEBUG << "[i] (" << _displayName << ") "
            << "year/month has requested from" << _year << _month << "to"

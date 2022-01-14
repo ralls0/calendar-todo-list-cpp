@@ -14,10 +14,16 @@ ClientCalDAV::ClientCalDAV(const QString &username, const QString &password,
                            QObject *parent)
     : QObject(parent), _hostURL(hostURL), _displayName(displayName),
       _username(username), _password(password) {
+
+  _on = true;
+  _firstSync = true;
+
   connect(this, &ClientCalDAV::eventParsed, this,
           &ClientCalDAV::handleEventParsed);
   std::thread t([this]() { this->handle(); });
   _t = std::move(t);
+
+  setupStateMachine();
 
   _requestTimeoutMS = 32000;
   _requestTimeoutTimer.setSingleShot(true);
@@ -44,15 +50,10 @@ ClientCalDAV::ClientCalDAV(const QString &username, const QString &password,
   _year = QDate::currentDate().year();
   _month = QDate::currentDate().month();
   _yearToBeRequested = QDate::currentDate().year();
-  ;
+
   _monthToBeRequested = QDate::currentDate().month();
   _bRecoveredFromError = false;
 
-  _on = true;
-
-  setupStateMachine();
-  emit passwordChanged(password);
-  retrieveCTag();
 }
 
 ClientCalDAV::ClientCalDAV(const QString &filepath, const QString &hostURL,
@@ -60,10 +61,15 @@ ClientCalDAV::ClientCalDAV(const QString &filepath, const QString &hostURL,
     : QObject(parent), _hostURL(hostURL), _displayName(displayName),
       _filepath(filepath) {
 
+  _on = true;
+  _firstSync = true;
+
   connect(this, &ClientCalDAV::eventParsed, this,
           &ClientCalDAV::handleEventParsed);
   std::thread t([this]() { this->handle(); });
   _t = std::move(t);
+
+  setupStateMachine();
 
   _requestTimeoutMS = 32000;
   _requestTimeoutTimer.setSingleShot(true);
@@ -98,9 +104,6 @@ ClientCalDAV::ClientCalDAV(const QString &filepath, const QString &hostURL,
   ;
   _monthToBeRequested = QDate::currentDate().month();
   _bRecoveredFromError = false;
-
-  _on = true;
-  setupStateMachine();
 }
 
 ClientCalDAV::~ClientCalDAV() {
@@ -108,7 +111,9 @@ ClientCalDAV::~ClientCalDAV() {
   _synchronizationTimer.stop();
 
   if (_t.joinable())
+    QDEBUG << "[i] (" << _displayName << ") Joining thread";
     _on = false;
+    _cv.notify_one();
     _t.join();
 
   if (_au)

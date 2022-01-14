@@ -153,10 +153,9 @@ private:
 
 protected:
   void retrieveChangedEvent(void);
-  void retrieveChangedTask(void);
   void retrieveCTag(void);
   void setupStateMachine(void);
-  void sendRequestSyncToken(void);
+
   // Tipo di auth verso il server
   E_CalendarAuth _auth;
 
@@ -176,6 +175,7 @@ protected:
   QString _accessToken;
   QString _filepath;
   bool _on;
+  bool _firstSync;
 
   QString _color;
   E_CalendarState _state;
@@ -268,6 +268,7 @@ signals:
 
   // emesso quando l'evento in _eventList ha dei cambiamenti
   void eventsUpdated(void);
+  void noEventsUpdated(void);
 
   // emesso quando vi è un errore
   void error(QString errorMsg);
@@ -386,7 +387,6 @@ protected slots:
 
   void handleRequestCTagFinished(void);
   void handleRequestChangesEventFinished(void);
-  void handleRequestChangesActivityFinished(void);
 
   void handleStateWaitingEntry(void);
   void handleStateWaitingExit(void);

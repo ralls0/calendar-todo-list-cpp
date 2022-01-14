@@ -25,15 +25,8 @@ NewCalendarDialog::NewCalendarDialog(QWidget *parent) : QDialog(parent) {
   setWindowTitle(tr("Adding Calendar"));
 }
 
-NewCalendarDialog::~NewCalendarDialog() {
-  delete _baseInfoGroupBox;
-  delete _baseInfoLayout;
-  delete _authGroupBox;
-  delete _authLayout;
-}
-
 void NewCalendarDialog::createBaseInfoGroupBox() {
-  _baseInfoGroupBox = new QGroupBox(tr("Base Information"));
+  _baseInfoGroupBox = new QGroupBox(tr("Base Information"), this);
 
   lbl_displayName = new QLabel(tr("&Display Name:"));
   le_displayName = new QLineEdit;
@@ -43,7 +36,7 @@ void NewCalendarDialog::createBaseInfoGroupBox() {
   le_hostURL = new QLineEdit;
   lbl_hostURL->setBuddy(le_hostURL);
 
-  _baseInfoLayout = new QGridLayout;
+  _baseInfoLayout = new QGridLayout(this);
   _baseInfoLayout->addWidget(lbl_displayName, 0, 0, Qt::AlignLeft);
   _baseInfoLayout->addWidget(le_displayName, 0, 1, Qt::AlignCenter);
   _baseInfoLayout->addWidget(lbl_hostURL, 1, 0, Qt::AlignLeft);
@@ -52,7 +45,7 @@ void NewCalendarDialog::createBaseInfoGroupBox() {
 }
 
 void NewCalendarDialog::createAuthGroupBox() {
-  _authGroupBox = new QGroupBox(tr("Authentication"));
+  _authGroupBox = new QGroupBox(tr("Authentication"), this);
 
   _groupBox = new QGroupBox();
   rb_basicAuth = new QRadioButton("Basic Authentication");
@@ -103,7 +96,7 @@ void NewCalendarDialog::createAuthGroupBox() {
   e_oauth->setLayout(e_oauthLayout);
   e_oauth->hide();
 
-  _authLayout = new QGridLayout;
+  _authLayout = new QGridLayout(this);
   _authLayout->addWidget(_groupBox, 0, 0, Qt::AlignLeft);
   _authLayout->addWidget(e_basic, 1, 0, Qt::AlignLeft);
   _authLayout->addWidget(e_oauth, 2, 0, Qt::AlignLeft);

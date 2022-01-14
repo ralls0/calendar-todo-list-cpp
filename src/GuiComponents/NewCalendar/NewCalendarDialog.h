@@ -36,7 +36,7 @@ class NewCalendarDialog : public QDialog {
 
 public:
   NewCalendarDialog(QWidget *parent = nullptr);
-  ~NewCalendarDialog();
+  ~NewCalendarDialog() = default;
 
 public slots:
   void browseFile(void);

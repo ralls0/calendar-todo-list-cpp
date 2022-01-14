@@ -28,7 +28,9 @@ void ClientCalDAV::setupStateMachine(void) {
   pStateWaiting->addTransition(this, SIGNAL(passwordChanged(QString)),
                                pStateCheckingChanges);
   pStateWaiting->addTransition(this, SIGNAL(forceSynchronization()),
-                               pStateRequestingChanges);
+                               pStateRequestingChanges); /*
+   pStateWaiting->addTransition(this, SIGNAL(calendarCTagChanged()),
+                                        pStateRequestingChanges);*/
 
   // pStateWaiting
   connect(pStateWaiting, SIGNAL(entered()), this,
@@ -49,10 +51,11 @@ void ClientCalDAV::setupStateMachine(void) {
           SLOT(handleStateCheckingChangesExit()));
 
   // pStateRequestingChanges
-  pStateRequestingChanges->addTransition(
-      this, SIGNAL(calendarHasNotChanged()),
-      pStateWaiting);
+  pStateRequestingChanges->addTransition(this, SIGNAL(calendarHasNotChanged()),
+                                         pStateWaiting);
   pStateRequestingChanges->addTransition(this, SIGNAL(eventsUpdated()),
+                                         pStateWaiting);
+  pStateRequestingChanges->addTransition(this, SIGNAL(noEventsUpdated()),
                                          pStateWaiting);
   pStateRequestingChanges->addTransition(this, SIGNAL(error(QString)),
                                          pStateError);

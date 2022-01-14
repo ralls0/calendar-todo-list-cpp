@@ -120,19 +120,19 @@ void ClientCalDAV::retrieveChangedEvent(void) {
 void ClientCalDAV::handleRequestChangesEventFinished(void) {
   _requestTimeoutTimer.stop();
 
+  bool changes = false;
   if (E_STATE_ERROR == _state) {
     QDEBUG << "[i] (" << _displayName << ") "
            << "Error state - aborting";
   }
 
-  QDEBUG << "[i] (" << _displayName << ") "
-         << "HTTP RequestChangesEvent finished";
+  QDEBUG << "[i] (" << _displayName << ")  HTTP RequestChangesEvent finished";
 
   if (nullptr != _pReply) {
     QDomDocument doc;
 
     QString reply = _pReply->readAll();
-    QDEBUG << _displayName << "Response: " << reply;
+    QDEBUG << "[i] (" << _displayName << ") Response: " << reply;
     reply = reply.replace("<D:", "<")
                 .replace("</D:", "</")
                 .replace("<d:", "<")
@@ -143,19 +143,18 @@ void ClientCalDAV::handleRequestChangesEventFinished(void) {
                 .replace("</cal:calendar-data", "</calendardata")
                 .replace("<caldav:calendar-data", "<calendardata")
                 .replace("</caldav:calendar-data", "</calendardata");
-    QDEBUG << "[i] (" << _displayName << ") "
-           << "Response replaced: " << reply;
+    QDEBUG << "[i] (" << _displayName << ") Response replaced: " << reply;
 
     doc.setContent(reply);
 
     _eventList.clear();
 
     QDomNodeList list_response = doc.elementsByTagName("response");
+    QDEBUG << "[i] (" << _displayName << ") Response amount:" << list_response.size();
     for (int i = 0; i < list_response.size(); i++) {
       QDomNode thisResponse = list_response.item(i);
 
-      QDEBUG << "[i] (" << _displayName << ") "
-             << "Response" << i;
+      QDEBUG << "[i] (" << _displayName << ") Event number:" << i;
 
       QString sHref = "";
       QString sETag = "";
@@ -213,20 +212,25 @@ void ClientCalDAV::handleRequestChangesEventFinished(void) {
           }
         }
       }
+      changes = true;
     }
 
     int iStatusCode =
         _pReply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
-    QDEBUG << "[i] (" << _displayName << ") "
-           << "Status code:" << iStatusCode;
+    QDEBUG << "[i] (" << _displayName << ") Status code:" << iStatusCode;
 
     if (207 != iStatusCode) {
       QDEBUG << "[i] (" << _displayName << ") "
              << "ERROR: Invalid HTTP return code:" << iStatusCode;
       emit error("Invalid HTTP return code.");
     } else {
-      QDEBUG << "[i] (" << _displayName << ") Restarting synchronization\r\n";
-      _synchronizationTimer.start();
+      if (!changes) {
+        emit noEventsUpdated();
+      }
+      if (!_synchronizationTimer.isActive()) {
+        QDEBUG << "[i] (" << _displayName << ") Restarting synchronization";
+        _synchronizationTimer.start();
+      }
     }
 
   } else {
