@@ -168,8 +168,12 @@ void MainWindow::createNewTaskDialog(TaskElement *el) {
   _newEventDialog->show();
 }
 
-void MainWindow::newTask(QString name) {
-  _taskm->createTask(_taskm->getAccT(), _taskm->getId(), name);
+void MainWindow::newTask(QString name, QDateTime t ) {
+    QJsonObject jsonObj;
+    jsonObj["kind"] = "tasks#task";
+    jsonObj["title"] = name;
+    jsonObj["due"] = t.toString(Qt::ISODateWithMs).append("Z");
+  _taskm->createTask(_taskm->getAccT(), _taskm->getId(), name,jsonObj);
 }
 
 void MainWindow::modifyTask(QString name, QDateTime t, QString idT,

@@ -68,7 +68,7 @@ public slots:
   void createNewTaskDialog(TaskElement *te);
   void deleteTask(TaskElement *te);
   void modifyTask(QString name, QDateTime t, QString idT, TaskElement *te);
-  void newTask(QString name);
+  void newTask(QString name, QDateTime t);
 
 private:
   void createPreviewGroupBox();

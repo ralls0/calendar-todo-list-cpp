@@ -72,13 +72,13 @@ void ClientCalDAV::shareCalendar(QString email, QString comment) {
   _pUploadReply = _uploadNetworkManager.put(request, buffer);
 
   if (_pUploadReply) {
-    connect(_pReply, &QNetworkReply::errorOccurred, this,
+    connect(_pUploadReply, &QNetworkReply::errorOccurred, this,
             &ClientCalDAV::handleHTTPError);
 
     connect(_pUploadReply, SIGNAL(finished()), this,
             SLOT(handleShareFinished()));
 
-    connect(&_networkManager, &QNetworkAccessManager::authenticationRequired,
+    connect(&_uploadNetworkManager, &QNetworkAccessManager::authenticationRequired,
             this, &ClientCalDAV::handleRequestAuthentication);
 
     _uploadRequestTimeoutTimer.start(_requestTimeoutMS);

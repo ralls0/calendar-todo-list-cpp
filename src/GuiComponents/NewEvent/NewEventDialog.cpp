@@ -203,21 +203,18 @@ void NewEventDialog::createActivityLayout(const QList<QString> &cals,
   dte_deadline->setMaximumDate(QDate::currentDate().addDays(365));
   dte_deadline->setDisplayFormat("yyyy.MM.dd");
 
-  cb_activity = new QComboBox(e_activity);
+
   if (!cals.isEmpty()) {
+      cb_activity = new QComboBox(e_activity);
     cb_activity->addItems(cals);
-  } else {
-    if (te != nullptr) {
-      cb_activity->addItem(te->getName());
-    } else {
-      cb_activity->addItem(QString("Nessun Calendario"));
-    }
   }
 
   _activityLayout = new QGridLayout(e_activity);
   _activityLayout->addWidget(_deadLine, 0, 0);
   _activityLayout->addWidget(dte_deadline, 0, 1);
+    if (!cals.isEmpty()) {
   _activityLayout->addWidget(cb_activity, 1, 0, 1, 2);
+    }
   e_activity->setLayout(_activityLayout);
 }
 
@@ -320,7 +317,8 @@ void NewEventDialog::onSaveClick(void) {
         emit modifyTask(title, endDateTime, _te->getId(), _te);
     } else if (btn_save->text() == "Add") {
       QString title = le_title->text();
-      emit newTask(title);
+      QDateTime endDateTime = dte_deadline->dateTime();
+      emit newTask(title,endDateTime);
     }
   }
   this->close();
