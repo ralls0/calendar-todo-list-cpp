@@ -29,8 +29,7 @@ public:
   void deleteTask(const QString &access_token, const QString &taskListID,
                   const QString &taskID);
   void createTask(const QString &access_token, const QString &taskListID,
-                  const QString &title/*, const QString &prevTaskID,
-                  const QString &parentID */);
+                  const QString &title,const QJsonObject &json_object);
   void updateTask(const QString &access_token, const QString &taskListID,
                   const QString &taskID, const QJsonObject &json_object);
 

@@ -62,7 +62,7 @@ signals:
   void deleteEvent(CalendarEvent *t);
   void deleteTask(void);
   void modifyTask(QString name, QDateTime t, QString idT, TaskElement *te);
-  void newTask(QString name);
+  void newTask(QString name,QDateTime endDateTime );
 
 private:
   void createBaseInfoLayout(QList<QString> cals, CalendarEvent *event = nullptr,
