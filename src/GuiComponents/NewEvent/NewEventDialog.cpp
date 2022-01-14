@@ -316,7 +316,7 @@ void NewEventDialog::onSaveClick(void) {
     if (btn_save->text() == "Modify") {
       QDateTime endDateTime = dte_deadline->dateTime();
       QString title = le_title->text();
-      if(_te->getType()==0)
+      if (_te->getType() == 0)
         emit modifyTask(title, endDateTime, _te->getId(), _te);
     } else if (btn_save->text() == "Add") {
       QString title = le_title->text();

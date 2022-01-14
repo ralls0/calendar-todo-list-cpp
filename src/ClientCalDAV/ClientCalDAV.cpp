@@ -14,11 +14,16 @@ ClientCalDAV::ClientCalDAV(const QString &username, const QString &password,
                            QObject *parent)
     : QObject(parent), _hostURL(hostURL), _displayName(displayName),
       _username(username), _password(password) {
-  connect(this, &ClientCalDAV::eventParsed, this, &ClientCalDAV::handleEventParsed);
-  std::thread t([this]() {
-      this->handle();
-  });
+
+  _on = true;
+  _firstSync = true;
+
+  connect(this, &ClientCalDAV::eventParsed, this,
+          &ClientCalDAV::handleEventParsed);
+  std::thread t([this]() { this->handle(); });
   _t = std::move(t);
+
+  setupStateMachine();
 
   _requestTimeoutMS = 32000;
   _requestTimeoutTimer.setSingleShot(true);
@@ -45,13 +50,10 @@ ClientCalDAV::ClientCalDAV(const QString &username, const QString &password,
   _year = QDate::currentDate().year();
   _month = QDate::currentDate().month();
   _yearToBeRequested = QDate::currentDate().year();
-  ;
+
   _monthToBeRequested = QDate::currentDate().month();
   _bRecoveredFromError = false;
 
-  setupStateMachine();
-  retrieveChangedEvent();
-  // retrieveChangedTask() TODO
 }
 
 ClientCalDAV::ClientCalDAV(const QString &filepath, const QString &hostURL,
@@ -59,11 +61,15 @@ ClientCalDAV::ClientCalDAV(const QString &filepath, const QString &hostURL,
     : QObject(parent), _hostURL(hostURL), _displayName(displayName),
       _filepath(filepath) {
 
-  connect(this, &ClientCalDAV::eventParsed, this, &ClientCalDAV::handleEventParsed);
-  std::thread t([this]() {
-    this->handle();
-  });
+  _on = true;
+  _firstSync = true;
+
+  connect(this, &ClientCalDAV::eventParsed, this,
+          &ClientCalDAV::handleEventParsed);
+  std::thread t([this]() { this->handle(); });
   _t = std::move(t);
+
+  setupStateMachine();
 
   _requestTimeoutMS = 32000;
   _requestTimeoutTimer.setSingleShot(true);
@@ -84,10 +90,8 @@ ClientCalDAV::ClientCalDAV(const QString &filepath, const QString &hostURL,
   _pReply = nullptr;
   _accessToken = "";
 
-  _au = new OAuth(
-      filepath,
-      "https://www.googleapis.com/auth/calendar "
-      "https://www.googleapis.com/auth/tasks ");
+  _au = new OAuth(filepath, "https://www.googleapis.com/auth/calendar "
+                            "https://www.googleapis.com/auth/tasks ");
   connect(_au, &OAuth::accessTokenChanged, this, &ClientCalDAV::setAccessToken);
   connect(_au, &OAuth::accessTokenTimeout, this, &ClientCalDAV::notifyError);
 
@@ -100,15 +104,17 @@ ClientCalDAV::ClientCalDAV(const QString &filepath, const QString &hostURL,
   ;
   _monthToBeRequested = QDate::currentDate().month();
   _bRecoveredFromError = false;
-
-  setupStateMachine();
 }
 
 ClientCalDAV::~ClientCalDAV() {
   _eventList.clear();
   _synchronizationTimer.stop();
 
-  if(_t.joinable()) _t.join();
+  if (_t.joinable())
+    QDEBUG << "[i] (" << _displayName << ") Joining thread";
+    _on = false;
+    _cv.notify_one();
+    _t.join();
 
   if (_au)
     delete _au;
@@ -251,32 +257,34 @@ ClientCalDAV::E_CalendarAuth ClientCalDAV::getClientAuth(void) const {
 void ClientCalDAV::handle(void) {
   QDEBUG << "[i] (" << _displayName << ") Handle Thread";
   std::unique_lock<std::mutex> ul{_m};
-  while (true) {
+  while (_on) {
     QDEBUG << "[i] (" << _displayName << ") Start loop Thread";
     _cv.wait(ul, [this]() {
       // Waiting for a task
-      return (_eventsp.empty() == false);
+      return (!_eventsp.empty() || !_on);
     });
     // Validity check
     QDEBUG << "[i] (" << _displayName << ") Validity check";
-    if (_eventsp.empty() == false) {
+    if (!_eventsp.empty()) {
 
       // Getting the next href and remove it form the queue.
-      QDEBUG << "[i] (" << _displayName << ") Getting the next href and dataStream";
+      QDEBUG << "[i] (" << _displayName
+             << ") Getting the next href and dataStream";
       auto it = _eventsp.begin();
       ul.unlock();
       QDEBUG << "[i] (" << _displayName << ") Start parsing";
       parseVCALENDAR(it->first, *(it->second));
       _eventsp.erase(it->first);
+      emit eventsUpdated();
       ul.lock();
     }
   }
 }
 
-void  ClientCalDAV::submit(QString href, QTextStream *dataStream) {
+void ClientCalDAV::submit(QString href, QTextStream *dataStream) {
   const std::lock_guard<std::mutex> lg{_m};
   // Adding new href.
   QDEBUG << "[i] (" << _displayName << ") Adding new href";
-  _eventsp.insert(std::pair<QString,QTextStream *>(href, dataStream));
+  _eventsp.insert(std::pair<QString, QTextStream *>(href, dataStream));
   _cv.notify_one();
 }

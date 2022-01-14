@@ -10,8 +10,8 @@ class TaskElement {
 public:
   TaskElement(const QDateTime deadline, bool status, const QString name,
               QString id, QDateTime _updated, QString _etag, QString _selflink,
-              QString _statusS, QString _kind, QString dString,
-              QString uString, int type);
+              QString _statusS, QString _kind, QString dString, QString uString,
+              int type);
 
   void setDeadline(const QDateTime &deadline);
 
@@ -52,6 +52,7 @@ public:
   int getType() const;
 
   void setType(int type);
+
 protected:
   QDateTime _deadline;
   QString _deadlineString;
@@ -65,7 +66,7 @@ protected:
   QDateTime _updated;
   QString _updatedString;
   QString _kind;
-  int _type; //0:google 1:sabre
+  int _type; // 0:google 1:sabre
 };
 
 #endif // CALENDAR_TODO_LIST_CPP_TASKELEMENT_H

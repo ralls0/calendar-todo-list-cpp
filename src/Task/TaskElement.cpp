@@ -7,11 +7,12 @@
 TaskElement::TaskElement(const QDateTime deadline, bool status,
                          const QString name, QString id, QDateTime updated,
                          QString etag, QString selfLink, QString statusS,
-                         QString kind, QString dString, QString uString, int type)
+                         QString kind, QString dString, QString uString,
+                         int type)
     : _deadline(deadline), _status(status), _name(name), _id(id),
-      _updated(updated), _etag(etag),
-      _selflink(selfLink), _statusS(statusS), _kind(kind),
-      _updatedString(uString), _deadlineString(dString), _type(type) {}
+      _updated(updated), _etag(etag), _selflink(selfLink), _statusS(statusS),
+      _kind(kind), _updatedString(uString), _deadlineString(dString),
+      _type(type) {}
 
 const QString &TaskElement::getEtag() const { return _etag; }
 
@@ -57,10 +58,6 @@ void TaskElement::setUpdatedString(const QString &updatedString) {
   _updatedString = updatedString;
 }
 
-int TaskElement::getType() const {
-    return _type;
-}
+int TaskElement::getType() const { return _type; }
 
-void TaskElement::setType(int type) {
-    _type = type;
-}
+void TaskElement::setType(int type) { _type = type; }

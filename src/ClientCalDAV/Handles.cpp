@@ -45,6 +45,7 @@ void ClientCalDAV::handleRequestAuthentication(QNetworkReply *reply,
   _authenticator->setUser(_username);
   _authenticator->setPassword(_password);
 }
+
 void ClientCalDAV::handleHTTPError(void) {
   _state = E_STATE_ERROR;
   emit syncStateChanged(_state);
@@ -65,6 +66,11 @@ void ClientCalDAV::handleStateWaitingEntry(void) {
   _state = E_STATE_IDLE;
   emit syncStateChanged(_state);
 
+  if (_firstSync && _auth != E_AUTH_TOKEN) {
+    QDEBUG << "[i] (" << _displayName << ") First sync";
+    _firstSync = false;
+    startSynchronization();
+  }
   if ((_yearToBeRequested != _year) || (_monthToBeRequested != _month)) {
     QDEBUG << "[i] (" << _displayName << ") "
            << "year/month has requested from" << _year << _month << "to"
@@ -124,9 +130,12 @@ void ClientCalDAV::debug_handleTimerTimeout(void) {
 }
 
 void ClientCalDAV::handleEventParsed(QList<CalendarEvent> eventList) {
-  QDEBUG << "[i] (" << _displayName << ") Start handleEventParsed, eventList get: " << eventList.size();
-  for(auto e : eventList) {
+  QDEBUG << "[i] (" << _displayName
+         << ") Start handleEventParsed, eventList get: " << eventList.size();
+  for (auto e : eventList) {
     _eventList.append(CalendarEvent(e));
   }
+  QDEBUG << "[i] (" << _displayName
+         << ") Events were parsed and amit eventUpdated";
   emit eventsUpdated();
 }

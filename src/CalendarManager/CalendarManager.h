@@ -116,13 +116,14 @@ signals:
   void setToDoList(QString acc);
 
 public slots:
+  void handleDisplayNameChanged(void);
   void handleLoadSetting(void);
   QDate getDate() const;
   void setDate(const QDate &newDate);
 
   QList<QObject *> getListOfCalendars(void);
   QList<QObject *> getListOfEvents(void);
-  //QList<QObject *>  listOfTaskChanged(void);
+  // QList<QObject *>  listOfTaskChanged(void);
   void addCalendarCalDAVUP(QString calendarName, QString url, QString username,
                            QString password);
 

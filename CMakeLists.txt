@@ -43,7 +43,6 @@ add_executable(calendar_todo_list_cpp
         src/GuiComponents/NewEvent/NewEventDialog.h
         src/ClientCalDAV/RetrieveCTag.cpp
         src/ClientCalDAV/Parsing.cpp
-        src/ClientCalDAV/RetrieveChangedActivity.cpp
         src/ClientCalDAV/SaveTask.cpp
         src/GuiComponents/Calendar/Calendar.cpp
         src/GuiComponents/Calendar/Calendar.h
