@@ -223,6 +223,7 @@ void ClientCalDAV::handleRequestChangesEventFinished(void) {
       QDEBUG << "[i] (" << _displayName << ") "
              << "ERROR: Invalid HTTP return code:" << iStatusCode;
       emit error("Invalid HTTP return code.");
+      emit errorOccured();
     } else {
       if (!changes) {
         emit noEventsUpdated();
@@ -237,5 +238,6 @@ void ClientCalDAV::handleRequestChangesEventFinished(void) {
     QDEBUG << "[i] (" << _displayName << ") "
            << "ERROR: Invalid reply pointer when receiving changes.";
     emit error("Invalid reply pointer when receiving changes.");
+    emit errorOccured();
   }
 }

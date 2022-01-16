@@ -114,12 +114,14 @@ signals:
   listOfEventsChanged(QList<QObject *> t); // emitted during handleEventUpdate()
   void eventsUpdated(void);                // emitted during handleEventUpdate()
   void setToDoList(QString acc);
+  void errorCalendarOccured();
 
 public slots:
   void handleDisplayNameChanged(void);
   void handleLoadSetting(void);
   QDate getDate() const;
   void setDate(const QDate &newDate);
+  void handleErrorCalendarOccured(void);
 
   QList<QObject *> getListOfCalendars(void);
   QList<QObject *> getListOfEvents(void);

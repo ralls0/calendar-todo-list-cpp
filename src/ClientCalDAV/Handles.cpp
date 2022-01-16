@@ -21,6 +21,7 @@ void ClientCalDAV::recover(void) {
   QDEBUG << "[i] (" << _displayName << ") "
          << "trying to recover from EEROR state";
   _bRecoveredFromError = true;
+  emit errorOccured();
   emit recoverSignal();
 }
 
@@ -30,10 +31,12 @@ void ClientCalDAV::handleUploadHTTPError(void) {
     QDEBUG << "[i] (" << _displayName << ") "
            << "HTTP upload error:" << _pUploadReply->errorString();
     emit error(_pUploadReply->errorString());
+    emit errorOccured();
   } else {
     QDEBUG << "[i] (" << _displayName << ") "
            << "ERROR: Invalid reply pointer when handling HTTP error.";
     emit error("Invalid reply pointer when handling HTTP error.");
+    emit errorOccured();
   }
 }
 
@@ -121,6 +124,7 @@ void ClientCalDAV::handleStateProcessingChangesExit(void) {
 
 void ClientCalDAV::handleStateErrorEntry(void) {
   QDEBUG << "[i] (" << _displayName << ") Entering state error";
+  emit errorOccured();
 }
 
 void ClientCalDAV::debug_handleTimerTimeout(void) {

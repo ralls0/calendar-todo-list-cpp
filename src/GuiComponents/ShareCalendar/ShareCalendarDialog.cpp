@@ -14,18 +14,13 @@ ShareCalendarDialog::ShareCalendarDialog(QList<QString> cals, QWidget *parent)
   createBaseLayout(cals);
   createButtonGroupBox();
 
-  QGridLayout *layout = new QGridLayout;
+  QGridLayout *layout = new QGridLayout(this);
   layout->addWidget(gb_base, 0, 0);
   layout->addWidget(_buttonBox, 2, 0, Qt::AlignRight);
   layout->setSizeConstraint(QLayout::SetFixedSize);
   setLayout(layout);
 
   setWindowTitle(tr("Create"));
-}
-
-ShareCalendarDialog::~ShareCalendarDialog() {
-  delete _baseLayout;
-  delete _buttonBox;
 }
 
 void ShareCalendarDialog::createBaseLayout(QList<QString> cals) {
@@ -35,7 +30,7 @@ void ShareCalendarDialog::createBaseLayout(QList<QString> cals) {
   gb_base->setStyleSheet("border:0;");
 
   lbl_email = new QLabel(tr("Email"), gb_base);
-  le_email = new QLineEdit(this);
+  le_email = new QLineEdit(gb_base);
   le_email->setPlaceholderText(tr("email"));
 
   cb_calendar = new QComboBox(gb_base);

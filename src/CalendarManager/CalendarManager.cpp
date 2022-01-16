@@ -177,6 +177,8 @@ void CalendarManager::addCalendarCalDAVUP(QString calendarName, QString url,
   connect(pCalendar, &ClientCalDAV::eventsUpdated, this, &CalendarManager::handleEventUpdate);
   connect(pCalendar, &ClientCalDAV::displayNameChanged, this,
           &CalendarManager::handleDisplayNameChanged);
+  connect(pCalendar, &ClientCalDAV::errorOccured, this,
+          &CalendarManager::handleErrorCalendarOccured);
   QDEBUG << "[i] Emit listOfCalendarsChanged";
   emit listOfCalendarsChanged(this->getListOfCalendars());
 }
@@ -190,6 +192,8 @@ void CalendarManager::addCalendarCalDAVOA(QString calendarName, QString url,
   connect(pCalendar, SIGNAL(eventsUpdated()), this, SLOT(handleEventUpdate()));
   connect(pCalendar, &ClientCalDAV::displayNameChanged, this,
           &CalendarManager::handleDisplayNameChanged);
+  connect(pCalendar, &ClientCalDAV::errorOccured, this,
+          &CalendarManager::handleErrorCalendarOccured);
   QDEBUG << "[i] New calendar added";
   QDEBUG << "[i] Emit listOfCalendarsChanged";
   emit listOfCalendarsChanged(this->getListOfCalendars());
@@ -230,4 +234,8 @@ void CalendarManager::handleLoadSetting(void) { loadSettings(); }
 
 void CalendarManager::handleDisplayNameChanged(void) {
   emit listOfCalendarsChanged(this->getListOfCalendars());
+}
+
+void CalendarManager::handleErrorCalendarOccured() {
+  emit errorCalendarOccured();
 }

@@ -13,6 +13,7 @@
 #include "../CalendarManager/CalendarManager.h"
 #include "../ClientCalDAV/ClientCalDAV.h"
 #include "../GuiComponents/ToDoList/ToDoList.h"
+#include "../GuiComponents/ErrorDialog/ErrorDialog.h"
 #include "../Task/TasksManager.h"
 #include "./Calendar/Calendar.h"
 #include "./NewCalendar/NewCalendarDialog.h"
@@ -47,7 +48,7 @@ class MainWindow : public QWidget {
 
 public:
   MainWindow(QWidget *parent = nullptr);
-  ~MainWindow();
+  ~MainWindow() = default;
 
 public slots:
   void createNewCalendar(const QString &displayName, const QString &hostURL,
@@ -69,6 +70,7 @@ public slots:
   void deleteTask(TaskElement *te);
   void modifyTask(QString name, QDateTime t, QString idT, TaskElement *te);
   void newTask(QString name, QDateTime t);
+  void handleCalErrorOccurred();
 
 private:
   void createPreviewGroupBox();
