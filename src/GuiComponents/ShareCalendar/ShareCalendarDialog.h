@@ -41,7 +41,7 @@ class ShareCalendarDialog : public QDialog {
 
 public:
   ShareCalendarDialog(QList<QString> cals, QWidget *parent = nullptr);
-  ~ShareCalendarDialog();
+  ~ShareCalendarDialog() = default;
 
 public slots:
   void onShareClick(void);

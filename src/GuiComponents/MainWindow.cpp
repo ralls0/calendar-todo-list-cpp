@@ -154,7 +154,7 @@ void MainWindow::createNewEventDialogM(CalendarEvent *event) {
 }
 
 void MainWindow::createToDo(QString acc) {
-  _taskm = new TasksManager(acc);
+  _taskm = new TasksManager(acc, this);
   connect(_taskm, &TasksManager::getAllTask, _todo, &ToDoList::updateTaskList);
   connect(_taskm, &TasksManager::getAll, _taskm, &TasksManager::getMyTasks);
   _taskm->getMyTaskLists(_taskm->getAccT());
