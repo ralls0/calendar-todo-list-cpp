@@ -15,7 +15,7 @@ NewCalendarDialog::NewCalendarDialog(QWidget *parent) : QDialog(parent) {
   createAuthGroupBox();
   createButtonGroupBox();
 
-  QGridLayout *layout = new QGridLayout;
+  QGridLayout *layout = new QGridLayout(this);
   layout->addWidget(_baseInfoGroupBox, 0, 0);
   layout->addWidget(_authGroupBox, 1, 0);
   layout->addWidget(_buttonBox, 2, 0, Qt::AlignRight);

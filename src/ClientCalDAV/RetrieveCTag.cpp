@@ -159,11 +159,13 @@ void ClientCalDAV::handleRequestCTagFinished(void) {
       QDEBUG << "[i] (" << _displayName << ") "
              << "ERROR: Receiving ctag failed. Status:" << sStatus;
       emit error("Receiving ctag failed.");
+      emit errorOccured();
     }
 
   } else {
     QDEBUG << "[i] (" << _displayName << ") "
            << "ERROR: Invalid reply pointer when receiving ctag.";
     emit error("Invalid reply pointer when receiving ctag.");
+    emit errorOccured();
   }
 }

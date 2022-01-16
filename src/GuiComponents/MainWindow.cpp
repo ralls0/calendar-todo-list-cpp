@@ -28,6 +28,8 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent) {
           &MainCalendar::setCalendarList);
   connect(_cals, &CalendarManager::listOfEventsChanged, _calendar,
           &MainCalendar::updateListOfEvents);
+  connect(_cals, &CalendarManager::errorCalendarOccured, this,
+          &MainWindow::handleCalErrorOccurred);
   connect(_calendar, &MainCalendar::calendarDateChanged, _cals,
           &CalendarManager::setDate);
   connect(_cals, &CalendarManager::setToDoList, this, &MainWindow::createToDo);
@@ -44,8 +46,6 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent) {
   setWindowTitle(tr("Calendar Widget"));
   _cals->handleLoadSetting();
 }
-
-MainWindow::~MainWindow() {}
 
 void MainWindow::createNewCalendar(const QString &displayName,
                                    const QString &hostURL, bool isBasicAuth,
@@ -232,4 +232,10 @@ QString MainWindow::checkDisplayName(QList<QObject *> cals,
     }
   }
   return ndn;
+}
+
+void MainWindow::handleCalErrorOccurred() {
+  ErrorDialog *errd = new ErrorDialog(this);
+  errd->show();
+  connect(errd, &ErrorDialog::pushedCloseButton, this, &QWidget::close);
 }

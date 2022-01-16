@@ -68,6 +68,7 @@ void ClientCalDAV::deleteEvent(QString href) {
     QDEBUG << _displayName << ": "
            << "ERROR: Invalid reply pointer when requesting URL.";
     emit error("Invalid reply pointer when requesting URL.");
+    emit errorOccured();
   }
 }
 

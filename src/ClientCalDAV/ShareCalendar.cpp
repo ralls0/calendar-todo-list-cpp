@@ -31,7 +31,7 @@ void ClientCalDAV::shareCalendar(QString email, QString comment) {
 
   QString requestString = "<D:share-resource xmlns:D=\"DAV:\">\n"
                           "     <D:sharee>\n"
-                          "       <D:href>" +
+                          "       <D:href>mailto:" +
                           email +
                           "</D:href>\n"
                           "       <D:prop>\n"
@@ -86,6 +86,7 @@ void ClientCalDAV::shareCalendar(QString email, QString comment) {
     QDEBUG << "[i] (" << _displayName << ") "
            << "ERROR: Invalid reply pointer when requesting URL.";
     emit error("Invalid reply pointer when requesting URL.");
+    emit errorOccured();
   }
 }
 

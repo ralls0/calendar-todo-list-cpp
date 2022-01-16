@@ -119,5 +119,6 @@ void ClientCalDAV::saveEvent(QString uid, QString filename, QString summary,
     QDEBUG << "[i] (" << _displayName << ") "
            << "ERROR: Invalid reply pointer when requesting URL.";
     emit error("Invalid reply pointer when requesting URL.");
+    emit errorOccured();
   }
 }

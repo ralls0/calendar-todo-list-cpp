@@ -272,6 +272,7 @@ signals:
 
   // emesso quando vi è un errore
   void error(QString errorMsg);
+  void errorOccured(void);
 
   // emesso quando lo stato di errore viene recuperato
   void recoverSignal(void);
