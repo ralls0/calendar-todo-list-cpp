@@ -67,6 +67,7 @@ void NewCalendarDialog::createAuthGroupBox() {
   lbl_password = new QLabel(tr("Password:"), e_basic);
   le_password = new QLineEdit(e_basic);
   lbl_password->setBuddy(le_password);
+  le_password->setEchoMode(QLineEdit::Password);
 
   lbl_clientSecret = new QLabel(tr("Client Secret:"), e_oauth);
   le_clientSecret = new QLineEdit(e_oauth);

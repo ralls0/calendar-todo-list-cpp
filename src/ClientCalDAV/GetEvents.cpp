@@ -402,8 +402,8 @@ QList<QObject *> ClientCalDAV::eventsInRange(const QDate &startDate,
               }
             }
 
-            testStartDateTime = testStartDateTime.addDays(7 * iInterval);
-            testEndDateTime = testEndDateTime.addDays(7 * iInterval);
+            testStartDateTime = testStartDateTime.addDays(30 * iInterval);
+            testEndDateTime = testEndDateTime.addDays(30 * iInterval);
           }
 
         }
